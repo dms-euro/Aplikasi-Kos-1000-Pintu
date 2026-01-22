@@ -14,4 +14,9 @@ class Log_aktifitas extends Model
         'nama_table',
         'id_data',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'users_id');
+    }
 }

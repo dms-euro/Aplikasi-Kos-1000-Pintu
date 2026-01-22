@@ -14,7 +14,13 @@ class Kamar extends Model
         'status',
     ];
 
-    public function tipe() {
+    public function tipe_kamar()
+    {
         return $this->belongsTo(Tipe_kamar::class);
+    }
+
+    public function pemesanan()
+    {
+        return $this->hasMany(Pemesanan::class, 'kamar_id');
     }
 }

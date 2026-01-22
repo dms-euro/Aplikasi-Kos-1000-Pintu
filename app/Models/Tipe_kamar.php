@@ -11,7 +11,8 @@ class Tipe_kamar extends Model
         'nama_tipe'
     ];
 
-    public function kamar() {
-        return $this->hasMany(Kamar::class);    
+    public function kamar()
+    {
+        return $this->hasMany(Kamar::class);
     }
 }

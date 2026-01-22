@@ -12,4 +12,21 @@ class Penghuni extends Model
         'nik',
         'telepon',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'users_id');
+    }
+
+    public function pemesanan()
+    {
+        return $this->hasMany(Pemesanan::class, 'penghuni_id');
+    }
+
+    
+
+    public function komplain()
+    {
+        return $this->hasMany(Komplain::class, 'penghuni_id');
+    }
 }

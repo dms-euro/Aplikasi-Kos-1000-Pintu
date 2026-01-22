@@ -14,4 +14,10 @@ class Tagihan extends Model
         'jumlah',
         'status',
     ];
+
+    public function pembayaran()
+    {
+        return $this->hasMany(Pembayaran::class);
+    }
+
 }

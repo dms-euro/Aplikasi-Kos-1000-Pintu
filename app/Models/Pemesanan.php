@@ -15,4 +15,14 @@ class Pemesanan extends Model
         'paket_bulanan',
         'status_pemesanan',
     ];
+
+    public function penghuni()
+    {
+        return $this->belongsTo(Penghuni::class, 'penghuni_id');
+    }
+
+    public function kamar()
+    {
+        return $this->belongsTo(Kamar::class, 'kamar_id');
+    }
 }

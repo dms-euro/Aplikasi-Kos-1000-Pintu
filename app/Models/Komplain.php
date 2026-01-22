@@ -13,4 +13,9 @@ class Komplain extends Model
         'deskripsi',
         'status',
     ];
+
+    public function penghuni()
+    {
+        return $this->belongsTo(Penghuni::class, 'penghuni_id');
+    }
 }
