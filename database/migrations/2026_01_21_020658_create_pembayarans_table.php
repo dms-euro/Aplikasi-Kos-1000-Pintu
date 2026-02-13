@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('pembayaran', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tagihan_id')->constrained('tagihan');
-            $table->integer('jumlah');
-            $table->string('metode');
-            $table->enum('status', ['pending', 'completed', 'failed'])->default('pending');
+            $table->foreignId('pemesanan_id')->constrained('pemesanan');
+            $table->date('tanggal_bayar');
+            $table->decimal('jumlah',10,2);
+            $table->foreignId('petugas_id')->constrained('users');
             $table->timestamps();
         });
     }

@@ -6,24 +6,26 @@ use Illuminate\Database\Eloquent\Model;
 
 class Penghuni extends Model
 {
-    protected $tabel = 'penghuni';
+    protected $table = 'penghuni';
     protected $fillable = [
         'users_id',
-        'nik',
-        'telepon',
+        'nama',
+        'kelamin',
+        'tanggal_lahir',
+        'pekerjaan',
+        'kontak',
+        'kontak_darurat',
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'users_id');
+        return $this->belongsTo(User::class);
     }
 
     public function pemesanan()
     {
-        return $this->hasMany(Pemesanan::class, 'penghuni_id');
+        return $this->hasMany(Pemesanan::class);
     }
-
-    
 
     public function komplain()
     {

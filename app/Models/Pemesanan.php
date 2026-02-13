@@ -12,8 +12,10 @@ class Pemesanan extends Model
         'penghuni_id',
         'kamar_id',
         'tanggal_masuk',
-        'paket_bulanan',
-        'status_pemesanan',
+        'tanggal_keluar',
+        'durasi_bulanan',
+        'total',
+        'status',
     ];
 
     public function penghuni()
@@ -24,5 +26,10 @@ class Pemesanan extends Model
     public function kamar()
     {
         return $this->belongsTo(Kamar::class, 'kamar_id');
+    }
+
+    public function pembayaran()
+    {
+        return $this->hasMany(Pembayaran::class, 'sewa_id');
     }
 }

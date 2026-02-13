@@ -14,8 +14,12 @@ return new class extends Migration
         Schema::create('penghuni', function (Blueprint $table) {
             $table->id();
             $table->foreignId('users_id')->constrained('users');
-            $table->string('nik')->unique();
-            $table->string('telepon');
+            $table->string('nama');
+            $table->enum('kelamin',['Laki-laki','Perempuan']);
+            $table->date('taggal_lahir');
+            $table->enum('pekerjaan',['Karyawan','Mahasiswa','Lainnya'])->default('Lainnya');
+            $table->string('kontak');
+            $table->string('kontak_darurat');
             $table->timestamps();
         });
     }

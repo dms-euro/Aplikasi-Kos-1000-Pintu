@@ -8,7 +8,9 @@ class Tipe_kamar extends Model
 {
     protected $table = 'tipe_kamar';
     protected $fillable = [
-        'nama_tipe'
+        'tipe',
+        'harga',
+        'deskripsi'
     ];
 
     public function kamar()

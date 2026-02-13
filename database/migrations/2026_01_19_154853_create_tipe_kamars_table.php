@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('tipe_kamar', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_tipe');
+            $table->string('tipe');
+            $table->decimal('harga',10,2);
+            $table->text('deskripsi');
             $table->timestamps();
         });
     }

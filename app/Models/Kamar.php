@@ -10,7 +10,6 @@ class Kamar extends Model
     protected $fillable = [
         'tipe_kamar_id',
         'kode_kamar',
-        'harga',
         'status',
     ];
 

@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('tipe_kamar_id')->constrained('tipe_kamar');
             $table->string('kode_kamar')->unique();
-            $table->integer('harga');
-            $table->enum('status',['tersedia','terisi']);
+            $table->enum('status',['tersedia','terisi','renovasi'])->default('tersedia');
             $table->timestamps();
         });
     }

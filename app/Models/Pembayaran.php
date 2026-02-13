@@ -9,14 +9,19 @@ class Pembayaran extends Model
     protected $table = 'pembayaran';
 
     protected $fillable = [
-        'tagihan_id',
+        'pemesanan_id',
         'tanggal_bayar',
-        'jumlah_bayar',
-        'metode_pembayaran',
+        'jumlah',
+        'petugas_id',
     ];
 
-    public function tagihan()
+    public function pemesanan()
     {
-        return $this->belongsTo(Tagihan::class);
+        return $this->belongsTo(Pemesanan::class);
+    }
+
+    public function petugas()
+    {
+        return $this->belongsTo(User::class);
     }
 }

@@ -13,7 +13,7 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $fillable = [
-        'name',
+        'nama',
         'email',
         'password',
         'role',
@@ -24,8 +24,9 @@ class User extends Authenticatable
         return $this->hasOne(Penghuni::class);
     }
 
+
     public  function log_aktifitas()
     {
-        return $this->hasMany(Log_aktifitas::class, 'users_id');
+        return $this->hasMany(Log_aktifitas::class);
     }
 }
