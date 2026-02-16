@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Keuangan · Kosan优雅</title>
+    <!-- Tailwind CDN v4 -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Flowbite CSS & JS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+    <!-- Chart.js untuk grafik cashflow -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        body { font-family: 'Inter', system-ui, sans-serif; background-color: #f8fafc; }
+    </style>
+</head>
+<body class="bg-indigo-50/20">
+
+<div class="flex h-screen overflow-hidden">
+    <!-- SIDEBAR (konsisten) dengan highlight laporan keuangan -->
+    <aside class="w-64 bg-white shadow-lg flex flex-col justify-between border-r border-indigo-100">
+        <div class="py-6 px-4">
+            <div class="flex items-center gap-2 mb-8 px-2">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-emerald-500 flex items-center justify-center shadow-sm">
+                    <i class='bx bx-home-alt-2 text-white text-lg'></i>
+                </div>
+                <span class="text-xl font-semibold text-gray-800">Kos<span class="text-indigo-600">an</span></span>
+                <span class="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full ml-1">owner</span>
+            </div>
+            <nav class="space-y-1">
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-indigo-50/50 rounded-xl transition group">
+                    <i class='bx bxs-dashboard text-xl text-indigo-400 group-hover:text-indigo-500'></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-indigo-50/50 rounded-xl transition group">
+                    <i class='bx bx-building-house text-xl text-emerald-400 group-hover:text-emerald-500'></i>
+                    <span>Properti kos</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-indigo-50/50 rounded-xl transition group">
+                    <i class='bx bx-group text-xl text-indigo-400 group-hover:text-indigo-500'></i>
+                    <span>Management Account</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-indigo-50/50 rounded-xl transition group">
+                    <i class='bx bx-purchase-tag-alt text-xl text-indigo-400 group-hover:text-indigo-500'></i>
+                    <span>Kategori & Harga</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-indigo-50/50 rounded-xl transition group">
+                    <i class='bx bx-bed text-xl text-indigo-400 group-hover:text-indigo-500'></i>
+                    <span>Manajemen Kamar</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-indigo-700 bg-indigo-50 rounded-xl border-l-4 border-indigo-600 font-medium">
+                    <i class='bx bx-line-chart text-xl text-indigo-600'></i>
+                    <span>Laporan Keuangan</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-indigo-50/50 rounded-xl transition group">
+                    <i class='bx bx-receipt text-xl text-amber-400 group-hover:text-amber-500'></i>
+                    <span>Tagihan</span>
+                </a>
+                <div class="pt-4 mt-2 border-t border-indigo-100"></div>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-indigo-50/50 rounded-xl transition group">
+                    <i class='bx bx-cog text-xl text-violet-400 group-hover:text-violet-500'></i>
+                    <span>Pengaturan</span>
+                </a>
+            </nav>
+        </div>
+        <div class="border-t border-indigo-100 p-4 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-400 to-emerald-400 flex items-center justify-center text-white font-bold shadow-sm">
+                <i class='bx bx-user-circle text-2xl'></i>
+            </div>
+            <div>
+                <p class="text-sm font-medium text-gray-800">Rahma W.</p>
+                <p class="text-xs text-indigo-500 flex items-center gap-1"><i class='bx bx-crown text-xs'></i> owner</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 overflow-y-auto bg-white/70 backdrop-blur-sm">
+        <!-- top bar -->
+        <header class="bg-white border-b border-indigo-100 py-4 px-6 flex items-center justify-between sticky top-0 z-10">
+            <div class="flex items-center gap-4">
+                <h1 class="text-2xl font-semibold text-gray-800">Laporan <span class="text-indigo-600">Keuangan</span></h1>
+                <span class="bg-emerald-100 text-emerald-700 text-sm px-3 py-1 rounded-full flex items-center gap-1"><i class='bx bx-calendar'></i> Periode: April 2026</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="relative hidden md:block">
+                    <i class='bx bx-calendar absolute left-3 top-1/2 -translate-y-1/2 text-indigo-300 text-lg'></i>
+                    <select class="pl-10 pr-8 py-2 border border-indigo-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 bg-indigo-50/30 appearance-none">
+                        <option>April 2026</option>
+                        <option>Maret 2026</option>
+                        <option>Februari 2026</option>
+                        <option>Januari 2026</option>
+                    </select>
+                </div>
+                <button class="relative p-2 text-indigo-500 hover:bg-indigo-100 rounded-full">
+                    <i class='bx bx-bell text-2xl'></i>
+                    <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-rose-500 rounded-full border border-white"></span>
+                </button>
+                <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-200 to-emerald-200 flex items-center justify-center text-indigo-700 font-medium border-2 border-white shadow-sm">
+                    <i class='bx bx-user text-xl'></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- konten laporan keuangan -->
+        <div class="p-6 space-y-6">
+            <!-- 4 Kartu Utama: Total Pemasukan, Kamar Kosong, Penghuni Nunggak, Cashflow Bulanan -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                <!-- Total Pemasukan -->
+                <div class="bg-white rounded-2xl shadow-sm border border-indigo-100 p-5 flex items-center justify-between hover:shadow-md transition group">
+                    <div>
+                        <p class="text-sm text-indigo-500 font-medium flex items-center gap-1"><i class='bx bx-trending-up text-indigo-400'></i> Total Pemasukan</p>
+                        <p class="text-2xl font-bold text-gray-800">Rp 42.850.000</p>
+                        <p class="text-xs text-emerald-600 mt-1 flex items-center"><i class='bx bx-trending-up mr-1'></i> +8.5% dari bulan lalu</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 text-2xl group-hover:scale-110 transition">
+                        <i class='bx bx-money'></i>
+                    </div>
+                </div>
+
+                <!-- Kamar Kosong -->
+                <div class="bg-white rounded-2xl shadow-sm border border-indigo-100 p-5 flex items-center justify-between hover:shadow-md transition group">
+                    <div>
+                        <p class="text-sm text-amber-500 font-medium flex items-center gap-1"><i class='bx bx-door-open text-amber-400'></i> Kamar Kosong</p>
+                        <p class="text-3xl font-bold text-gray-800">5 <span class="text-sm font-normal text-amber-500 ml-1">kamar</span></p>
+                        <p class="text-xs text-gray-400 mt-1">dari 24 total kamar</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 text-2xl group-hover:scale-110 transition">
+                        <i class='bx bx-home'></i>
+                    </div>
+                </div>
+
+                <!-- Penghuni Nunggak -->
+                <div class="bg-white rounded-2xl shadow-sm border border-indigo-100 p-5 flex items-center justify-between hover:shadow-md transition group">
+                    <div>
+                        <p class="text-sm text-rose-500 font-medium flex items-center gap-1"><i class='bx bx-error-circle text-rose-400'></i> Penghuni Nunggak</p>
+                        <p class="text-3xl font-bold text-gray-800">3 <span class="text-sm font-normal text-rose-500 ml-1">orang</span></p>
+                        <p class="text-xs text-rose-600 mt-1">Total tunggakan: Rp 2.450.000</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-full bg-rose-100 flex items-center justify-center text-rose-600 text-2xl group-hover:scale-110 transition">
+                        <i class='bx bx-user-x'></i>
+                    </div>
+                </div>
+
+                <!-- Cashflow Bulanan -->
+                <div class="bg-white rounded-2xl shadow-sm border border-indigo-100 p-5 flex items-center justify-between hover:shadow-md transition group">
+                    <div>
+                        <p class="text-sm text-emerald-500 font-medium flex items-center gap-1"><i class='bx bx-wallet text-emerald-400'></i> Cashflow Bulanan</p>
+                        <p class="text-2xl font-bold text-gray-800">+ Rp 38.750.000</p>
+                        <p class="text-xs text-emerald-600 mt-1">Pemasukan - Pengeluaran</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 text-2xl group-hover:scale-110 transition">
+                        <i class='bx bx-line-chart'></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grafik Cashflow Bulanan & Detail Tunggakan -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Grafik cashflow 6 bulan -->
+                <div class="lg:col-span-2 bg-white rounded-2xl border border-indigo-100 p-5 shadow-sm">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-semibold text-gray-800 flex items-center gap-2"><i class='bx bx-line-chart text-indigo-500 text-xl'></i> Cashflow 6 Bulan Terakhir</h3>
+                        <span class="text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full flex items-center"><i class='bx bx-trending-up mr-1'></i> +12% YoY</span>
+                    </div>
+                    <div class="h-64">
+                        <canvas id="cashflowChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Daftar Penghuni Nunggak -->
+                <div class="bg-white rounded-2xl border border-indigo-100 p-5 shadow-sm">
+                    <h3 class="font-semibold text-gray-800 flex items-center gap-2 mb-4"><i class='bx bx-error-circle text-rose-500 text-xl'></i> Penghuni Nunggak</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between border-b border-indigo-50 pb-3">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center text-rose-600">AN</div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-800">Ahmad Nugraha</p>
+                                    <p class="text-xs text-gray-500">Kamar VIP-01 · 3 bulan</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm font-semibold text-rose-600">Rp 1.250.000</p>
+                                <p class="text-xs text-rose-500">Telat 45 hari</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between border-b border-indigo-50 pb-3">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center text-rose-600">SR</div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-800">Siti Rahma</p>
+                                    <p class="text-xs text-gray-500">Kamar PRM-02 · 2 bulan</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm font-semibold text-rose-600">Rp 750.000</p>
+                                <p class="text-xs text-rose-500">Telat 20 hari</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between pb-3">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center text-rose-600">BF</div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-800">Budi Firmansyah</p>
+                                    <p class="text-xs text-gray-500">Kamar DLX-01 · 1 bulan</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm font-semibold text-rose-600">Rp 450.000</p>
+                                <p class="text-xs text-rose-500">Telat 12 hari</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="w-full mt-4 text-sm text-indigo-600 bg-indigo-50 hover:bg-indigo-100 py-2 rounded-xl transition flex items-center justify-center gap-1">
+                        <i class='bx bx-show'></i> Lihat semua tunggakan
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tabel Rincian Pemasukan & Pengeluaran -->
+            <div class="bg-white rounded-2xl border border-indigo-100 shadow-sm overflow-hidden">
+                <div class="px-6 py-4 border-b border-indigo-100 flex justify-between items-center">
+                    <h3 class="font-semibold text-gray-800 flex items-center gap-2"><i class='bx bx-detail text-indigo-500'></i> Rincian Cashflow Bulan April 2026</h3>
+                    <button class="text-xs bg-white border border-indigo-200 text-indigo-600 px-4 py-2 rounded-full hover:bg-indigo-50 transition flex items-center gap-1">
+                        <i class='bx bx-download'></i> Export PDF
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-indigo-50/70 text-indigo-800">
+                            <tr>
+                                <th class="px-6 py-3 text-left font-medium">Tanggal</th>
+                                <th class="px-6 py-3 text-left font-medium">Keterangan</th>
+                                <th class="px-6 py-3 text-left font-medium">Kategori</th>
+                                <th class="px-6 py-3 text-left font-medium">Pemasukan</th>
+                                <th class="px-6 py-3 text-left font-medium">Pengeluaran</th>
+                                <th class="px-6 py-3 text-left font-medium">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-indigo-100">
+                            <tr>
+                                <td class="px-6 py-4 text-gray-600">01 Apr 2026</td>
+                                <td class="px-6 py-4 font-medium text-gray-800">Pembayaran Sewa 10 Kamar</td>
+                                <td class="px-6 py-4"><span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full">Pemasukan</span></td>
+                                <td class="px-6 py-4 text-indigo-600 font-medium">Rp 12.500.000</td>
+                                <td class="px-6 py-4 text-gray-400">-</td>
+                                <td class="px-6 py-4"><span class="bg-emerald-100 text-emerald-700 text-xs px-2 py-1 rounded-full">Lunas</span></td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 text-gray-600">03 Apr 2026</td>
+                                <td class="px-6 py-4 font-medium text-gray-800">Pembayaran Listrik & Air</td>
+                                <td class="px-6 py-4"><span class="bg-rose-100 text-rose-700 text-xs px-2 py-1 rounded-full">Pengeluaran</span></td>
+                                <td class="px-6 py-4 text-gray-400">-</td>
+                                <td class="px-6 py-4 text-rose-600 font-medium">Rp 2.850.000</td>
+                                <td class="px-6 py-4"><span class="bg-amber-100 text-amber-700 text-xs px-2 py-1 rounded-full">Terbayar</span></td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 text-gray-600">05 Apr 2026</td>
+                                <td class="px-6 py-4 font-medium text-gray-800">Pembayaran Sewa 5 Kamar</td>
+                                <td class="px-6 py-4"><span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full">Pemasukan</span></td>
+                                <td class="px-6 py-4 text-indigo-600 font-medium">Rp 6.250.000</td>
+                                <td class="px-6 py-4 text-gray-400">-</td>
+                                <td class="px-6 py-4"><span class="bg-emerald-100 text-emerald-700 text-xs px-2 py-1 rounded-full">Lunas</span></td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 text-gray-600">10 Apr 2026</td>
+                                <td class="px-6 py-4 font-medium text-gray-800">Perbaikan AC 3 Kamar</td>
+                                <td class="px-6 py-4"><span class="bg-rose-100 text-rose-700 text-xs px-2 py-1 rounded-full">Pengeluaran</span></td>
+                                <td class="px-6 py-4 text-gray-400">-</td>
+                                <td class="px-6 py-4 text-rose-600 font-medium">Rp 1.200.000</td>
+                                <td class="px-6 py-4"><span class="bg-emerald-100 text-emerald-700 text-xs px-2 py-1 rounded-full">Terbayar</span></td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 text-gray-600">15 Apr 2026</td>
+                                <td class="px-6 py-4 font-medium text-gray-800">Pembayaran Sewa 8 Kamar</td>
+                                <td class="px-6 py-4"><span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full">Pemasukan</span></td>
+                                <td class="px-6 py-4 text-indigo-600 font-medium">Rp 10.800.000</td>
+                                <td class="px-6 py-4 text-gray-400">-</td>
+                                <td class="px-6 py-4"><span class="bg-emerald-100 text-emerald-700 text-xs px-2 py-1 rounded-full">Lunas</span></td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 text-gray-600">20 Apr 2026</td>
+                                <td class="px-6 py-4 font-medium text-gray-800">Gaji Staf Kebersihan</td>
+                                <td class="px-6 py-4"><span class="bg-rose-100 text-rose-700 text-xs px-2 py-1 rounded-full">Pengeluaran</span></td>
+                                <td class="px-6 py-4 text-gray-400">-</td>
+                                <td class="px-6 py-4 text-rose-600 font-medium">Rp 2.000.000</td>
+                                <td class="px-6 py-4"><span class="bg-emerald-100 text-emerald-700 text-xs px-2 py-1 rounded-full">Terbayar</span></td>
+                            </tr>
+                        </tbody>
+                        <tfoot class="bg-indigo-50/30 font-medium">
+                            <tr>
+                                <td colspan="3" class="px-6 py-3 text-right text-indigo-600">Total Bulan Ini</td>
+                                <td class="px-6 py-3 text-indigo-700">Rp 42.850.000</td>
+                                <td class="px-6 py-3 text-rose-700">Rp 6.050.000</td>
+                                <td class="px-6 py-3 text-emerald-700">+ Rp 36.800.000</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Ringkasan Kamar Kosong per Tipe -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="bg-white rounded-2xl border border-indigo-100 p-5">
+                    <h3 class="font-semibold text-gray-800 flex items-center gap-2 mb-3"><i class='bx bx-door-open text-amber-500'></i> Kamar Kosong per Tipe</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-600">Standar</span>
+                                <span class="font-medium text-indigo-600">2 dari 8 kosong</span>
+                            </div>
+                            <div class="w-full bg-indigo-100 h-2 rounded-full"><div class="bg-indigo-500 h-2 rounded-full" style="width:25%"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-600">Premium</span>
+                                <span class="font-medium text-indigo-600">1 dari 5 kosong</span>
+                            </div>
+                            <div class="w-full bg-indigo-100 h-2 rounded-full"><div class="bg-indigo-500 h-2 rounded-full" style="width:20%"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-600">VIP</span>
+                                <span class="font-medium text-indigo-600">1 dari 3 kosong</span>
+                            </div>
+                            <div class="w-full bg-indigo-100 h-2 rounded-full"><div class="bg-indigo-500 h-2 rounded-full" style="width:33%"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-600">Ekonomi</span>
+                                <span class="font-medium text-indigo-600">1 dari 10 kosong</span>
+                            </div>
+                            <div class="w-full bg-indigo-100 h-2 rounded-full"><div class="bg-indigo-500 h-2 rounded-full" style="width:10%"></div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl border border-indigo-100 p-5">
+                    <h3 class="font-semibold text-gray-800 flex items-center gap-2 mb-3"><i class='bx bx-calendar-check text-indigo-500'></i> Proyeksi Bulan Depan</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Estimasi Pemasukan</span>
+                            <span class="font-semibold text-gray-800">Rp 45.000.000</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Estimasi Pengeluaran</span>
+                            <span class="font-semibold text-gray-800">Rp 7.200.000</span>
+                        </div>
+                        <div class="flex justify-between items-center border-t border-indigo-100 pt-3">
+                            <span class="text-gray-800 font-medium">Proyeksi Cashflow</span>
+                            <span class="font-bold text-emerald-600">+ Rp 37.800.000</span>
+                        </div>
+                        <div class="bg-indigo-50 p-3 rounded-xl mt-2">
+                            <p class="text-xs text-indigo-700 flex items-center gap-1"><i class='bx bx-info-circle'></i> 3 kamar akan segera kosong bulan depan, potensi pemasukan tambahan</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- akhir p-6 -->
+    </main>
+</div>
+
+<script>
+    // Inisialisasi grafik cashflow
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('cashflowChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Nov 25', 'Des 25', 'Jan 26', 'Feb 26', 'Mar 26', 'Apr 26'],
+                datasets: [
+                    {
+                        label: 'Pemasukan',
+                        data: [38500000, 41200000, 39800000, 42300000, 39500000, 42850000],
+                        borderColor: '#4f46e5',
+                        backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: 'Pengeluaran',
+                        data: [5200000, 5800000, 4950000, 6100000, 5850000, 6050000],
+                        borderColor: '#f43f5e',
+                        backgroundColor: 'rgba(244, 63, 94, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: { usePointStyle: true, boxWidth: 8 }
+                    }
+                },
+                scales: {
+                    y: {
+                        ticks: { callback: function(value) { return 'Rp ' + (value/1000000) + 'jt'; } }
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

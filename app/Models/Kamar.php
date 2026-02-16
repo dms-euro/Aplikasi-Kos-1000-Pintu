@@ -15,7 +15,7 @@ class Kamar extends Model
 
     public function tipe_kamar()
     {
-        return $this->belongsTo(Tipe_kamar::class);
+        return $this->belongsTo(Tipe_kamar::class, 'tipe_kamar_id');
     }
 
     public function pemesanan()
