@@ -12,7 +12,7 @@ class AccountController
      */
     public function index()
     {
-        $user = User::whereIn('role', ['owner','staf']);
+        $user = User::whereIn('role', ['owner','staf'])->get();
         return view('admin.users', compact('user'));
     }
 
@@ -29,7 +29,16 @@ class AccountController
      */
     public function store(Request $request)
     {
-        //
+        $validate = $request->validate([
+            'nama' => 'required',
+            'email' => 'required',
+            'password' => 'required',
+            'role' => 'required',
+        ]);
+
+        User::create($validate);
+
+        return redirect()->back()->with('success', 'Account berhasil di Tambahkan');
     }
 
     /**
