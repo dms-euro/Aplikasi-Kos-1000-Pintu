@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Account;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class AccountController
@@ -11,7 +12,8 @@ class AccountController
      */
     public function index()
     {
-        //  
+        $user = User::whereIn('role', ['owner','staf']);
+        return view('admin.users', compact('user'));
     }
 
     /**
