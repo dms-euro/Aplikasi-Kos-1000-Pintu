@@ -44,7 +44,7 @@
             </div>
         </div>
         <!-- header + button tambah kamar -->
-        <div class="flex justify-between items-center mb-6">
+        <div class="flex justify-between items-center m-6">
             <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2"><i
                     class='bx bx-door-open text-indigo-500'></i> Daftar Kamar</h2>
             <button id="createKamarBtn"
