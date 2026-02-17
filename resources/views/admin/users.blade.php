@@ -14,65 +14,107 @@
             </button>
         </div>
 
-        <!-- Tabel User (sesuai struktur: id, nama, email, role, timestamps) -->
-        <div class="bg-white rounded-2xl border border-indigo-100 shadow-sm overflow-hidden">
+        <!-- Tabel User -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
-                    <thead class="bg-indigo-50/70 text-indigo-800">
-                        <tr>
-                            <th class="px-6 py-3 text-left font-medium">ID</th>
-                            <th class="px-6 py-3 text-left font-medium">Nama</th>
-                            <th class="px-6 py-3 text-left font-medium">Email</th>
-                            <th class="px-6 py-3 text-left font-medium">Role</th>
-                            <th class="px-6 py-3 text-left font-medium">Created At</th>
-                            <th class="px-6 py-3 text-left font-medium">Aksi</th>
+                    <thead>
+                        <tr class="bg-gradient-to-r from-indigo-50 to-indigo-100/50 border-b border-indigo-200">
+                            <th
+                                class="px-6 py-3.5 text-left text-xs font-semibold text-indigo-700 uppercase tracking-wider">
+                                ID</th>
+                            <th
+                                class="px-6 py-3.5 text-left text-xs font-semibold text-indigo-700 uppercase tracking-wider">
+                                Nama</th>
+                            <th
+                                class="px-6 py-3.5 text-left text-xs font-semibold text-indigo-700 uppercase tracking-wider">
+                                Email</th>
+                            <th
+                                class="px-6 py-3.5 text-left text-xs font-semibold text-indigo-700 uppercase tracking-wider">
+                                Role</th>
+                            <th
+                                class="px-6 py-3.5 text-left text-xs font-semibold text-indigo-700 uppercase tracking-wider">
+                                Created At</th>
+                            <th
+                                class="px-6 py-3.5 text-left text-xs font-semibold text-indigo-700 uppercase tracking-wider">
+                                Aksi</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-indigo-100">
+                    <tbody class="divide-y divide-gray-200 bg-white">
                         @forelse($user as $item)
-                            <tr class="hover:bg-indigo-50 transition">
-                                <td class="px-6 py-3">{{ $item->id }}</td>
-                                <td class="px-6 py-3">{{ $item->nama }}</td>
-                                <td class="px-6 py-3">{{ $item->email }}</td>
-                                <td class="px-6 py-3 capitalize">
-                                    <span
-                                        class="px-2 py-1 text-xs rounded-full
-                    @if ($item->role == 'owner') bg-green-100 text-green-700
-                    @else bg-blue-100 text-blue-700 @endif">
-                                        {{ $item->role }}
-                                    </span>
+                            <tr class="hover:bg-indigo-50/50 transition-colors duration-150 ease-in-out">
+                                <td class="px-6 py-4 text-gray-600 font-mono text-sm">#{{ $item->id }}</td>
+                                <td class="px-6 py-4 font-medium text-gray-800">{{ $item->nama }}</td>
+                                <td class="px-6 py-4 text-gray-600">{{ $item->email }}</td>
+                                <td class="px-6 py-4">
+                                    @if ($item->role == 'owner')
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-700 border border-amber-200">
+                                            <span class="w-1.5 h-1.5 bg-amber-500 rounded-full mr-1.5"></span>
+                                            Owner
+                                        </span>
+                                    @else
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700 border border-blue-200">
+                                            <span class="w-1.5 h-1.5 bg-blue-500 rounded-full mr-1.5"></span>
+                                            {{ ucfirst($item->role) }}
+                                        </span>
+                                    @endif
                                 </td>
-                                <td class="px-6 py-3">
-                                    {{ $item->created_at->format('d M Y') }}
+                                <td class="px-6 py-4 text-gray-500 text-sm">
+                                    <div class="flex items-center gap-1.5">
+                                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                        {{ $item->created_at->format('d M Y') }}
+                                    </div>
                                 </td>
-                                <td class="px-6 py-3 flex gap-2">
-                                    <!-- Tombol Delete -->
+                                <td class="px-6 py-4">
                                     <form id="delete-form-{{ $item->id }}"
-                                        action="{{ route('account.delete', $item->id) }}" method="POST">
+                                        action="{{ route('account.delete', $item->id) }}" method="POST" class="inline">
                                         @csrf
                                         @method('DELETE')
-
                                         <button type="button" onclick="confirmDelete({{ $item->id }})"
-                                            class="px-3 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600">
+                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 hover:text-red-700 hover:border-red-300 transition-all duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                            </svg>
                                             Hapus
                                         </button>
                                     </form>
-
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center py-6 text-gray-500">
-                                    Tidak ada data user
+                                <td colspan="6" class="px-6 py-12 text-center">
+                                    <div class="flex flex-col items-center justify-center text-gray-400">
+                                        <svg class="w-12 h-12 mb-3 text-gray-300" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                        </svg>
+                                        <p class="text-gray-500 text-sm">Tidak ada data user</p>
+                                    </div>
                                 </td>
                             </tr>
                         @endforelse
                     </tbody>
-
                 </table>
             </div>
-            <div class="px-6 py-3 border-t border-indigo-100 text-right text-xs text-indigo-400">
-                total <span id="userCount">0</span> pengguna
+
+            <!-- Footer dengan total pengguna -->
+            <div class="bg-gray-50 px-6 py-3 border-t border-gray-200">
+                <div class="flex items-center justify-between text-xs text-gray-600">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                        <span>{{ $user->count() }} pengguna terdaftar</span>
+                    </div>
+                    <span class="text-gray-400">Last updated: {{ now()->format('d M Y H:i') }}</span>
+                </div>
             </div>
         </div>
     </div>
@@ -150,30 +192,7 @@
             </div>
         </div>
     </div>
-
-    <!-- Modal Hapus (Delete Confirmation) -->
-    <div id="deleteModal" tabindex="-1"
-        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-        <div class="relative p-4 w-full max-w-md max-h-full">
-            <div class="relative bg-white rounded-2xl shadow-lg border border-rose-100">
-                <div class="p-4 md:p-5 text-center">
-                    <i class='bx bx-error-circle text-rose-500 text-6xl mb-3'></i>
-                    <h3 class="mb-5 text-lg font-normal text-gray-700">Apakah Anda yakin ingin menghapus user <span
-                            id="deleteUserName" class="font-semibold text-indigo-600"></span>?</h3>
-                    <div class="flex justify-center gap-3">
-                        <button id="confirmDeleteBtn" type="button"
-                            class="text-white bg-rose-600 hover:bg-rose-700 focus:ring-4 focus:outline-none focus:ring-rose-200 font-medium rounded-xl text-sm px-5 py-2.5 text-center transition">Ya,
-                            hapus</button>
-                        <button data-modal-hide="deleteModal" type="button"
-                            class="text-gray-600 bg-white border border-gray-200 hover:bg-gray-50 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-xl text-sm px-5 py-2.5 text-center transition">Batal</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection
 
 @push('scripts')
-
-
 @endpush

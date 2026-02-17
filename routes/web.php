@@ -11,8 +11,9 @@ Route::get('/account/admin', [AccountController::class, 'index'])->name('account
 Route::post('/account/add/admin', [AccountController::class, 'store'])->name('account.store');
 Route::delete('/account/delete/{id}', [AccountController::class, 'destroy'])->name('account.delete');
 Route::get('/Kategori/admin', [KategoriController::class, 'index'])->name('kategori.index');
-Route::get('/Kategori/add/admin', [KategoriController::class, 'store'])->name('kategori.store');
-Route::get('/Kategori/delete/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
+Route::post('/Kategori/add/admin', [KategoriController::class, 'store'])->name('kategori.store');
+Route::put('/Kategori/update/{id}', [KategoriController::class, 'update'])->name('kategori.update');
+Route::delete('/Kategori/delete/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
 Route::get('/kamar/admin', [KamarController::class, 'index'])->name('kamar.index');
 Route::post('/kamar/add/admin', [KamarController::class, 'store'])->name('kamar.store');
 Route::post('/kamar/delete/{id}', [KamarController::class, 'destroy'])->name('kamar.destroy');

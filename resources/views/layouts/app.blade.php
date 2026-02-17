@@ -17,6 +17,10 @@
             font-family: 'Inter', system-ui, sans-serif;
             background-color: #f8fafc;
         }
+
+        button {
+            pointer-events: auto !important;
+        }
     </style>
 </head>
 
@@ -61,7 +65,7 @@
             });
         </script>
     @endif
-    
+
     <script>
         function confirmDelete(id) {
             Swal.fire({
@@ -69,10 +73,13 @@
                 text: "Data tidak bisa dikembalikan!",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
                 confirmButtonText: 'Ya, hapus!',
-                cancelButtonText: 'Batal'
+                cancelButtonText: 'Batal',
+                buttonsStyling: false,
+                customClass: {
+                    confirmButton: 'px-4 py-2 bg-red-600 text-white rounded-lg',
+                    cancelButton: 'px-4 py-2 bg-gray-500 text-white rounded-lg ml-2'
+                }
             }).then((result) => {
                 if (result.isConfirmed) {
                     document.getElementById('delete-form-' + id).submit();

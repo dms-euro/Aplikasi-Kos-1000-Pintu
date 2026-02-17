@@ -12,7 +12,7 @@ class AccountController
      */
     public function index()
     {
-        $user = User::whereIn('role', ['owner','staf'])->get();
+        $user = User::whereIn('role', ['owner', 'staf'])->get();
         return view('admin.users', compact('user'));
     }
 
@@ -68,8 +68,15 @@ class AccountController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        try {
+            $account = User::findOrFail($id);
+            $account->delete();
+
+            return back()->with('success', 'Account Berhasil Dihapus');
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
     }
 }

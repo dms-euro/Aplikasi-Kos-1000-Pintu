@@ -61,7 +61,17 @@ class KategoriController
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validated = $request->validate([
+            'tipe' => 'required',
+            'harga' => 'required',
+            'deskripsi' => 'required',
+        ]);
+
+        $tipe = Tipe_kamar::findOrFail($id);
+
+        $tipe->update($validated);
+
+        return redirect()->back()->with('success', 'Tipe Kamar Bru Diedite');
     }
 
     /**
@@ -69,6 +79,14 @@ class KategoriController
      */
     public function destroy(string $id)
     {
-        //
+        $kategori = Tipe_kamar::findOrFail($id);
+
+        if ($kategori->kamar()->count() > 0) {
+            return redirect()->back()->with('error', 'Data tidak bisa dihapus karena masih digunakan oleh kamar.');
+        }
+
+        $kategori->delete();
+
+        return redirect()->back()->with('success', 'Data Berhasil Dihapus');
     }
 }

@@ -36,14 +36,15 @@
         </div>
 
         <!-- header + button tambah kategori -->
-        <div class="flex justify-between items-center mb-6">
+        <div class="flex justify-between items-center m-6">
             <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2"><i
                     class='bx bx-category-alt text-indigo-500'></i> Daftar Tipe Kamar</h2>
-            <button id="createKategoriBtn"
+            <button
                 class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl text-sm font-medium flex items-center gap-2 transition shadow-sm"
-                data-modal-target="kategoriModal" data-modal-toggle="kategoriModal" onclick="openCreateModal()">
+                data-modal-target="kategoriModal" data-modal-toggle="kategoriModal">
                 <i class='bx bx-plus-circle'></i> Tambah Tipe Kamar
             </button>
+
         </div>
 
         <!-- Tabel Kategori (tipe, harga, deskripsi) -->
@@ -72,23 +73,28 @@
                                 <td class="px-6 py-3">{{ $item->jumlah_kamar }}</td>
                                 <td class="px-6 py-3 flex gap-2">
 
-                                    <!-- Tombol Edit -->
-                                    <a href=""
-                                        class="px-3 py-1 text-sm bg-yellow-400 text-white rounded-lg hover:bg-yellow-500">
+                                    <button class="px-3 py-1 text-sm bg-yellow-400 text-white rounded-lg"
+                                        data-modal-target="editModal" data-modal-toggle="editModal"
+                                        data-id="{{ $item->id }}" data-tipe="{{ $item->tipe }}"
+                                        data-harga="{{ $item->harga }}" data-deskripsi="{{ $item->deskripsi }}"
+                                        onclick="setEditData(this)">
                                         Edit
-                                    </a>
+                                    </button>
 
-                                    <!-- Tombol Hapus -->
-                                    <form action="{{ route('kategori.destroy', $item->id) }}" method="POST"
-                                        onsubmit="return confirm('Yakin hapus data ini?')">
+                                    <form id="delete-form-{{ $item->id }}"
+                                        action="{{ route('kategori.destroy', $item->id) }}" method="POST" class="inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit"
-                                            class="px-3 py-1 text-sm bg-red-500 text-white rounded-lg hover:bg-red-600">
+                                        <button type="button" onclick="confirmDelete({{ $item->id }})"
+                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 hover:text-red-700 hover:border-red-300 transition-all duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                            </svg>
                                             Hapus
                                         </button>
                                     </form>
-
                                 </td>
                             </tr>
                         @empty
@@ -99,92 +105,133 @@
                             </tr>
                         @endforelse
                     </tbody>
-
                 </table>
             </div>
             <div class="px-6 py-3 border-t border-indigo-100 text-right text-xs text-indigo-400">
-                total <span id="kategoriCount">0</span> tipe kamar
+                total <span id="kategoriCount">{{ $kategori->count() }}</span> tipe kamar
             </div>
         </div>
     </div>
 
-    <!-- MODAL FLOWBITE (untuk create & edit kategori) -->
-    <div id="kategoriModal" tabindex="-1" aria-hidden="true"
-        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-        <div class="relative p-4 w-full max-w-md max-h-full">
-            <div class="relative bg-white rounded-2xl shadow-lg border border-indigo-100">
-                <!-- Modal header -->
-                <div class="flex items-center justify-between p-4 md:p-5 border-b border-indigo-100 rounded-t-2xl">
-                    <h3 class="text-lg font-semibold text-gray-900 flex items-center gap-2" id="modalTitle">
-                        <i class='bx bx-purchase-tag-alt text-indigo-600'></i> Tambah Tipe Kamar
+    <div id="kategoriModal" tabindex="-1"
+        class="hidden fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-full bg-black/40">
+
+        <div class="relative p-4 w-full max-w-md">
+            <div class="bg-white rounded-2xl shadow-lg border border-indigo-100">
+
+                <!-- Header -->
+                <div class="flex items-center justify-between p-4 border-b">
+                    <h3 class="text-lg font-semibold text-gray-900">
+                        Tambah Tipe Kamar
                     </h3>
-                    <button type="button"
-                        class="text-gray-400 bg-transparent hover:bg-indigo-100 hover:text-indigo-700 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-                        data-modal-hide="kategoriModal">
+                    <button data-modal-hide="kategoriModal">
                         <i class='bx bx-x text-2xl'></i>
                     </button>
                 </div>
-                <!-- Modal body form (field: tipe, harga, deskripsi) -->
-                <div class="p-4 md:p-5">
-                    <form action="{{ route('kategori.store') }}" id="kategoriForm" class="space-y-4">
+
+                <!-- Body -->
+                <div class="p-5">
+                    <form action="{{ route('kategori.store') }}" method="POST" class="space-y-4">
+                        @csrf
+
                         <div>
-                            <label for="tipe"
-                                class="block mb-2 text-sm font-medium text-gray-700 flex items-center gap-1"><i
-                                    class='bx bx-tag text-indigo-400'></i> Tipe Kamar</label>
-                            <input type="text" name="tipe" id="tipe"
-                                class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
-                                placeholder="Contoh: Standar, Premium, VIP" required>
+                            <label class="block mb-1 text-sm font-medium">Tipe Kamar</label>
+                            <input type="text" name="tipe" class="w-full border rounded-xl p-2.5" required>
                         </div>
 
                         <div>
-                            <label for="harga"
-                                class="block mb-2 text-sm font-medium text-gray-700 flex items-center gap-1"><i
-                                    class='bx bx-money text-indigo-400'></i> Harga per Bulan (Rp)</label>
-                            <input type="number" name="harga" id="harga"
-                                class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
-                                placeholder="1000000" min="0" required>
+                            <label class="block mb-1 text-sm font-medium">Harga</label>
+                            <input type="number" name="harga" class="w-full border rounded-xl p-2.5" required>
                         </div>
 
                         <div>
-                            <label for="deskripsi"
-                                class="block mb-2 text-sm font-medium text-gray-700 flex items-center gap-1"><i
-                                    class='bx bx-detail text-indigo-400'></i> Deskripsi</label>
-                            <textarea id="deskripsi" name="deskripsi" rows="3"
-                                class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
-                                placeholder="Fasilitas, ukuran kamar, dll..."></textarea>
+                            <label class="block mb-1 text-sm font-medium">Deskripsi</label>
+                            <textarea name="deskripsi" class="w-full border rounded-xl p-2.5"></textarea>
                         </div>
 
-                        <div class="flex gap-3 pt-2">
-                            <button type="submit" id="submitBtn"
-                                class="w-full text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-xl text-sm px-5 py-2.5 text-center transition">Simpan</button>
-                            <button type="button" data-modal-hide="kategoriModal"
-                                class="w-full text-indigo-600 bg-white border border-indigo-200 hover:bg-indigo-50 focus:ring-4 focus:outline-none focus:ring-indigo-100 font-medium rounded-xl text-sm px-5 py-2.5 text-center transition">Batal</button>
+                        <div class="flex gap-3">
+                            <button type="submit" class="w-full bg-indigo-600 text-white rounded-xl py-2.5">
+                                Simpan
+                            </button>
+                            <button type="button" data-modal-hide="kategoriModal" class="w-full border rounded-xl py-2.5">
+                                Batal
+                            </button>
                         </div>
+
                     </form>
                 </div>
+
             </div>
         </div>
     </div>
 
-    <!-- Modal Hapus -->
-    <div id="deleteModal" tabindex="-1"
-        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-        <div class="relative p-4 w-full max-w-md max-h-full">
-            <div class="relative bg-white rounded-2xl shadow-lg border border-rose-100">
-                <div class="p-4 md:p-5 text-center">
-                    <i class='bx bx-error-circle text-rose-500 text-6xl mb-3'></i>
-                    <h3 class="mb-5 text-lg font-normal text-gray-700">Hapus tipe kamar <span id="deleteTipeName"
-                            class="font-semibold text-indigo-600"></span>?</h3>
-                    <p class="text-sm text-gray-500 mb-4">Tindakan ini akan mempengaruhi kamar dengan tipe ini.</p>
-                    <div class="flex justify-center gap-3">
-                        <button id="confirmDeleteBtn" type="button"
-                            class="text-white bg-rose-600 hover:bg-rose-700 focus:ring-4 focus:outline-none focus:ring-rose-200 font-medium rounded-xl text-sm px-5 py-2.5 text-center transition">Ya,
-                            hapus</button>
-                        <button data-modal-hide="deleteModal" type="button"
-                            class="text-gray-600 bg-white border border-gray-200 hover:bg-gray-50 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-xl text-sm px-5 py-2.5 text-center transition">Batal</button>
-                    </div>
+    <div id="editModal" tabindex="-1"
+        class="hidden fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-full bg-black/40">
+
+        <div class="relative p-4 w-full max-w-md">
+            <div class="bg-white rounded-2xl shadow-lg border border-indigo-100">
+
+                <div class="flex items-center justify-between p-4 border-b">
+                    <h3 class="text-lg font-semibold">
+                        Edit Tipe Kamar
+                    </h3>
+                    <button data-modal-hide="editModal">
+                        ✕
+                    </button>
                 </div>
+
+                <div class="p-5">
+                    <form id="editForm" method="POST" class="space-y-4"
+                        data-action-template="{{ route('kategori.update', ':id') }}">
+                        @csrf
+                        @method('PUT')
+
+                        <div>
+                            <label>Tipe</label>
+                            <input type="text" name="tipe" id="edit_tipe" class="w-full border rounded-xl p-2.5"
+                                required>
+                        </div>
+
+                        <div>
+                            <label>Harga</label>
+                            <input type="number" name="harga" id="edit_harga" class="w-full border rounded-xl p-2.5"
+                                required>
+                        </div>
+
+                        <div>
+                            <label>Deskripsi</label>
+                            <textarea name="deskripsi" id="edit_deskripsi" class="w-full border rounded-xl p-2.5"></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full bg-indigo-600 text-white rounded-xl py-2.5">
+                            Update
+                        </button>
+                    </form>
+                </div>
+
             </div>
         </div>
     </div>
+
 @endsection
+
+@push('scripts')
+    <script>
+        function setEditData(button) {
+            let id = button.getAttribute('data-id');
+            let tipe = button.getAttribute('data-tipe');
+            let harga = button.getAttribute('data-harga');
+            let deskripsi = button.getAttribute('data-deskripsi');
+
+            document.getElementById('edit_tipe').value = tipe;
+            document.getElementById('edit_harga').value = harga;
+            document.getElementById('edit_deskripsi').value = deskripsi;
+
+            let template = document.getElementById('editForm')
+                .getAttribute('data-action-template');
+
+            document.getElementById('editForm').action =
+                template.replace(':id', id);
+        }
+    </script>
+@endpush
