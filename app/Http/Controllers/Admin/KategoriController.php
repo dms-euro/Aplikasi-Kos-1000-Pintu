@@ -16,7 +16,8 @@ class KategoriController
         $JumlahTipe = Tipe_kamar::count();
         $JumlahKamar = Kamar::count();
         $kategori = Tipe_kamar::withCount('kamar')->get();
-        return view('admin.kategori', compact('kategori', 'JumlahTipe', 'JumlahKamar'));
+         $TipeTermahal = Tipe_kamar::orderBy('harga', 'desc')->first();
+        return view('admin.kategori', compact('kategori', 'JumlahTipe', 'JumlahKamar', 'TipeTermahal'));
     }
 
     /**
@@ -74,7 +75,7 @@ class KategoriController
 
         $tipe->update($validated);
 
-        return redirect()->back()->with('success', 'Tipe Kamar Bru Diedite');
+        return redirect()->back()->with('success', 'Tipe Kamar Diedite');
     }
 
     /**

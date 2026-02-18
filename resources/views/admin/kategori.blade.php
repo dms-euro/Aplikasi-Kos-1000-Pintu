@@ -20,7 +20,8 @@
                 </div>
                 <div>
                     <p class="text-xs text-emerald-500">Tipe termahal</p>
-                    <p class="text-lg font-semibold text-gray-800" id="termahal">-</p>
+                    <p class="text-lg font-semibold text-gray-800" id="termahal">Rp
+                        {{ isset($TipeTermahal) ? number_format($TipeTermahal->harga, 0, ',', '.') : '-' }}</p>
                 </div>
             </div>
             <div class="bg-white rounded-xl border border-indigo-100 p-4 flex items-center gap-3">
@@ -63,7 +64,7 @@
                     <tbody class="divide-y divide-indigo-100">
                         @forelse($kategori as $item)
                             <tr class="hover:bg-indigo-50/40 transition">
-                                <td class="px-6 py-3">{{ $item->id }}</td>
+                                <td class="px-6 py-3">{{ $loop->iteration }}</td>
                                 <td class="px-6 py-3">{{ $item->tipe }}</td>
                                 <td class="px-6 py-3">Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
                                 <td class="px-6 py-3">{{ $item->deskripsi }}</td>

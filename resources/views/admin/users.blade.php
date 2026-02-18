@@ -43,7 +43,7 @@
                     <tbody class="divide-y divide-gray-200 bg-white">
                         @forelse($user as $item)
                             <tr class="hover:bg-indigo-50/50 transition-colors duration-150 ease-in-out">
-                                <td class="px-6 py-4 text-gray-600 font-mono text-sm">#{{ $item->id }}</td>
+                                <td class="px-6 py-4 text-gray-600 font-mono text-sm">{{ $loop->iteration }}</td>
                                 <td class="px-6 py-4 font-medium text-gray-800">{{ $item->nama }}</td>
                                 <td class="px-6 py-4 text-gray-600">{{ $item->email }}</td>
                                 <td class="px-6 py-4">
