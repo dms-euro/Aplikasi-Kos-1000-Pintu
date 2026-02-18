@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Kamar;
 use App\Models\Tipe_kamar;
 use Illuminate\Http\Request;
 
@@ -12,8 +13,10 @@ class KategoriController
      */
     public function index()
     {
-        $kategori = Tipe_kamar::all();
-        return view('admin.kategori', compact('kategori'));
+        $JumlahTipe = Tipe_kamar::count();
+        $JumlahKamar = Kamar::count();
+        $kategori = Tipe_kamar::withCount('kamar')->get();
+        return view('admin.kategori', compact('kategori', 'JumlahTipe', 'JumlahKamar'));
     }
 
     /**

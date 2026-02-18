@@ -7,11 +7,11 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div class="bg-white rounded-xl border border-indigo-100 p-4 flex items-center gap-3">
                 <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
-                    <i class='bx bx-bed text-xl'></i>
+                    <i class='bx bx-home text-xl'></i>
                 </div>
                 <div>
-                    <p class="text-xs text-indigo-500">Rata-rata harga</p>
-                    <p class="text-lg font-semibold text-gray-800" id="avgHarga">Rp 0</p>
+                    <p class="text-xs text-indigo-500">Jumlah Tipe Kamar</p>
+                    <p class="text-lg font-semibold text-gray-800" id="avgHarga">{{ $JumlahTipe }}</p>
                 </div>
             </div>
             <div class="bg-white rounded-xl border border-indigo-100 p-4 flex items-center gap-3">
@@ -25,11 +25,11 @@
             </div>
             <div class="bg-white rounded-xl border border-indigo-100 p-4 flex items-center gap-3">
                 <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600">
-                    <i class='bx bx-home text-xl'></i>
+                    <i class='bx bx-bed text-xl'></i>
                 </div>
                 <div>
                     <p class="text-xs text-amber-500">Total kamar</p>
-                    <p class="text-lg font-semibold text-gray-800" id="totalKamar">0</p>
+                    <p class="text-lg font-semibold text-gray-800" id="totalKamar">{{ $JumlahKamar }}</p>
                 </div>
             </div>
         </div>
@@ -67,7 +67,7 @@
                                 <td class="px-6 py-3">{{ $item->tipe }}</td>
                                 <td class="px-6 py-3">Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
                                 <td class="px-6 py-3">{{ $item->deskripsi }}</td>
-                                <td class="px-6 py-3">{{ $item->jumlah_kamar }}</td>
+                                <td class="px-6 py-3">{{ $item->kamar_count }}</td>
                                 <td class="px-6 py-3">
                                     <div class="flex gap-2">
                                         <button
@@ -76,8 +76,10 @@
                                             data-id="{{ $item->id }}" data-tipe="{{ $item->tipe }}"
                                             data-harga="{{ $item->harga }}" data-deskripsi="{{ $item->deskripsi }}"
                                             onclick="setEditData(this)">
-                                            <i class='bx bx-edit-alt text-lg'></i>
-                                            Edit
+                                            <i class='bx bx-edit-alt text-lg  text-amber-500'></i>
+                                            <div class="text-amber-500">
+                                                Edit
+                                            </div>
                                         </button>
 
                                         <form id="delete-form-{{ $item->id }}"
