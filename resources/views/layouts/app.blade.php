@@ -27,7 +27,13 @@
 <body class="bg-indigo-50/20">
 
     <div class="flex h-screen overflow-hidden">
-        @include('layouts.sidebar')
+        @if (auth()->user()->role === 'owner')
+            @include('layouts.sidebar-owner')
+        @endif
+
+        @if (auth()->user()->role === 'staf')
+            @include('layouts.sidebar-staf')
+        @endif
 
         <!-- MAIN CONTENT -->
         <main class="flex-1 overflow-y-auto bg-white/70 backdrop-blur-sm">

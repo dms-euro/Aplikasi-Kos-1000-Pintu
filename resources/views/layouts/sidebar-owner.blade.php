@@ -6,7 +6,7 @@
                 <i class='bx bx-home-alt-2 text-white text-lg'></i>
             </div>
             <span class="text-xl font-semibold text-gray-800">
-                Kos<span class="text-indigo-600">an</span>
+                Bapak<span class="text-indigo-600">Kos</span>
             </span>
             <span class="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full ml-1">
                 {{ auth()->user()->role }}
@@ -82,7 +82,7 @@
             </p>
             <p class="text-xs text-indigo-500 flex items-center gap-1">
                 <i class='bx bx-crown text-xs'></i>
-                {{ auth()->user()->role }}
+                {{ auth()->user()->role }}  
             </p>
         </div>
     </div>

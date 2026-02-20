@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\DashboardCpntroller;
 use App\Http\Controllers\Admin\KamarController;
 use App\Http\Controllers\Admin\KategoriController;
 use App\Http\Controllers\Staf\DashboardController;
+use App\Http\Controllers\Staf\PenghuniController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -29,6 +30,7 @@ Route::middleware(['auth', 'role:owner'])->group(function () {
 
 Route::middleware(['auth', 'role:staf'])->group(function () {
     Route::get('/dashboard/staf', [DashboardController::class, 'index'])->name('dashboard.staf');
+    Route::get('/penghuni/staf', [PenghuniController::class, 'index'])->name('penghuni.index');
 });
 
 Route::middleware(['auth', 'role:owner,staf'])->group(function(){
