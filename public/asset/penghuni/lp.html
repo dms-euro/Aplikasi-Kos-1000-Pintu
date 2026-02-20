@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kosan优雅 · Cari & Booking Kamar Kos</title>
+    <!-- Tailwind CDN v4 -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            scroll-behavior: smooth;
+        }
+        .hero-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- ========== NAVBAR ========== -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-emerald-500 flex items-center justify-center shadow-sm">
+                        <i class='bx bx-home-alt-2 text-white text-lg'></i>
+                    </div>
+                    <span class="text-xl font-semibold text-gray-800">Kos<span class="text-indigo-600">an</span></span>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#beranda" class="text-gray-700 hover:text-indigo-600 transition">Beranda</a>
+                    <a href="#tentang" class="text-gray-700 hover:text-indigo-600 transition">Tentang</a>
+                    <a href="#kamar" class="text-gray-700 hover:text-indigo-600 transition">Kamar</a>
+                    <a href="#fasilitas" class="text-gray-700 hover:text-indigo-600 transition">Fasilitas</a>
+                    <a href="#kontak" class="text-gray-700 hover:text-indigo-600 transition">Kontak</a>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex items-center gap-3">
+                    <a href="login.html" class="text-indigo-600 hover:text-indigo-700 font-medium px-4 py-2 rounded-lg hover:bg-indigo-50 transition">Login</a>
+                    <a href="register.html" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition shadow-md hidden md:block">Daftar</a>
+
+                    <!-- Mobile Menu Button -->
+                    <button id="mobileMenuBtn" class="md:hidden text-gray-700 hover:text-indigo-600">
+                        <i class='bx bx-menu text-2xl'></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (hidden by default) -->
+        <div id="mobileMenu" class="hidden md:hidden bg-white border-t border-gray-200 py-4 px-4">
+            <div class="flex flex-col space-y-3">
+                <a href="#beranda" class="text-gray-700 hover:text-indigo-600 py-2">Beranda</a>
+                <a href="#tentang" class="text-gray-700 hover:text-indigo-600 py-2">Tentang</a>
+                <a href="#kamar" class="text-gray-700 hover:text-indigo-600 py-2">Kamar</a>
+                <a href="#fasilitas" class="text-gray-700 hover:text-indigo-600 py-2">Fasilitas</a>
+                <a href="#kontak" class="text-gray-700 hover:text-indigo-600 py-2">Kontak</a>
+                <a href="register.html" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium text-center">Daftar</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ========== HERO SECTION ========== -->
+    <section id="beranda" class="hero-gradient text-white py-20 md:py-28">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div data-aos="fade-right">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+                        Temukan Kamar Kos <span class="text-yellow-300">Impianmu</span>
+                    </h1>
+                    <p class="text-lg md:text-xl mb-8 text-indigo-100">
+                        Ribuan kamar kos tersedia dengan berbagai pilihan tipe, harga terjangkau, dan fasilitas lengkap. Cari dan booking sekarang!
+                    </p>
+
+                    <!-- Search Box -->
+                    <div class="bg-white rounded-2xl p-4 shadow-2xl">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="relative">
+                                <i class='bx bx-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400'></i>
+                                <input type="text" placeholder="Cari lokasi..." class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                            </div>
+                            <div class="relative">
+                                <i class='bx bx-calendar absolute left-3 top-1/2 -translate-y-1/2 text-gray-400'></i>
+                                <select class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent appearance-none">
+                                    <option>Tipe Kamar</option>
+                                    <option>Standar</option>
+                                    <option>Premium</option>
+                                    <option>VIP</option>
+                                    <option>Deluxe</option>
+                                </select>
+                            </div>
+                            <button class="bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-6 rounded-xl font-semibold transition transform hover:scale-105">
+                                Cari Kamar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="flex gap-8 mt-8">
+                        <div>
+                            <p class="text-2xl font-bold">500+</p>
+                            <p class="text-indigo-200">Kamar Tersedia</p>
+                        </div>
+                        <div>
+                            <p class="text-2xl font-bold">300+</p>
+                            <p class="text-indigo-200">Penghuni Aktif</p>
+                        </div>
+                        <div>
+                            <p class="text-2xl font-bold">50+</p>
+                            <p class="text-indigo-200">Lokasi Strategis</p>
+                        </div>
+                    </div>
+                </div>
+                <div data-aos="fade-left" class="hidden md:block">
+                    <img src="https://placehold.co/600x400/4f46e5/ffffff?text=Kosan+Elegant" alt="Hero Image" class="rounded-2xl shadow-2xl">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== TENTANG KAMI ========== -->
+    <section id="tentang" class="py-20 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Tentang <span class="text-indigo-600">Kosan优雅</span></h2>
+                <p class="text-gray-600 text-lg">Platform penyewaan kamar kos terpercaya dengan ribuan pilihan kamar berkualitas di lokasi strategis.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center p-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="w-16 h-16 bg-indigo-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <i class='bx bx-check-shield text-3xl text-indigo-600'></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Terpercaya</h3>
+                    <p class="text-gray-600">Ribuan penghuni telah mempercayakan tempat tinggal mereka kepada kami.</p>
+                </div>
+                <div class="text-center p-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="w-16 h-16 bg-indigo-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <i class='bx bx-map text-3xl text-indigo-600'></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Lokasi Strategis</h3>
+                    <p class="text-gray-600">Dekat dengan kampus, perkantoran, pusat perbelanjaan, dan transportasi umum.</p>
+                </div>
+                <div class="text-center p-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="w-16 h-16 bg-indigo-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <i class='bx bx-wifi text-3xl text-indigo-600'></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Fasilitas Lengkap</h3>
+                    <p class="text-gray-600">WiFi, AC, kamar mandi dalam, dapur bersama, dan keamanan 24 jam.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== DAFTAR KAMAR (CARI & BOOKING) ========== -->
+    <section id="kamar" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Cari & <span class="text-indigo-600">Booking Kamar</span></h2>
+                <p class="text-gray-600 text-lg">Temukan kamar kos impian Anda dengan berbagai pilihan tipe dan harga.</p>
+            </div>
+
+            <!-- Filter Section -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 mb-10" data-aos="fade-up">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Lokasi</label>
+                        <select id="filterLokasi" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500">
+                            <option>Semua Lokasi</option>
+                            <option>Jakarta</option>
+                            <option>Bandung</option>
+                            <option>Surabaya</option>
+                            <option>Yogyakarta</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Tipe Kamar</label>
+                        <select id="filterTipe" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500">
+                            <option>Semua Tipe</option>
+                            <option>Standar</option>
+                            <option>Premium</option>
+                            <option>VIP</option>
+                            <option>Deluxe</option>
+                            <option>Ekonomi</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Harga Maksimal</label>
+                        <select id="filterHarga" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500">
+                            <option>Semua Harga</option>
+                            <option value="1000000">< Rp 1 Juta</option>
+                            <option value="1500000">< Rp 1.5 Juta</option>
+                            <option value="2000000">< Rp 2 Juta</option>
+                            <option value="2500000">< Rp 2.5 Juta</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                        <select id="filterStatus" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500">
+                            <option>Semua Status</option>
+                            <option value="tersedia">Tersedia</option>
+                            <option value="terisi">Terisi</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex justify-end mt-4">
+                    <button onclick="applyFilter()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-xl font-medium transition">
+                        <i class='bx bx-filter-alt mr-2'></i>Terapkan Filter
+                    </button>
+                </div>
+            </div>
+
+            <!-- Kamar Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="kamarGrid">
+                <!-- Kamar items akan diisi via JavaScript -->
+            </div>
+
+            <!-- Load More Button -->
+            <div class="text-center mt-12">
+                <button class="bg-white border border-indigo-600 text-indigo-600 hover:bg-indigo-50 px-8 py-3 rounded-xl font-medium transition">
+                    Muat Lebih Banyak
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FASILITAS ========== -->
+    <section id="fasilitas" class="py-20 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Fasilitas <span class="text-indigo-600">Kami</span></h2>
+                <p class="text-gray-600 text-lg">Kenyamanan Anda adalah prioritas utama kami.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="p-6 border border-gray-200 rounded-2xl hover:shadow-lg transition" data-aos="fade-up" data-aos-delay="100">
+                    <i class='bx bx-wifi text-4xl text-indigo-600 mb-4'></i>
+                    <h3 class="text-lg font-semibold mb-2">WiFi Cepat</h3>
+                    <p class="text-gray-600">Koneksi internet stabil untuk bekerja dan belajar.</p>
+                </div>
+                <div class="p-6 border border-gray-200 rounded-2xl hover:shadow-lg transition" data-aos="fade-up" data-aos-delay="150">
+                    <i class='bx bx-shield-quarter text-4xl text-indigo-600 mb-4'></i>
+                    <h3 class="text-lg font-semibold mb-2">Keamanan 24 Jam</h3>
+                    <p class="text-gray-600">CCTV dan satpam siap menjaga keamanan Anda.</p>
+                </div>
+                <div class="p-6 border border-gray-200 rounded-2xl hover:shadow-lg transition" data-aos="fade-up" data-aos-delay="200">
+                    <i class='bx bx-car text-4xl text-indigo-600 mb-4'></i>
+                    <h3 class="text-lg font-semibold mb-2">Parkir Luas</h3>
+                    <p class="text-gray-600">Area parkir yang aman untuk motor dan mobil.</p>
+                </div>
+                <div class="p-6 border border-gray-200 rounded-2xl hover:shadow-lg transition" data-aos="fade-up" data-aos-delay="250">
+                    <i class='bx bx-water text-4xl text-indigo-600 mb-4'></i>
+                    <h3 class="text-lg font-semibold mb-2">Air Bersih 24 Jam</h3>
+                    <p class="text-gray-600">Pasokan air bersih lancar tanpa henti.</p>
+                </div>
+                <div class="p-6 border border-gray-200 rounded-2xl hover:shadow-lg transition" data-aos="fade-up" data-aos-delay="300">
+                    <i class='bx bx-wind text-4xl text-indigo-600 mb-4'></i>
+                    <h3 class="text-lg font-semibold mb-2">AC</h3>
+                    <p class="text-gray-600">Kamar dengan AC untuk kenyamanan maksimal.</p>
+                </div>
+                <div class="p-6 border border-gray-200 rounded-2xl hover:shadow-lg transition" data-aos="fade-up" data-aos-delay="350">
+                    <i class='bx bx-fridge text-4xl text-indigo-600 mb-4'></i>
+                    <h3 class="text-lg font-semibold mb-2">Kulkas</h3>
+                    <p class="text-gray-600">Fasilitas kulkas di beberapa tipe kamar.</p>
+                </div>
+                <div class="p-6 border border-gray-200 rounded-2xl hover:shadow-lg transition" data-aos="fade-up" data-aos-delay="400">
+                    <i class='bx bx-bath text-4xl text-indigo-600 mb-4'></i>
+                    <h3 class="text-lg font-semibold mb-2">Kamar Mandi Dalam</h3>
+                    <p class="text-gray-600">Kamar mandi pribadi di dalam kamar.</p>
+                </div>
+                <div class="p-6 border border-gray-200 rounded-2xl hover:shadow-lg transition" data-aos="fade-up" data-aos-delay="450">
+                    <i class='bx bx-trash text-4xl text-indigo-600 mb-4'></i>
+                    <h3 class="text-lg font-semibold mb-2">Kebersihan</h3>
+                    <p class="text-gray-600">Petugas kebersihan setiap hari.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== TESTIMONIAL ========== -->
+    <section class="py-20 bg-indigo-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Apa Kata <span class="text-indigo-600">Mereka</span></h2>
+                <p class="text-gray-600 text-lg">Testimoni dari para penghuni yang telah tinggal di Kosan优雅.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-2xl shadow-lg" data-aos="fade-up" data-aos-delay="100">
+                    <div class="flex items-center gap-2 mb-4">
+                        <i class='bx bxs-star text-yellow-400'></i>
+                        <i class='bx bxs-star text-yellow-400'></i>
+                        <i class='bx bxs-star text-yellow-400'></i>
+                        <i class='bx bxs-star text-yellow-400'></i>
+                        <i class='bx bxs-star text-yellow-400'></i>
+                    </div>
+                    <p class="text-gray-700 mb-4">"Tempatnya nyaman, bersih, dan lokasi strategis. Sangat recommended untuk mahasiswa dan pekerja."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-indigo-200 flex items-center justify-center text-indigo-700 font-bold">A</div>
+                        <div>
+                            <p class="font-semibold">Ahmad Fauzi</p>
+                            <p class="text-xs text-gray-500">Penghuni VIP-01</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-lg" data-aos="fade-up" data-aos-delay="200">
+                    <div class="flex items-center gap-2 mb-4">
+                        <i class='bx bxs-star text-yellow-400'></i>
+                        <i class='bx bxs-star text-yellow-400'></i>
+                        <i class='bx bxs-star text-yellow-400'></i>
+                        <i class='bx bxs-star text-yellow-400'></i>
+                        <i class='bx bxs-star text-yellow-400'></i>
+                    </div>
+                    <p class="text-gray-700 mb-4">"Fasilitas lengkap, WiFi kencang, dan owner sangat ramah. Pasti akan perpanjang kontrak."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-emerald-200 flex items-center justify-center text-emerald-700 font-bold">S</div>
+                        <div>
+                            <p class="font-semibold">Siti Aminah</p>
+                            <p class="text-xs text-gray-500">Penghuni PRM-01</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-lg" data-aos="fade-up" data-aos-delay="300">
+                    <div class="flex items-center gap-2 mb-4">
+                        <i class='bx bxs-star text-yellow-400'></i>
+                        <i class='bx bxs-star text-yellow-400'></i>
+                        <i class='bx bxs-star text-yellow-400'></i>
+                        <i class='bx bxs-star text-yellow-400'></i>
+                        <i class='bx bxs-star-half text-yellow-400'></i>
+                    </div>
+                    <p class="text-gray-700 mb-4">"Harga terjangkau dengan kualitas bagus. Proses booking mudah dan cepat."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-amber-200 flex items-center justify-center text-amber-700 font-bold">R</div>
+                        <div>
+                            <p class="font-semibold">Rizki Pratama</p>
+                            <p class="text-xs text-gray-500">Penghuni EKO-02</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== BOOKING MODAL ========== -->
+    <div id="bookingModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-2xl max-w-md w-full mx-4 p-6" data-aos="zoom-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-gray-800">Booking Kamar</h3>
+                <button onclick="closeBookingModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class='bx bx-x text-2xl'></i>
+                </button>
+            </div>
+            <div id="bookingDetail" class="mb-4 p-4 bg-indigo-50 rounded-xl">
+                <!-- akan diisi javascript -->
+            </div>
+            <form id="bookingForm" onsubmit="handleBooking(event)">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap</label>
+                        <input type="text" id="bookingNama" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                        <input type="email" id="bookingEmail" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">No. Telepon</label>
+                        <input type="text" id="bookingTelepon" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Masuk</label>
+                        <input type="date" id="bookingTglMasuk" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Durasi Sewa</label>
+                        <select id="bookingDurasi" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500" required>
+                            <option value="3">3 Bulan</option>
+                            <option value="6">6 Bulan</option>
+                            <option value="12">12 Bulan</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-medium transition">
+                        Konfirmasi Booking
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========== KONTAK & FOOTER ========== -->
+    <section id="kontak" class="py-20 bg-gray-900 text-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-emerald-500 flex items-center justify-center">
+                            <i class='bx bx-home-alt-2 text-white text-lg'></i>
+                        </div>
+                        <span class="text-xl font-semibold">Kos<span class="text-indigo-400">an</span></span>
+                    </div>
+                    <p class="text-gray-400 text-sm">Platform penyewaan kamar kos terpercaya dengan ribuan pilihan kamar berkualitas.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-lg mb-4">Tautan Cepat</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#beranda" class="hover:text-indigo-400 transition">Beranda</a></li>
+                        <li><a href="#tentang" class="hover:text-indigo-400 transition">Tentang</a></li>
+                        <li><a href="#kamar" class="hover:text-indigo-400 transition">Kamar</a></li>
+                        <li><a href="#fasilitas" class="hover:text-indigo-400 transition">Fasilitas</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-lg mb-4">Kontak</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-center gap-2"><i class='bx bx-phone text-indigo-400'></i> 0812-3456-7890</li>
+                        <li class="flex items-center gap-2"><i class='bx bx-envelope text-indigo-400'></i> info@kosan.id</li>
+                        <li class="flex items-center gap-2"><i class='bx bx-map text-indigo-400'></i> Jakarta, Indonesia</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-lg mb-4">Ikuti Kami</h4>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-indigo-600 transition"><i class='bx bxl-facebook'></i></a>
+                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-indigo-600 transition"><i class='bx bxl-instagram'></i></a>
+                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-indigo-600 transition"><i class='bx bxl-twitter'></i></a>
+                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-indigo-600 transition"><i class='bx bxl-whatsapp'></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400 text-sm">
+                <p>© 2026 Kosan优雅. All rights reserved.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- AOS Script -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- JavaScript -->
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+
+        // Mobile Menu Toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Data Kamar
+        const kamarData = [
+            { id: 1, nama: 'Kamar Standar A', lokasi: 'Jakarta', tipe: 'Standar', harga: 850000, fasilitas: ['Kasur', 'Lemari', 'Meja', 'WiFi'], status: 'tersedia', gambar: 'https://placehold.co/400x300/4f46e5/ffffff?text=Standar' },
+            { id: 2, nama: 'Kamar Standar B', lokasi: 'Bandung', tipe: 'Standar', harga: 900000, fasilitas: ['Kasur', 'Lemari', 'AC', 'WiFi'], status: 'tersedia', gambar: 'https://placehold.co/400x300/4f46e5/ffffff?text=Standar' },
+            { id: 3, nama: 'Kamar Premium A', lokasi: 'Jakarta', tipe: 'Premium', harga: 1250000, fasilitas: ['Kasur', 'Lemari', 'AC', 'TV', 'WiFi', 'Kamar Mandi Dalam'], status: 'tersedia', gambar: 'https://placehold.co/400x300/8b5cf6/ffffff?text=Premium' },
+            { id: 4, nama: 'Kamar Premium B', lokasi: 'Surabaya', tipe: 'Premium', harga: 1350000, fasilitas: ['Kasur', 'Lemari', 'AC', 'TV', 'Kulkas', 'WiFi', 'Kamar Mandi Dalam'], status: 'tersedia', gambar: 'https://placehold.co/400x300/8b5cf6/ffffff?text=Premium' },
+            { id: 5, nama: 'Kamar VIP', lokasi: 'Jakarta', tipe: 'VIP', harga: 1750000, fasilitas: ['King Size Bed', 'Lemari', 'AC', 'TV 40"', 'Kulkas', 'Sofa', 'WiFi', 'Kamar Mandi Dalam'], status: 'tersedia', gambar: 'https://placehold.co/400x300/d946ef/ffffff?text=VIP' },
+            { id: 6, nama: 'Kamar Deluxe', lokasi: 'Yogyakarta', tipe: 'Deluxe', harga: 1500000, fasilitas: ['Kasur Queen', 'Lemari', 'AC', 'TV', 'Kulkas', 'WiFi', 'Kamar Mandi Dalam', 'Balkon'], status: 'tersedia', gambar: 'https://placehold.co/400x300/ec4899/ffffff?text=Deluxe' },
+            { id: 7, nama: 'Kamar Ekonomi A', lokasi: 'Bandung', tipe: 'Ekonomi', harga: 650000, fasilitas: ['Kasur', 'Lemari', 'Kipas Angin', 'WiFi'], status: 'tersedia', gambar: 'https://placehold.co/400x300/10b981/ffffff?text=Ekonomi' },
+            { id: 8, nama: 'Kamar Ekonomi B', lokasi: 'Surabaya', tipe: 'Ekonomi', harga: 700000, fasilitas: ['Kasur', 'Lemari', 'Kipas Angin', 'WiFi'], status: 'tersedia', gambar: 'https://placehold.co/400x300/10b981/ffffff?text=Ekonomi' },
+            { id: 9, nama: 'Kamar Superior', lokasi: 'Yogyakarta', tipe: 'Superior', harga: 1100000, fasilitas: ['Kasur', 'Lemari', 'AC', 'Meja Kerja', 'WiFi', 'Kamar Mandi Dalam'], status: 'tersedia', gambar: 'https://placehold.co/400x300/f97316/ffffff?text=Superior' }
+        ];
+
+        // Render Kamar
+        function renderKamar(data) {
+            const grid = document.getElementById('kamarGrid');
+            grid.innerHTML = '';
+
+            data.forEach(kamar => {
+                const statusBadge = kamar.status === 'tersedia'
+                    ? '<span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs">Tersedia</span>'
+                    : '<span class="bg-amber-100 text-amber-700 px-2 py-1 rounded-full text-xs">Terisi</span>';
+
+                const fasilitasIcons = {
+                    'AC': 'bx-wind',
+                    'WiFi': 'bx-wifi',
+                    'TV': 'bx-tv',
+                    'Kulkas': 'bx-fridge',
+                    'Kamar Mandi Dalam': 'bx-bath',
+                    'Kasur': 'bx-bed',
+                    'Lemari': 'bx-closet',
+                    'Meja': 'bx-desk',
+                    'Sofa': 'bx-chair',
+                    'Balkon': 'bx-building-house'
+                };
+
+                const fasilitasHtml = kamar.fasilitas.slice(0, 3).map(f =>
+                    `<i class='bx ${fasilitasIcons[f] || 'bx-check'} text-indigo-600' title="${f}"></i>`
+                ).join('');
+
+                grid.innerHTML += `
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover" data-aos="fade-up">
+                        <img src="${kamar.gambar}" alt="${kamar.nama}" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-xl font-semibold text-gray-800">${kamar.nama}</h3>
+                                ${statusBadge}
+                            </div>
+                            <p class="text-gray-600 text-sm mb-2"><i class='bx bx-map mr-1 text-indigo-600'></i>${kamar.lokasi}</p>
+                            <p class="text-2xl font-bold text-indigo-600 mb-3">Rp ${kamar.harga.toLocaleString('id-ID')}<span class="text-sm font-normal text-gray-500">/bulan</span></p>
+                            <div class="flex gap-2 mb-4">
+                                ${fasilitasHtml}
+                                ${kamar.fasilitas.length > 3 ? `<span class="text-xs text-gray-500">+${kamar.fasilitas.length - 3}</span>` : ''}
+                            </div>
+                            <button onclick="openBookingModal(${kamar.id})" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-xl font-medium transition ${kamar.status !== 'tersedia' ? 'opacity-50 cursor-not-allowed' : ''}" ${kamar.status !== 'tersedia' ? 'disabled' : ''}>
+                                Booking Sekarang
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Filter Function
+        function applyFilter() {
+            const lokasi = document.getElementById('filterLokasi').value;
+            const tipe = document.getElementById('filterTipe').value;
+            const harga = document.getElementById('filterHarga').value;
+            const status = document.getElementById('filterStatus').value;
+
+            let filtered = kamarData;
+
+            if (lokasi !== 'Semua Lokasi') {
+                filtered = filtered.filter(k => k.lokasi === lokasi);
+            }
+            if (tipe !== 'Semua Tipe') {
+                filtered = filtered.filter(k => k.tipe === tipe);
+            }
+            if (harga !== 'Semua Harga') {
+                filtered = filtered.filter(k => k.harga <= parseInt(harga));
+            }
+            if (status !== 'Semua Status') {
+                filtered = filtered.filter(k => k.status === status);
+            }
+
+            renderKamar(filtered);
+        }
+
+        // Booking Modal
+        let currentKamarId = null;
+
+        function openBookingModal(kamarId) {
+            const kamar = kamarData.find(k => k.id === kamarId);
+            if (!kamar) return;
+
+            currentKamarId = kamarId;
+
+            document.getElementById('bookingDetail').innerHTML = `
+                <p class="font-semibold text-gray-800">${kamar.nama}</p>
+                <p class="text-indigo-600 font-bold">Rp ${kamar.harga.toLocaleString('id-ID')}/bulan</p>
+                <p class="text-sm text-gray-600"><i class='bx bx-map mr-1'></i>${kamar.lokasi}</p>
+            `;
+
+            document.getElementById('bookingModal').style.display = 'flex';
+        }
+
+        function closeBookingModal() {
+            document.getElementById('bookingModal').style.display = 'none';
+            document.getElementById('bookingForm').reset();
+        }
+
+        function handleBooking(e) {
+            e.preventDefault();
+
+            const nama = document.getElementById('bookingNama').value;
+            const email = document.getElementById('bookingEmail').value;
+            const telepon = document.getElementById('bookingTelepon').value;
+            const tglMasuk = document.getElementById('bookingTglMasuk').value;
+            const durasi = document.getElementById('bookingDurasi').value;
+
+            const kamar = kamarData.find(k => k.id === currentKamarId);
+
+            alert(`Booking berhasil!\n\nKamar: ${kamar.nama}\nNama: ${nama}\nEmail: ${email}\nTelepon: ${telepon}\nTanggal Masuk: ${tglMasuk}\nDurasi: ${durasi} bulan\n\nSilakan lakukan pembayaran DP untuk konfirmasi booking.`);
+
+            closeBookingModal();
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('bookingModal');
+            if (event.target === modal) {
+                closeBookingModal();
+            }
+        }
+
+        // Initial render
+        renderKamar(kamarData);
+    </script>
+
+</body>
+</html>

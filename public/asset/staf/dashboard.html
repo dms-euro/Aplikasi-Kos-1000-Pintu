@@ -3,888 +3,753 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Staff Dashboard · Kosan优雅</title>
+    <title>Kosan优雅 · Cari & Booking Kos Impianmu</title>
     <!-- Tailwind CDN v4 -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- Boxicons -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <!-- Flowbite CSS & JS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
-    <!-- Chart.js untuk grafik -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Swiper Slider -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <style>
-        body { font-family: 'Inter', system-ui, sans-serif; background-color: #f8fafc; }
-        @media print {
-            .no-print { display: none; }
-            .print-only { display: block; }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            scroll-behavior: smooth;
+        }
+        .hero-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .swiper-pagination-bullet-active {
+            background: #4f46e5 !important;
+        }
+        .filter-scroll {
+            overflow-x: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #4f46e5 #e0e7ff;
+        }
+        .filter-scroll::-webkit-scrollbar {
+            height: 6px;
+        }
+        .filter-scroll::-webkit-scrollbar-track {
+            background: #e0e7ff;
+            border-radius: 10px;
+        }
+        .filter-scroll::-webkit-scrollbar-thumb {
+            background: #4f46e5;
+            border-radius: 10px;
         }
     </style>
 </head>
-<body class="bg-indigo-50/20">
+<body class="bg-gray-50">
 
-<div class="flex h-screen overflow-hidden">
-    <!-- SIDEBAR STAFF (akses terbatas sesuai acuan) -->
-    <aside class="w-64 bg-white shadow-lg flex flex-col justify-between border-r border-indigo-100 no-print">
-        <div class="py-6 px-4">
-            <div class="flex items-center gap-2 mb-8 px-2">
-                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-emerald-500 flex items-center justify-center shadow-sm">
-                    <i class='bx bx-home-alt-2 text-white text-lg'></i>
+    <!-- ========== NAVBAR ========== -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-emerald-500 flex items-center justify-center shadow-sm">
+                        <i class='bx bx-home-alt-2 text-white text-lg'></i>
+                    </div>
+                    <span class="text-xl font-semibold text-gray-800">Kos<span class="text-indigo-600">an</span></span>
+                    <span class="hidden md:inline-block ml-2 text-xs bg-indigo-100 text-indigo-700 px-2 py-1 rounded-full">#NyamanSepertiRumah</span>
                 </div>
-                <span class="text-xl font-semibold text-gray-800">Kos<span class="text-indigo-600">an</span></span>
-                <span class="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full ml-1">staff</span>
-            </div>
-            <nav class="space-y-1">
-                <a href="#" onclick="showSection('dashboard'); return false;" class="flex items-center gap-3 px-4 py-3 text-indigo-700 bg-indigo-50 rounded-xl border-l-4 border-indigo-600 font-medium" id="menu-dashboard">
-                    <i class='bx bxs-dashboard text-xl text-indigo-600'></i>
-                    <span>Dashboard</span>
-                </a>
-                <a href="#" onclick="showSection('penghuni'); return false;" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-indigo-50/50 rounded-xl transition group" id="menu-penghuni">
-                    <i class='bx bx-user-plus text-xl text-indigo-400 group-hover:text-indigo-500'></i>
-                    <span>Input Penghuni</span>
-                </a>
-                <a href="#" onclick="showSection('pembayaran'); return false;" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-indigo-50/50 rounded-xl transition group" id="menu-pembayaran">
-                    <i class='bx bx-credit-card text-xl text-emerald-400 group-hover:text-emerald-500'></i>
-                    <span>Input Pembayaran</span>
-                </a>
-                <a href="#" onclick="showSection('kamar'); return false;" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-indigo-50/50 rounded-xl transition group" id="menu-kamar">
-                    <i class='bx bx-bed text-xl text-indigo-400 group-hover:text-indigo-500'></i>
-                    <span>Data Kamar</span>
-                </a>
-                <a href="#" onclick="showSection('laporan'); return false;" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-indigo-50/50 rounded-xl transition group" id="menu-laporan">
-                    <i class='bx bx-file text-xl text-violet-400 group-hover:text-violet-500'></i>
-                    <span>Lihat Laporan</span>
-                </a>
-                <div class="pt-4 mt-2 border-t border-indigo-100"></div>
-                <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-indigo-50/50 rounded-xl transition group">
-                    <i class='bx bx-log-out text-xl text-rose-400 group-hover:text-rose-500'></i>
-                    <span>Logout</span>
-                </a>
-            </nav>
-        </div>
-        <div class="border-t border-indigo-100 p-4 flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-400 to-emerald-400 flex items-center justify-center text-white font-bold shadow-sm">
-                <i class='bx bx-user-circle text-2xl'></i>
-            </div>
-            <div>
-                <p class="text-sm font-medium text-gray-800">Budi Santoso</p>
-                <p class="text-xs text-emerald-500 flex items-center gap-1"><i class='bx bx-badge-check text-xs'></i> staff</p>
+
+                <!-- Search Bar Desktop -->
+                <div class="hidden lg:flex items-center bg-gray-100 rounded-full px-4 py-2 w-96">
+                    <i class='bx bx-search text-gray-400 mr-2'></i>
+                    <input type="text" placeholder="Cari lokasi, nama kos, atau tipe kamar..." class="bg-transparent border-none focus:outline-none w-full text-sm">
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#beranda" class="text-gray-700 hover:text-indigo-600 transition text-sm font-medium">Beranda</a>
+                    <a href="#kamar" class="text-gray-700 hover:text-indigo-600 transition text-sm font-medium">Cari Kos</a>
+                    <a href="#tips" class="text-gray-700 hover:text-indigo-600 transition text-sm font-medium">Tips Ngekos</a>
+                    <a href="#kontak" class="text-gray-700 hover:text-indigo-600 transition text-sm font-medium">Kontak</a>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex items-center gap-2">
+                    <a href="login.html" class="text-indigo-600 hover:text-indigo-700 font-medium px-4 py-2 rounded-lg hover:bg-indigo-50 transition text-sm">Masuk</a>
+                    <a href="register.html" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition shadow-md text-sm hidden md:block">Daftar</a>
+
+                    <!-- Mobile Menu Button -->
+                    <button id="mobileMenuBtn" class="md:hidden text-gray-700 hover:text-indigo-600 p-2">
+                        <i class='bx bx-menu text-2xl'></i>
+                    </button>
+                </div>
             </div>
         </div>
-    </aside>
 
-    <!-- MAIN CONTENT -->
-    <main class="flex-1 overflow-y-auto bg-white/70 backdrop-blur-sm">
-        <!-- top bar -->
-        <header class="bg-white border-b border-indigo-100 py-4 px-6 flex items-center justify-between sticky top-0 z-10 no-print">
-            <div class="flex items-center gap-4">
-                <h1 class="text-2xl font-semibold text-gray-800" id="pageTitle">Dashboard <span class="text-indigo-600">Staff</span></h1>
-                <span class="bg-emerald-100 text-emerald-700 text-sm px-3 py-1 rounded-full flex items-center gap-1"><i class='bx bx-calendar'></i> <span id="currentDate"></span></span>
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-white border-t border-gray-200 py-4 px-4">
+            <div class="flex flex-col space-y-3">
+                <div class="bg-gray-100 rounded-full px-4 py-2 flex items-center mb-2">
+                    <i class='bx bx-search text-gray-400 mr-2'></i>
+                    <input type="text" placeholder="Cari kos..." class="bg-transparent border-none focus:outline-none w-full text-sm">
+                </div>
+                <a href="#beranda" class="text-gray-700 hover:text-indigo-600 py-2">Beranda</a>
+                <a href="#kamar" class="text-gray-700 hover:text-indigo-600 py-2">Cari Kos</a>
+                <a href="#tips" class="text-gray-700 hover:text-indigo-600 py-2">Tips Ngekos</a>
+                <a href="#kontak" class="text-gray-700 hover:text-indigo-600 py-2">Kontak</a>
+                <a href="register.html" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium text-center">Daftar</a>
             </div>
-            <div class="flex items-center gap-4">
-                <div class="relative hidden md:block">
-                    <i class='bx bx-search absolute left-3 top-1/2 -translate-y-1/2 text-indigo-300 text-lg'></i>
-                    <input type="text" id="globalSearch" placeholder="Cari..." class="pl-10 pr-4 py-2 border border-indigo-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 bg-indigo-50/30 w-64">
-                </div>
-                <button class="relative p-2 text-indigo-500 hover:bg-indigo-100 rounded-full">
-                    <i class='bx bx-bell text-2xl'></i>
-                    <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-rose-500 rounded-full border border-white"></span>
-                </button>
-                <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-200 to-emerald-200 flex items-center justify-center text-indigo-700 font-medium border-2 border-white shadow-sm">
-                    <i class='bx bx-user text-xl'></i>
-                </div>
-            </div>
-        </header>
+        </div>
+    </nav>
 
-        <!-- KONTEN UTAMA - SEMUA SECTION DALAM SATU FILE -->
-        <div class="p-6" id="mainContent">
+    <!-- ========== HERO SECTION ========== -->
+    <section class="hero-gradient text-white py-16 md:py-24">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div data-aos="fade-right">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+                        Temukan Kos <span class="text-yellow-300">Idaman</span> dengan Mudah
+                    </h1>
+                    <p class="text-lg md:text-xl mb-8 text-indigo-100">
+                        10.000+ kamar kos tersedia di 50+ kota. Filter sesuai budget dan preferensimu, booking langsung tanpa perantara!
+                    </p>
 
-            <!-- ========== SECTION DASHBOARD ========== -->
-            <div id="dashboardSection">
-                <!-- Statistik Cepat -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
-                    <div class="bg-white rounded-2xl shadow-sm border border-indigo-100 p-5 flex items-center justify-between hover:shadow-md transition">
-                        <div>
-                            <p class="text-sm text-indigo-500 font-medium flex items-center gap-1"><i class='bx bx-group text-indigo-400'></i> Total Penghuni</p>
-                            <p class="text-3xl font-bold text-gray-800" id="totalPenghuni">24</p>
-                            <p class="text-xs text-gray-400 mt-1">Aktif semua</p>
-                        </div>
-                        <div class="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 text-2xl">
-                            <i class='bx bx-group'></i>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-2xl shadow-sm border border-indigo-100 p-5 flex items-center justify-between hover:shadow-md transition">
-                        <div>
-                            <p class="text-sm text-emerald-500 font-medium flex items-center gap-1"><i class='bx bx-bed text-emerald-400'></i> Kamar Terisi</p>
-                            <p class="text-3xl font-bold text-gray-800" id="kamarTerisi">19</p>
-                            <p class="text-xs text-gray-400 mt-1">dari 24 kamar</p>
-                        </div>
-                        <div class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 text-2xl">
-                            <i class='bx bx-bed'></i>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-2xl shadow-sm border border-indigo-100 p-5 flex items-center justify-between hover:shadow-md transition">
-                        <div>
-                            <p class="text-sm text-amber-500 font-medium flex items-center gap-1"><i class='bx bx-error-circle text-amber-400'></i> Tagihan Bulan Ini</p>
-                            <p class="text-3xl font-bold text-gray-800" id="tagihanBulanIni">18</p>
-                            <p class="text-xs text-amber-600 mt-1">3 belum dibayar</p>
-                        </div>
-                        <div class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 text-2xl">
-                            <i class='bx bx-receipt'></i>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-2xl shadow-sm border border-indigo-100 p-5 flex items-center justify-between hover:shadow-md transition">
-                        <div>
-                            <p class="text-sm text-rose-500 font-medium flex items-center gap-1"><i class='bx bx-calendar-check text-rose-400'></i> Check-out Hari Ini</p>
-                            <p class="text-3xl font-bold text-gray-800" id="checkOutHariIni">2</p>
-                            <p class="text-xs text-rose-600 mt-1">Perlu persiapan</p>
-                        </div>
-                        <div class="w-12 h-12 rounded-full bg-rose-100 flex items-center justify-center text-rose-600 text-2xl">
-                            <i class='bx bx-calendar-x'></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Grafik dan Aktivitas -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-                    <!-- Grafik Okupansi -->
-                    <div class="lg:col-span-2 bg-white rounded-2xl border border-indigo-100 p-5 shadow-sm">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="font-semibold text-gray-800 flex items-center gap-2"><i class='bx bx-line-chart text-indigo-500 text-xl'></i> Okupansi 7 Hari Terakhir</h3>
-                            <span class="text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full">rata-rata 79%</span>
-                        </div>
-                        <div class="h-64">
-                            <canvas id="okupansiChart"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- Aktivitas Terkini -->
-                    <div class="bg-white rounded-2xl border border-indigo-100 p-5 shadow-sm">
-                        <h3 class="font-semibold text-gray-800 flex items-center gap-2 mb-4"><i class='bx bx-bell-ring text-amber-500 text-xl'></i> Aktivitas Terkini</h3>
-                        <div class="space-y-4" id="aktivitasList">
-                            <!-- akan diisi javascript -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tabel Penghuni Baru -->
-                <div class="bg-white rounded-2xl border border-indigo-100 shadow-sm overflow-hidden">
-                    <div class="px-6 py-4 border-b border-indigo-100 flex justify-between items-center">
-                        <h3 class="font-semibold text-gray-800 flex items-center gap-2"><i class='bx bx-user-plus text-indigo-500'></i> Penghuni Baru (7 Hari Terakhir)</h3>
-                        <button class="text-xs bg-indigo-50 text-indigo-600 px-4 py-2 rounded-full hover:bg-indigo-100 transition" onclick="showSection('penghuni')">Lihat Semua</button>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm">
-                            <thead class="bg-indigo-50/70 text-indigo-800">
-                                <tr>
-                                    <th class="px-6 py-3 text-left">Nama</th>
-                                    <th class="px-6 py-3 text-left">Kamar</th>
-                                    <th class="px-6 py-3 text-left">Tanggal Masuk</th>
-                                    <th class="px-6 py-3 text-left">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-indigo-100" id="penghuniBaruTable">
-                                <!-- akan diisi javascript -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ========== SECTION INPUT PENGHUNI ========== -->
-            <div id="penghuniSection" class="hidden">
-                <div class="bg-white rounded-2xl border border-indigo-100 shadow-sm overflow-hidden">
-                    <div class="px-6 py-4 border-b border-indigo-100 flex justify-between items-center">
-                        <h3 class="font-semibold text-gray-800 flex items-center gap-2"><i class='bx bx-user-plus text-indigo-500'></i> Form Input Penghuni Baru</h3>
-                    </div>
-                    <div class="p-6">
-                        <form id="formPenghuni" class="space-y-4" onsubmit="simpanPenghuni(event)">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block mb-2 text-sm font-medium text-gray-700">Nama Lengkap</label>
-                                    <input type="text" id="namaPenghuni" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" required>
-                                </div>
-                                <div>
-                                    <label class="block mb-2 text-sm font-medium text-gray-700">NIK</label>
-                                    <input type="text" id="nikPenghuni" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" required>
-                                </div>
-                                <div>
-                                    <label class="block mb-2 text-sm font-medium text-gray-700">Email</label>
-                                    <input type="email" id="emailPenghuni" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" required>
-                                </div>
-                                <div>
-                                    <label class="block mb-2 text-sm font-medium text-gray-700">No. Telepon</label>
-                                    <input type="text" id="teleponPenghuni" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" required>
-                                </div>
-                                <div class="md:col-span-2">
-                                    <label class="block mb-2 text-sm font-medium text-gray-700">Alamat Asal</label>
-                                    <textarea id="alamatPenghuni" rows="2" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" required></textarea>
-                                </div>
-                                <div>
-                                    <label class="block mb-2 text-sm font-medium text-gray-700">Pilih Kamar</label>
-                                    <select id="kamarPenghuni" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" required>
-                                        <option value="" disabled selected>Pilih kamar tersedia</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block mb-2 text-sm font-medium text-gray-700">Tanggal Masuk</label>
-                                    <input type="date" id="tanggalMasuk" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" required>
-                                </div>
+                    <!-- Search Box Hero -->
+                    <div class="bg-white rounded-2xl p-4 shadow-2xl">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                            <div class="relative md:col-span-2">
+                                <i class='bx bx-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400'></i>
+                                <input type="text" id="searchHero" placeholder="Nama kos atau lokasi (Jakarta, Bandung, dll)" class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-800">
                             </div>
-                            <div class="flex gap-3 pt-4">
-                                <button type="submit" class="text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-xl text-sm px-5 py-2.5 text-center transition">Simpan Penghuni</button>
-                                <button type="button" onclick="resetFormPenghuni()" class="text-indigo-600 bg-white border border-indigo-200 hover:bg-indigo-50 focus:ring-4 focus:outline-none focus:ring-indigo-100 font-medium rounded-xl text-sm px-5 py-2.5 text-center transition">Reset</button>
+                            <div class="relative">
+                                <i class='bx bx-calendar absolute left-3 top-1/2 -translate-y-1/2 text-gray-400'></i>
+                                <select id="tipeHero" class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent appearance-none text-gray-800">
+                                    <option value="">Semua Tipe</option>
+                                    <option value="Standar">Standar</option>
+                                    <option value="Premium">Premium</option>
+                                    <option value="VIP">VIP</option>
+                                    <option value="Deluxe">Deluxe</option>
+                                    <option value="Ekonomi">Ekonomi</option>
+                                </select>
                             </div>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Tabel Daftar Penghuni (untuk referensi) -->
-                <div class="bg-white rounded-2xl border border-indigo-100 shadow-sm overflow-hidden mt-6">
-                    <div class="px-6 py-4 border-b border-indigo-100">
-                        <h3 class="font-semibold text-gray-800 flex items-center gap-2"><i class='bx bx-group text-indigo-500'></i> Daftar Penghuni Aktif</h3>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm">
-                            <thead class="bg-indigo-50/70 text-indigo-800">
-                                <tr>
-                                    <th class="px-6 py-3 text-left">Nama</th>
-                                    <th class="px-6 py-3 text-left">Kamar</th>
-                                    <th class="px-6 py-3 text-left">No. Telepon</th>
-                                    <th class="px-6 py-3 text-left">Tanggal Masuk</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-indigo-100" id="daftarPenghuniTable">
-                                <!-- akan diisi javascript -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ========== SECTION INPUT PEMBAYARAN ========== -->
-            <div id="pembayaranSection" class="hidden">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Form Input Pembayaran -->
-                    <div class="bg-white rounded-2xl border border-indigo-100 shadow-sm overflow-hidden">
-                        <div class="px-6 py-4 border-b border-indigo-100">
-                            <h3 class="font-semibold text-gray-800 flex items-center gap-2"><i class='bx bx-credit-card text-indigo-500'></i> Form Input Pembayaran</h3>
-                        </div>
-                        <div class="p-6">
-                            <form id="formPembayaran" onsubmit="simpanPembayaran(event)">
-                                <div class="space-y-4">
-                                    <div>
-                                        <label class="block mb-2 text-sm font-medium text-gray-700">Cari Penghuni</label>
-                                        <select id="penghuniPembayaran" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" required>
-                                            <option value="" disabled selected>Pilih penghuni</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label class="block mb-2 text-sm font-medium text-gray-700">Informasi Tagihan</label>
-                                        <div id="infoTagihan" class="bg-indigo-50 p-3 rounded-xl text-sm hidden">
-                                            <!-- akan diisi javascript -->
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label class="block mb-2 text-sm font-medium text-gray-700">Jumlah Bayar (Rp)</label>
-                                        <input type="number" id="jumlahBayar" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" required>
-                                    </div>
-                                    <div>
-                                        <label class="block mb-2 text-sm font-medium text-gray-700">Tanggal Bayar</label>
-                                        <input type="date" id="tanggalBayar" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" required>
-                                    </div>
-                                    <div>
-                                        <label class="block mb-2 text-sm font-medium text-gray-700">Metode Pembayaran</label>
-                                        <select id="metodeBayar" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" required>
-                                            <option value="" disabled selected>Pilih metode</option>
-                                            <option value="Tunai">Tunai</option>
-                                            <option value="Transfer Bank">Transfer Bank</option>
-                                            <option value="QRIS">QRIS</option>
-                                            <option value="Kartu Debit/Kredit">Kartu Debit/Kredit</option>
-                                        </select>
-                                    </div>
-                                    <button type="submit" class="w-full text-white bg-emerald-600 hover:bg-emerald-700 focus:ring-4 focus:outline-none focus:ring-emerald-300 font-medium rounded-xl text-sm px-5 py-2.5 text-center transition">Catat Pembayaran</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
-                    <!-- Bukti Pembayaran Terakhir & Tombol Cetak -->
-                    <div class="bg-white rounded-2xl border border-indigo-100 shadow-sm overflow-hidden">
-                        <div class="px-6 py-4 border-b border-indigo-100">
-                            <h3 class="font-semibold text-gray-800 flex items-center gap-2"><i class='bx bx-printer text-indigo-500'></i> Bukti Pembayaran Terakhir</h3>
-                        </div>
-                        <div class="p-6">
-                            <div id="buktiPembayaranTerakhir" class="space-y-3">
-                                <!-- akan diisi javascript -->
-                                <p class="text-gray-500 text-center py-4">Belum ada pembayaran hari ini</p>
-                            </div>
-                            <button onclick="cetakBuktiPembayaran()" class="w-full mt-4 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 font-medium rounded-xl text-sm px-5 py-2.5 text-center transition flex items-center justify-center gap-2">
-                                <i class='bx bx-printer'></i> Cetak Bukti Pembayaran
+                            <button onclick="searchFromHero()" class="bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-6 rounded-xl font-semibold transition transform hover:scale-105">
+                                Cari
                             </button>
                         </div>
                     </div>
-                </div>
 
-                <!-- Riwayat Pembayaran -->
-                <div class="bg-white rounded-2xl border border-indigo-100 shadow-sm overflow-hidden mt-6">
-                    <div class="px-6 py-4 border-b border-indigo-100">
-                        <h3 class="font-semibold text-gray-800 flex items-center gap-2"><i class='bx bx-history text-indigo-500'></i> Riwayat Pembayaran Hari Ini</h3>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm">
-                            <thead class="bg-indigo-50/70 text-indigo-800">
-                                <tr>
-                                    <th class="px-6 py-3 text-left">Waktu</th>
-                                    <th class="px-6 py-3 text-left">Penghuni</th>
-                                    <th class="px-6 py-3 text-left">Kamar</th>
-                                    <th class="px-6 py-3 text-left">Jumlah</th>
-                                    <th class="px-6 py-3 text-left">Metode</th>
-                                    <th class="px-6 py-3 text-left">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-indigo-100" id="riwayatPembayaranTable">
-                                <!-- akan diisi javascript -->
-                            </tbody>
-                        </table>
+                    <!-- Popular Search -->
+                    <div class="flex flex-wrap gap-2 mt-6">
+                        <span class="text-indigo-200 text-sm">Populer:</span>
+                        <a href="#" class="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition">Jakarta Pusat</a>
+                        <a href="#" class="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition">Bandung</a>
+                        <a href="#" class="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition">Surabaya</a>
+                        <a href="#" class="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition">Kos Putra</a>
+                        <a href="#" class="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition">Kos Putri</a>
+                        <a href="#" class="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition">Under 1 Juta</a>
                     </div>
                 </div>
-            </div>
-
-            <!-- ========== SECTION DATA KAMAR ========== -->
-            <div id="kamarSection" class="hidden">
-                <div class="bg-white rounded-2xl border border-indigo-100 shadow-sm overflow-hidden">
-                    <div class="px-6 py-4 border-b border-indigo-100 flex justify-between items-center">
-                        <h3 class="font-semibold text-gray-800 flex items-center gap-2"><i class='bx bx-bed text-indigo-500'></i> Data Kamar & Update Status</h3>
-                        <div class="flex gap-2">
-                            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs flex items-center gap-1"><i class='bx bx-check-circle'></i> Tersedia</span>
-                            <span class="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs flex items-center gap-1"><i class='bx bx-user'></i> Terisi</span>
-                            <span class="bg-rose-100 text-rose-700 px-3 py-1 rounded-full text-xs flex items-center gap-1"><i class='bx bx-wrench'></i> Perbaikan</span>
-                        </div>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm">
-                            <thead class="bg-indigo-50/70 text-indigo-800">
-                                <tr>
-                                    <th class="px-6 py-3 text-left">Kode Kamar</th>
-                                    <th class="px-6 py-3 text-left">Tipe Kamar</th>
-                                    <th class="px-6 py-3 text-left">Harga/bulan</th>
-                                    <th class="px-6 py-3 text-left">Status</th>
-                                    <th class="px-6 py-3 text-left">Penghuni Saat Ini</th>
-                                    <th class="px-6 py-3 text-left">Aksi Update</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-indigo-100" id="dataKamarTable">
-                                <!-- akan diisi javascript -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ========== SECTION LIHAT LAPORAN (TANPA EDIT) ========== -->
-            <div id="laporanSection" class="hidden">
-                <!-- Filter Laporan -->
-                <div class="bg-white rounded-2xl border border-indigo-100 shadow-sm p-5 mb-6">
-                    <div class="flex flex-wrap gap-4 items-end">
-                        <div>
-                            <label class="block mb-2 text-sm font-medium text-gray-700">Periode Laporan</label>
-                            <select id="periodeLaporan" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 p-2.5">
-                                <option value="bulanini">Bulan Ini</option>
-                                <option value="bulanlalu">Bulan Lalu</option>
-                                <option value="tahunini">Tahun Ini</option>
-                            </select>
-                        </div>
-                        <button onclick="updateLaporan()" class="bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-indigo-700 transition flex items-center gap-2">
-                            <i class='bx bx-show'></i> Tampilkan
-                        </button>
-                        <button onclick="cetakLaporan()" class="bg-white border border-indigo-200 text-indigo-600 px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-indigo-50 transition flex items-center gap-2">
-                            <i class='bx bx-printer'></i> Cetak Laporan
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Ringkasan Laporan -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-5 mb-6">
-                    <div class="bg-white rounded-2xl border border-indigo-100 p-5">
-                        <p class="text-sm text-indigo-500">Total Pemasukan</p>
-                        <p class="text-2xl font-bold text-gray-800" id="laporanPemasukan">Rp 42.850.000</p>
-                    </div>
-                    <div class="bg-white rounded-2xl border border-emerald-100 p-5">
-                        <p class="text-sm text-emerald-500">Terkumpul</p>
-                        <p class="text-2xl font-bold text-gray-800" id="laporanTerkumpul">Rp 38.750.000</p>
-                    </div>
-                    <div class="bg-white rounded-2xl border border-amber-100 p-5">
-                        <p class="text-sm text-amber-500">Tunggakan</p>
-                        <p class="text-2xl font-bold text-gray-800" id="laporanTunggakan">Rp 4.100.000</p>
-                    </div>
-                    <div class="bg-white rounded-2xl border border-rose-100 p-5">
-                        <p class="text-sm text-rose-500">Kamar Kosong</p>
-                        <p class="text-2xl font-bold text-gray-800" id="laporanKamarKosong">5</p>
-                    </div>
-                </div>
-
-                <!-- Tabel Detail Laporan -->
-                <div class="bg-white rounded-2xl border border-indigo-100 shadow-sm overflow-hidden">
-                    <div class="px-6 py-4 border-b border-indigo-100">
-                        <h3 class="font-semibold text-gray-800">Detail Transaksi</h3>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm">
-                            <thead class="bg-indigo-50/70 text-indigo-800">
-                                <tr>
-                                    <th class="px-6 py-3 text-left">Tanggal</th>
-                                    <th class="px-6 py-3 text-left">Penghuni</th>
-                                    <th class="px-6 py-3 text-left">Keterangan</th>
-                                    <th class="px-6 py-3 text-left">Pemasukan</th>
-                                    <th class="px-6 py-3 text-left">Pengeluaran</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-indigo-100" id="detailLaporanTable">
-                                <!-- akan diisi javascript -->
-                            </tbody>
-                        </table>
-                    </div>
+                <div data-aos="fade-left" class="hidden md:block">
+                    <img src="https://placehold.co/600x500/4f46e5/ffffff?text=Kosan+Elegant" alt="Hero Image" class="rounded-2xl shadow-2xl">
                 </div>
             </div>
         </div>
+    </section>
 
-        <!-- Bukti Pembayaran Print (hidden, muncul saat print) -->
-        <div id="buktiPrint" class="hidden print-only p-8">
-            <!-- akan diisi javascript -->
+    <!-- ========== STATS SECTION ========== -->
+    <section class="py-12 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="text-center p-4">
+                    <p class="text-3xl md:text-4xl font-bold text-indigo-600">50+</p>
+                    <p class="text-gray-600 text-sm">Kota Tersedia</p>
+                </div>
+                <div class="text-center p-4">
+                    <p class="text-3xl md:text-4xl font-bold text-indigo-600">10rb+</p>
+                    <p class="text-gray-600 text-sm">Kamar Kos</p>
+                </div>
+                <div class="text-center p-4">
+                    <p class="text-3xl md:text-4xl font-bold text-indigo-600">25rb+</p>
+                    <p class="text-gray-600 text-sm">Penghuni Aktif</p>
+                </div>
+                <div class="text-center p-4">
+                    <p class="text-3xl md:text-4xl font-bold text-indigo-600">⭐ 4.8</p>
+                    <p class="text-gray-600 text-sm">Rating Aplikasi</p>
+                </div>
+            </div>
         </div>
-    </main>
-</div>
+    </section>
 
-<!-- JavaScript untuk Staff -->
-<script>
-    // ========== DATA DUMMY ==========
-    let kamarData = [
-        { id: 1, kode: 'STD-01', tipe: 'Standar', harga: 850000, status: 'terisi', penghuni: 'Budi Santoso' },
-        { id: 2, kode: 'STD-02', tipe: 'Standar', harga: 850000, status: 'tersedia', penghuni: '-' },
-        { id: 3, kode: 'STD-03', tipe: 'Standar', harga: 850000, status: 'terisi', penghuni: 'Joko Widodo' },
-        { id: 4, kode: 'PRM-01', tipe: 'Premium', harga: 1250000, status: 'terisi', penghuni: 'Siti Aminah' },
-        { id: 5, kode: 'PRM-02', tipe: 'Premium', harga: 1250000, status: 'tersedia', penghuni: '-' },
-        { id: 6, kode: 'VIP-01', tipe: 'VIP', harga: 1750000, status: 'terisi', penghuni: 'Ahmad Fauzi' },
-        { id: 7, kode: 'EKO-01', tipe: 'Ekonomi', harga: 650000, status: 'terisi', penghuni: 'Dewi Lestari' },
-        { id: 8, kode: 'EKO-02', tipe: 'Ekonomi', harga: 650000, status: 'terisi', penghuni: 'Rizki Pratama' },
-        { id: 9, kode: 'EKO-03', tipe: 'Ekonomi', harga: 650000, status: 'tersedia', penghuni: '-' },
-        { id: 10, kode: 'DLX-01', tipe: 'Deluxe', harga: 1500000, status: 'terisi', penghuni: 'Maya Sari' },
-        { id: 11, kode: 'SUP-01', tipe: 'Superior', harga: 1100000, status: 'perbaikan', penghuni: '-' },
-        { id: 12, kode: 'SUP-02', tipe: 'Superior', harga: 1100000, status: 'terisi', penghuni: 'Rina Wijaya' }
-    ];
+    <!-- ========== FILTER CEPAT ========== -->
+    <section class="py-6 bg-gray-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="filter-scroll flex gap-2 pb-2">
+                <button class="filter-chip active px-4 py-2 bg-indigo-600 text-white rounded-full text-sm whitespace-nowrap">Semua</button>
+                <button class="filter-chip px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-full text-sm whitespace-nowrap hover:bg-indigo-50">Kos Putra</button>
+                <button class="filter-chip px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-full text-sm whitespace-nowrap hover:bg-indigo-50">Kos Putri</button>
+                <button class="filter-chip px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-full text-sm whitespace-nowrap hover:bg-indigo-50">Campuran</button>
+                <button class="filter-chip px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-full text-sm whitespace-nowrap hover:bg-indigo-50">Dekat Kampus</button>
+                <button class="filter-chip px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-full text-sm whitespace-nowrap hover:bg-indigo-50">Dekat Kantor</button>
+                <button class="filter-chip px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-full text-sm whitespace-nowrap hover:bg-indigo-50">AC</button>
+                <button class="filter-chip px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-full text-sm whitespace-nowrap hover:bg-indigo-50">Kamar Mandi Dalam</button>
+                <button class="filter-chip px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-full text-sm whitespace-nowrap hover:bg-indigo-50">WiFi</button>
+                <button class="filter-chip px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-full text-sm whitespace-nowrap hover:bg-indigo-50">Harga < 1jt</button>
+            </div>
+        </div>
+    </section>
 
-    let penghuniData = [
-        { id: 1, nama: 'Budi Santoso', nik: '3273011508900001', email: 'budi@email.com', telepon: '081234567890', alamat: 'Jl. Merdeka No. 45, Jakarta', kamar_id: 1, kamar: 'STD-01', tgl_masuk: '2026-01-15' },
-        { id: 2, nama: 'Siti Aminah', nik: '3273011508900002', email: 'siti@email.com', telepon: '081298765432', alamat: 'Jl. Melati No. 12, Bandung', kamar_id: 4, kamar: 'PRM-01', tgl_masuk: '2026-02-01' },
-        { id: 3, nama: 'Ahmad Fauzi', nik: '3273011508900003', email: 'ahmad@email.com', telepon: '081312345678', alamat: 'Jl. Kenanga No. 7, Surabaya', kamar_id: 6, kamar: 'VIP-01', tgl_masuk: '2025-12-10' },
-        { id: 4, nama: 'Dewi Lestari', nik: '3273011508900004', email: 'dewi@email.com', telepon: '081398765432', alamat: 'Jl. Mawar No. 23, Yogyakarta', kamar_id: 7, kamar: 'EKO-01', tgl_masuk: '2026-03-05' },
-        { id: 5, nama: 'Rizki Pratama', nik: '3273011508900005', email: 'rizki@email.com', telepon: '081311223344', alamat: 'Jl. Anggrek No. 8, Semarang', kamar_id: 8, kamar: 'EKO-02', tgl_masuk: '2026-02-20' },
-        { id: 6, nama: 'Maya Sari', nik: '3273011508900006', email: 'maya@email.com', telepon: '081377889900', alamat: 'Jl. Flamboyan No. 15, Medan', kamar_id: 10, kamar: 'DLX-01', tgl_masuk: '2026-01-25' },
-        { id: 7, nama: 'Rina Wijaya', nik: '3273011508900007', email: 'rina@email.com', telepon: '081355667788', alamat: 'Jl. Cendana No. 3, Bali', kamar_id: 12, kamar: 'SUP-02', tgl_masuk: '2026-03-15' }
-    ];
+    <!-- ========== REKOMENDASI KAMAR ========== -->
+    <section id="kamar" class="py-12 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-800">Rekomendasi <span class="text-indigo-600">Kamar Kos</span></h2>
+                <a href="#" class="text-indigo-600 hover:text-indigo-700 text-sm font-medium flex items-center gap-1">
+                    Lihat Semua <i class='bx bx-right-arrow-alt'></i>
+                </a>
+            </div>
 
-    let pembayaranData = [
-        { id: 1, penghuni_id: 1, nama: 'Budi Santoso', kamar: 'STD-01', jumlah: 850000, tanggal: '2026-04-05', metode: 'Transfer Bank', waktu: '10:30' },
-        { id: 2, penghuni_id: 4, nama: 'Dewi Lestari', kamar: 'EKO-01', jumlah: 650000, tanggal: '2026-04-05', metode: 'Tunai', waktu: '11:15' },
-        { id: 3, penghuni_id: 5, nama: 'Rizki Pratama', kamar: 'EKO-02', jumlah: 650000, tanggal: '2026-04-05', metode: 'QRIS', waktu: '13:20' }
-    ];
+            <!-- Filter Bar -->
+            <div class="bg-gray-50 rounded-xl p-4 mb-8 flex flex-wrap gap-3 items-center">
+                <span class="text-sm font-medium text-gray-700">Filter:</span>
+                <select id="filterLokasi" class="bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500">
+                    <option value="">Semua Lokasi</option>
+                    <option value="Jakarta">Jakarta</option>
+                    <option value="Bandung">Bandung</option>
+                    <option value="Surabaya">Surabaya</option>
+                    <option value="Yogyakarta">Yogyakarta</option>
+                </select>
+                <select id="filterTipe" class="bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500">
+                    <option value="">Semua Tipe</option>
+                    <option value="Standar">Standar</option>
+                    <option value="Premium">Premium</option>
+                    <option value="VIP">VIP</option>
+                    <option value="Deluxe">Deluxe</option>
+                    <option value="Ekonomi">Ekonomi</option>
+                </select>
+                <select id="filterHarga" class="bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500">
+                    <option value="">Semua Harga</option>
+                    <option value="1000000">< Rp 1 Juta</option>
+                    <option value="1500000">< Rp 1.5 Juta</option>
+                    <option value="2000000">< Rp 2 Juta</option>
+                </select>
+                <select id="filterStatus" class="bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500">
+                    <option value="">Semua Status</option>
+                    <option value="tersedia">Tersedia</option>
+                    <option value="terisi">Terisi</option>
+                </select>
+                <button onclick="applyFilter()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium ml-auto">
+                    <i class='bx bx-filter-alt mr-1'></i> Terapkan
+                </button>
+            </div>
 
-    let tagihanData = [
-        { id: 1, penghuni_id: 2, nama: 'Siti Aminah', kamar: 'PRM-01', jumlah: 1250000, periode: '2026-04', status: 'belum' },
-        { id: 2, penghuni_id: 6, nama: 'Maya Sari', kamar: 'DLX-01', jumlah: 1500000, periode: '2026-04', status: 'belum' },
-        { id: 3, penghuni_id: 3, nama: 'Ahmad Fauzi', kamar: 'VIP-01', jumlah: 1750000, periode: '2026-04', status: 'belum' }
-    ];
+            <!-- Kamar Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="kamarGrid">
+                <!-- Akan diisi via JavaScript -->
+            </div>
 
-    // ========== FUNGSI UMUM ==========
-    document.getElementById('currentDate').textContent = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+            <!-- Load More -->
+            <div class="text-center mt-12">
+                <button class="border border-indigo-600 text-indigo-600 hover:bg-indigo-50 px-8 py-3 rounded-xl font-medium transition inline-flex items-center gap-2">
+                    Muat Lebih Banyak <i class='bx bx-loader-alt bx-spin'></i>
+                </button>
+            </div>
+        </div>
+    </section>
 
-    // Fungsi berpindah section
-    function showSection(section) {
-        // Sembunyikan semua section
-        document.getElementById('dashboardSection').classList.add('hidden');
-        document.getElementById('penghuniSection').classList.add('hidden');
-        document.getElementById('pembayaranSection').classList.add('hidden');
-        document.getElementById('kamarSection').classList.add('hidden');
-        document.getElementById('laporanSection').classList.add('hidden');
+    <!-- ========== TIPS NGEKOS ========== -->
+    <section id="tips" class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-8 text-center">Tips <span class="text-indigo-600">Ngekos</span></h2>
 
-        // Tampilkan section yang dipilih
-        document.getElementById(section + 'Section').classList.remove('hidden');
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-2xl shadow-sm p-5 card-hover">
+                    <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center mb-4">
+                        <i class='bx bx-search-alt-2 text-2xl text-indigo-600'></i>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Cek Lokasi Strategis</h3>
+                    <p class="text-gray-600 text-sm">Pastikan kos dekat dengan kampus, kantor, atau akses transportasi umum agar mobilitas lebih mudah.</p>
+                </div>
+                <div class="bg-white rounded-2xl shadow-sm p-5 card-hover">
+                    <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center mb-4">
+                        <i class='bx bx-wallet text-2xl text-indigo-600'></i>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Sesuaikan Budget</h3>
+                    <p class="text-gray-600 text-sm">Hitung pengeluaran bulanan, pastikan harga kos tidak lebih dari 30% pendapatan bulananmu.</p>
+                </div>
+                <div class="bg-white rounded-2xl shadow-sm p-5 card-hover">
+                    <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center mb-4">
+                        <i class='bx bx-shield-quarter text-2xl text-indigo-600'></i>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Prioritaskan Keamanan</h3>
+                    <p class="text-gray-600 text-sm">Pastikan ada CCTV, security, dan sistem keamanan yang baik untuk kenyamanan tinggal.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        // Update judul halaman
-        const titles = {
-            'dashboard': 'Dashboard Staff',
-            'penghuni': 'Input Penghuni',
-            'pembayaran': 'Input Pembayaran',
-            'kamar': 'Data Kamar',
-            'laporan': 'Lihat Laporan'
-        };
-        document.getElementById('pageTitle').innerHTML = '<span class="text-indigo-600">' + titles[section] + '</span>';
+    <!-- ========== PROMO BANNER ========== -->
+    <section class="py-12 bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="mb-4 md:mb-0">
+                    <h3 class="text-2xl md:text-3xl font-bold mb-2">Dapatkan Promo Spesial!</h3>
+                    <p class="text-indigo-100">Booking sekarang dan dapatkan diskon 10% untuk bulan pertama.</p>
+                </div>
+                <button class="bg-white text-indigo-600 hover:bg-gray-100 px-6 py-3 rounded-xl font-semibold transition shadow-lg">
+                    <i class='bx bx-gift mr-2'></i>Klaim Promo
+                </button>
+            </div>
+        </div>
+    </section>
 
-        // Update active menu
-        document.querySelectorAll('nav a').forEach(a => {
-            a.classList.remove('text-indigo-700', 'bg-indigo-50', 'border-l-4', 'border-indigo-600', 'font-medium');
-            a.classList.add('text-gray-600');
-        });
-        document.getElementById('menu-' + section).classList.remove('text-gray-600');
-        document.getElementById('menu-' + section).classList.add('text-indigo-700', 'bg-indigo-50', 'border-l-4', 'border-indigo-600', 'font-medium');
+    <!-- ========== TESTIMONIAL ========== -->
+    <section class="py-12 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-8 text-center">Apa Kata <span class="text-indigo-600">Mereka</span></h2>
 
-        // Load data sesuai section
-        if (section === 'dashboard') loadDashboard();
-        if (section === 'penghuni') loadPenghuniSection();
-        if (section === 'pembayaran') loadPembayaranSection();
-        if (section === 'kamar') loadKamarSection();
-        if (section === 'laporan') loadLaporanSection();
-    }
+            <div class="swiper mySwiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <div class="bg-gray-50 p-6 rounded-2xl">
+                            <div class="flex items-center gap-2 mb-3">
+                                <i class='bx bxs-star text-yellow-400'></i>
+                                <i class='bx bxs-star text-yellow-400'></i>
+                                <i class='bx bxs-star text-yellow-400'></i>
+                                <i class='bx bxs-star text-yellow-400'></i>
+                                <i class='bx bxs-star text-yellow-400'></i>
+                            </div>
+                            <p class="text-gray-700 mb-4">"Kosnya nyaman, bersih, dan lokasi strategis. Proses booking mudah dan cepat. Recommended!"</p>
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-indigo-200 flex items-center justify-center font-bold">A</div>
+                                <div>
+                                    <p class="font-semibold">Ahmad Fauzi</p>
+                                    <p class="text-xs text-gray-500">Penghuni VIP-01</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="bg-gray-50 p-6 rounded-2xl">
+                            <div class="flex items-center gap-2 mb-3">
+                                <i class='bx bxs-star text-yellow-400'></i>
+                                <i class='bx bxs-star text-yellow-400'></i>
+                                <i class='bx bxs-star text-yellow-400'></i>
+                                <i class='bx bxs-star text-yellow-400'></i>
+                                <i class='bx bxs-star-half text-yellow-400'></i>
+                            </div>
+                            <p class="text-gray-700 mb-4">"Harga terjangkau dengan fasilitas lengkap. AC dingin, WiFi kencang. Bakal perpanjang kontrak."</p>
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-emerald-200 flex items-center justify-center font-bold">S</div>
+                                <div>
+                                    <p class="font-semibold">Siti Aminah</p>
+                                    <p class="text-xs text-gray-500">Penghuni PRM-01</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="bg-gray-50 p-6 rounded-2xl">
+                            <div class="flex items-center gap-2 mb-3">
+                                <i class='bx bxs-star text-yellow-400'></i>
+                                <i class='bx bxs-star text-yellow-400'></i>
+                                <i class='bx bxs-star text-yellow-400'></i>
+                                <i class='bx bxs-star text-yellow-400'></i>
+                                <i class='bx bxs-star text-yellow-400'></i>
+                            </div>
+                            <p class="text-gray-700 mb-4">"Pelayanan cepat, petugas ramah. Kalau ada masalah cepat ditangani. Worth it banget!"</p>
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-amber-200 flex items-center justify-center font-bold">R</div>
+                                <div>
+                                    <p class="font-semibold">Rizki Pratama</p>
+                                    <p class="text-xs text-gray-500">Penghuni EKO-02</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+    </section>
 
-    // ========== DASHBOARD ==========
-    function loadDashboard() {
-        // Update statistik
-        document.getElementById('totalPenghuni').textContent = penghuniData.length;
-        document.getElementById('kamarTerisi').textContent = kamarData.filter(k => k.status === 'terisi').length;
-        document.getElementById('tagihanBulanIni').textContent = tagihanData.length;
-
-        const today = new Date().toISOString().split('T')[0];
-        const checkOutToday = penghuniData.filter(p => p.tgl_keluar === today).length;
-        document.getElementById('checkOutHariIni').textContent = checkOutToday || 2;
-
-        // Aktivitas
-        const aktivitas = [
-            { waktu: '10 menit lalu', deskripsi: 'Pembayaran dari Budi Santoso', tipe: 'pembayaran' },
-            { waktu: '1 jam lalu', deskripsi: 'Penghuni baru: Joko Widodo (STD-03)', tipe: 'penghuni' },
-            { waktu: '3 jam lalu', deskripsi: 'Kamar SUP-01 status menjadi perbaikan', tipe: 'kamar' },
-            { waktu: 'Kemarin', deskripsi: '3 tagihan belum dibayar', tipe: 'tagihan' }
-        ];
-
-        document.getElementById('aktivitasList').innerHTML = aktivitas.map(a => `
-            <div class="flex items-start gap-3">
-                <div class="w-2 h-2 mt-2 rounded-full ${a.tipe === 'pembayaran' ? 'bg-green-400' : a.tipe === 'penghuni' ? 'bg-indigo-400' : a.tipe === 'kamar' ? 'bg-amber-400' : 'bg-rose-400'}"></div>
+    <!-- ========== FOOTER ========== -->
+    <footer id="kontak" class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
                 <div>
-                    <p class="text-sm text-gray-700">${a.deskripsi}</p>
-                    <p class="text-xs text-indigo-400">${a.waktu}</p>
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-emerald-500 flex items-center justify-center">
+                            <i class='bx bx-home-alt-2 text-white text-lg'></i>
+                        </div>
+                        <span class="text-xl font-semibold">Kos<span class="text-indigo-400">an</span></span>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">Platform cari kos terpercaya #1 di Indonesia. Temukan kos impianmu dengan mudah dan cepat.</p>
+                    <div class="flex gap-3">
+                        <a href="#" class="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-indigo-600 transition"><i class='bx bxl-facebook'></i></a>
+                        <a href="#" class="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-indigo-600 transition"><i class='bx bxl-instagram'></i></a>
+                        <a href="#" class="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-indigo-600 transition"><i class='bx bxl-twitter'></i></a>
+                        <a href="#" class="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-indigo-600 transition"><i class='bx bxl-tiktok'></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-lg mb-4">Jelajahi</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-indigo-400 transition">Beranda</a></li>
+                        <li><a href="#" class="hover:text-indigo-400 transition">Cari Kos</a></li>
+                        <li><a href="#" class="hover:text-indigo-400 transition">Tips Ngekos</a></li>
+                        <li><a href="#" class="hover:text-indigo-400 transition">Blog</a></li>
+                        <li><a href="#" class="hover:text-indigo-400 transition">FAQ</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-lg mb-4">Kota Populer</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-indigo-400 transition">Kos Jakarta</a></li>
+                        <li><a href="#" class="hover:text-indigo-400 transition">Kos Bandung</a></li>
+                        <li><a href="#" class="hover:text-indigo-400 transition">Kos Surabaya</a></li>
+                        <li><a href="#" class="hover:text-indigo-400 transition">Kos Yogyakarta</a></li>
+                        <li><a href="#" class="hover:text-indigo-400 transition">Kos Bali</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-lg mb-4">Kontak Kami</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-center gap-2"><i class='bx bx-phone text-indigo-400'></i> 1500-123</li>
+                        <li class="flex items-center gap-2"><i class='bx bx-envelope text-indigo-400'></i> hello@kosan.id</li>
+                        <li class="flex items-center gap-2"><i class='bx bx-map text-indigo-400'></i> Jakarta, Indonesia</li>
+                    </ul>
+                    <div class="mt-4">
+                        <p class="text-sm text-gray-400 mb-2">Download Aplikasi</p>
+                        <div class="flex gap-2">
+                            <a href="#" class="bg-gray-800 px-3 py-2 rounded-lg text-xs flex items-center gap-1 hover:bg-indigo-600 transition"><i class='bx bxl-play-store'></i> Play Store</a>
+                            <a href="#" class="bg-gray-800 px-3 py-2 rounded-lg text-xs flex items-center gap-1 hover:bg-indigo-600 transition"><i class='bx bxl-apple'></i> App Store</a>
+                        </div>
+                    </div>
                 </div>
             </div>
-        `).join('');
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 text-sm">
+                <p>© 2026 Kosan优雅. All rights reserved. Made with <i class='bx bx-heart text-red-500'></i> for kos hunters</p>
+            </div>
+        </div>
+    </footer>
 
-        // Penghuni baru 7 hari
-        const sevenDaysAgo = new Date();
-        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-        const penghuniBaru = penghuniData.filter(p => new Date(p.tgl_masuk) >= sevenDaysAgo);
-
-        document.getElementById('penghuniBaruTable').innerHTML = penghuniBaru.map(p => `
-            <tr>
-                <td class="px-6 py-4">${p.nama}</td>
-                <td class="px-6 py-4">${p.kamar}</td>
-                <td class="px-6 py-4">${new Date(p.tgl_masuk).toLocaleDateString('id-ID')}</td>
-                <td class="px-6 py-4"><span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs">Aktif</span></td>
-            </tr>
-        `).join('');
-
-        // Chart
-        const ctx = document.getElementById('okupansiChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['H-6', 'H-5', 'H-4', 'H-3', 'H-2', 'Kemarin', 'Hari Ini'],
-                datasets: [{
-                    label: 'Kamar Terisi',
-                    data: [18, 19, 19, 20, 19, 19, kamarData.filter(k => k.status === 'terisi').length],
-                    borderColor: '#4f46e5',
-                    backgroundColor: 'rgba(79, 70, 229, 0.1)',
-                    tension: 0.3,
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true, max: 24 } }
-            }
-        });
-    }
-
-    // ========== INPUT PENGHUNI ==========
-    function loadPenghuniSection() {
-        // Load kamar tersedia ke dropdown
-        const select = document.getElementById('kamarPenghuni');
-        select.innerHTML = '<option value="" disabled selected>Pilih kamar tersedia</option>';
-        kamarData.filter(k => k.status === 'tersedia').forEach(k => {
-            select.innerHTML += `<option value="${k.id}">${k.kode} - ${k.tipe} (Rp ${k.harga.toLocaleString('id-ID')})</option>`;
-        });
-
-        // Load daftar penghuni
-        document.getElementById('daftarPenghuniTable').innerHTML = penghuniData.map(p => `
-            <tr>
-                <td class="px-6 py-4">${p.nama}</td>
-                <td class="px-6 py-4">${p.kamar}</td>
-                <td class="px-6 py-4">${p.telepon}</td>
-                <td class="px-6 py-4">${new Date(p.tgl_masuk).toLocaleDateString('id-ID')}</td>
-            </tr>
-        `).join('');
-    }
-
-    function simpanPenghuni(e) {
-        e.preventDefault();
-
-        const kamarId = parseInt(document.getElementById('kamarPenghuni').value);
-        const kamar = kamarData.find(k => k.id === kamarId);
-
-        const newPenghuni = {
-            id: penghuniData.length + 1,
-            nama: document.getElementById('namaPenghuni').value,
-            nik: document.getElementById('nikPenghuni').value,
-            email: document.getElementById('emailPenghuni').value,
-            telepon: document.getElementById('teleponPenghuni').value,
-            alamat: document.getElementById('alamatPenghuni').value,
-            kamar_id: kamarId,
-            kamar: kamar.kode,
-            tgl_masuk: document.getElementById('tanggalMasuk').value
-        };
-
-        penghuniData.push(newPenghuni);
-
-        // Update status kamar
-        kamar.status = 'terisi';
-        kamar.penghuni = newPenghuni.nama;
-
-        alert('Penghuni berhasil ditambahkan!');
-        resetFormPenghuni();
-        loadPenghuniSection();
-        loadKamarSection(); // Update data kamar
-    }
-
-    function resetFormPenghuni() {
-        document.getElementById('formPenghuni').reset();
-    }
-
-    // ========== INPUT PEMBAYARAN ==========
-    function loadPembayaranSection() {
-        // Load dropdown penghuni
-        const select = document.getElementById('penghuniPembayaran');
-        select.innerHTML = '<option value="" disabled selected>Pilih penghuni</option>';
-        penghuniData.forEach(p => {
-            select.innerHTML += `<option value="${p.id}">${p.nama} - ${p.kamar}</option>`;
-        });
-
-        // Load riwayat pembayaran hari ini
-        const today = new Date().toISOString().split('T')[0];
-        const pembayaranHariIni = pembayaranData.filter(p => p.tanggal === today);
-
-        if (pembayaranHariIni.length > 0) {
-            let html = '';
-            pembayaranHariIni.forEach(p => {
-                html += `
-                <tr>
-                    <td class="px-6 py-4">${p.waktu}</td>
-                    <td class="px-6 py-4">${p.nama}</td>
-                    <td class="px-6 py-4">${p.kamar}</td>
-                    <td class="px-6 py-4">Rp ${p.jumlah.toLocaleString('id-ID')}</td>
-                    <td class="px-6 py-4">${p.metode}</td>
-                    <td class="px-6 py-4">
-                        <button onclick="cetakBuktiPembayaranById(${p.id})" class="text-indigo-600 hover:text-indigo-900">
-                            <i class='bx bx-printer'></i>
+    <!-- ========== BOOKING MODAL ========== -->
+    <div id="bookingModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto" data-aos="zoom-in">
+            <div class="sticky top-0 bg-white border-b border-gray-200 p-4 flex justify-between items-center">
+                <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                    <i class='bx bx-calendar-check text-indigo-600'></i> Booking Kamar
+                </h3>
+                <button onclick="closeBookingModal()" class="text-gray-400 hover:text-gray-600 p-1">
+                    <i class='bx bx-x text-2xl'></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <div id="bookingDetail" class="bg-indigo-50 p-4 rounded-xl mb-6">
+                    <!-- akan diisi javascript -->
+                </div>
+                <form id="bookingForm" onsubmit="handleBooking(event)">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap</label>
+                            <input type="text" id="bookingNama" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500" placeholder="Masukkan nama sesuai KTP" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                            <input type="email" id="bookingEmail" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500" placeholder="nama@email.com" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">No. WhatsApp</label>
+                            <input type="text" id="bookingTelepon" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500" placeholder="081234567890" required>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Masuk</label>
+                                <input type="date" id="bookingTglMasuk" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Durasi</label>
+                                <select id="bookingDurasi" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500" required>
+                                    <option value="3">3 Bulan</option>
+                                    <option value="6">6 Bulan</option>
+                                    <option value="12">12 Bulan</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 p-3 rounded-xl text-sm text-yellow-700 flex gap-2">
+                            <i class='bx bx-info-circle text-xl'></i>
+                            <span>Booking ini masih bersifat sementara. Staff kami akan menghubungimu untuk konfirmasi dan pembayaran DP.</span>
+                        </div>
+                        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-medium transition">
+                            <i class='bx bx-check-circle mr-2'></i>Konfirmasi Booking
                         </button>
-                    </td>
-                </tr>`;
-            });
-            document.getElementById('riwayatPembayaranTable').innerHTML = html;
-
-            // Bukti terakhir
-            const last = pembayaranHariIni[pembayaranHariIni.length - 1];
-            document.getElementById('buktiPembayaranTerakhir').innerHTML = `
-                <div class="bg-indigo-50 p-4 rounded-xl">
-                    <p class="font-medium">${last.nama} - ${last.kamar}</p>
-                    <p class="text-lg font-bold text-indigo-600">Rp ${last.jumlah.toLocaleString('id-ID')}</p>
-                    <p class="text-sm">${last.metode} · ${last.waktu}</p>
-                </div>
-            `;
-        }
-    }
-
-    document.getElementById('penghuniPembayaran').addEventListener('change', function() {
-        const penghuniId = parseInt(this.value);
-        const penghuni = penghuniData.find(p => p.id === penghuniId);
-        const tagihan = tagihanData.find(t => t.penghuni_id === penghuniId && t.status === 'belum');
-
-        if (tagihan) {
-            document.getElementById('infoTagihan').innerHTML = `
-                <p class="text-sm">Tagihan periode ${tagihan.periode}: <span class="font-bold text-indigo-600">Rp ${tagihan.jumlah.toLocaleString('id-ID')}</span></p>
-            `;
-            document.getElementById('infoTagihan').classList.remove('hidden');
-            document.getElementById('jumlahBayar').value = tagihan.jumlah;
-        } else {
-            document.getElementById('infoTagihan').innerHTML = '<p class="text-sm text-amber-600">Tidak ada tagihan belum dibayar</p>';
-            document.getElementById('infoTagihan').classList.remove('hidden');
-        }
-    });
-
-    function simpanPembayaran(e) {
-        e.preventDefault();
-
-        const penghuniId = parseInt(document.getElementById('penghuniPembayaran').value);
-        const penghuni = penghuniData.find(p => p.id === penghuniId);
-        const now = new Date();
-        const waktu = now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
-
-        const newPembayaran = {
-            id: pembayaranData.length + 1,
-            penghuni_id: penghuniId,
-            nama: penghuni.nama,
-            kamar: penghuni.kamar,
-            jumlah: parseInt(document.getElementById('jumlahBayar').value),
-            tanggal: document.getElementById('tanggalBayar').value,
-            metode: document.getElementById('metodeBayar').value,
-            waktu: waktu
-        };
-
-        pembayaranData.push(newPembayaran);
-
-        // Update status tagihan
-        const tagihan = tagihanData.find(t => t.penghuni_id === penghuniId && t.status === 'belum');
-        if (tagihan) tagihan.status = 'lunas';
-
-        alert('Pembayaran berhasil dicatat!');
-        document.getElementById('formPembayaran').reset();
-        loadPembayaranSection();
-    }
-
-    function cetakBuktiPembayaran() {
-        const lastPembayaran = pembayaranData[pembayaranData.length - 1];
-        if (!lastPembayaran) {
-            alert('Tidak ada pembayaran untuk dicetak');
-            return;
-        }
-
-        cetakBuktiPembayaranById(lastPembayaran.id);
-    }
-
-    function cetakBuktiPembayaranById(id) {
-        const bayar = pembayaranData.find(p => p.id === id);
-        if (!bayar) return;
-
-        const printContent = `
-            <div style="text-align: center; margin-bottom: 30px;">
-                <h2 style="font-size: 24px; color: #4f46e5;">Kosan优雅</h2>
-                <p style="color: #666;">Bukti Pembayaran Sewa Kamar</p>
+                    </div>
+                </form>
             </div>
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-                <tr><td style="padding: 8px; border: 1px solid #ddd;">Nama Penyewa</td><td style="padding: 8px; border: 1px solid #ddd;">${bayar.nama}</td></tr>
-                <tr><td style="padding: 8px; border: 1px solid #ddd;">Kamar</td><td style="padding: 8px; border: 1px solid #ddd;">${bayar.kamar}</td></tr>
-                <tr><td style="padding: 8px; border: 1px solid #ddd;">Jumlah Pembayaran</td><td style="padding: 8px; border: 1px solid #ddd;">Rp ${bayar.jumlah.toLocaleString('id-ID')}</td></tr>
-                <tr><td style="padding: 8px; border: 1px solid #ddd;">Tanggal Bayar</td><td style="padding: 8px; border: 1px solid #ddd;">${new Date(bayar.tanggal).toLocaleDateString('id-ID')} ${bayar.waktu}</td></tr>
-                <tr><td style="padding: 8px; border: 1px solid #ddd;">Metode Pembayaran</td><td style="padding: 8px; border: 1px solid #ddd;">${bayar.metode}</td></tr>
-            </table>
-            <div style="text-align: center; margin-top: 30px;">
-                <p>Terima kasih telah melakukan pembayaran tepat waktu</p>
-                <p style="margin-top: 40px;">Petugas,</p>
-                <p style="margin-top: 50px;">( Budi Santoso )</p>
-            </div>
-        `;
+        </div>
+    </div>
 
-        const printWindow = window.open('', '_blank');
-        printWindow.document.write(`
-            <html>
-            <head>
-                <title>Bukti Pembayaran</title>
-                <style>
-                    body { font-family: Arial, sans-serif; padding: 40px; }
-                </style>
-            </head>
-            <body>${printContent}</body>
-            </html>
-        `);
-        printWindow.document.close();
-        printWindow.print();
-    }
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <!-- AOS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-    // ========== DATA KAMAR ==========
-    function loadKamarSection() {
-        let html = '';
-        kamarData.forEach(k => {
-            let statusClass = '';
-            let statusText = '';
-            if (k.status === 'tersedia') { statusClass = 'bg-green-100 text-green-700'; statusText = 'Tersedia'; }
-            else if (k.status === 'terisi') { statusClass = 'bg-amber-100 text-amber-700'; statusText = 'Terisi'; }
-            else { statusClass = 'bg-rose-100 text-rose-700'; statusText = 'Perbaikan'; }
-
-            html += `
-            <tr>
-                <td class="px-6 py-4 font-medium">${k.kode}</td>
-                <td class="px-6 py-4">${k.tipe}</td>
-                <td class="px-6 py-4">Rp ${k.harga.toLocaleString('id-ID')}</td>
-                <td class="px-6 py-4"><span class="${statusClass} px-2 py-1 rounded-full text-xs">${statusText}</span></td>
-                <td class="px-6 py-4">${k.penghuni || '-'}</td>
-                <td class="px-6 py-4">
-                    <select onchange="updateStatusKamar(${k.id}, this.value)" class="bg-indigo-50/30 border border-indigo-200 text-sm rounded-lg p-1">
-                        <option value="tersedia" ${k.status === 'tersedia' ? 'selected' : ''}>Tersedia</option>
-                        <option value="terisi" ${k.status === 'terisi' ? 'selected' : ''}>Terisi</option>
-                        <option value="perbaikan" ${k.status === 'perbaikan' ? 'selected' : ''}>Perbaikan</option>
-                    </select>
-                </td>
-            </tr>`;
+    <!-- JavaScript -->
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true
         });
-        document.getElementById('dataKamarTable').innerHTML = html;
-    }
 
-    function updateStatusKamar(id, newStatus) {
-        const kamar = kamarData.find(k => k.id === id);
-        if (kamar) {
-            kamar.status = newStatus;
-            if (newStatus !== 'terisi') {
-                kamar.penghuni = '-';
+        // Initialize Swiper
+        const swiper = new Swiper('.mySwiper', {
+            slidesPerView: 1,
+            spaceBetween: 20,
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            breakpoints: {
+                640: { slidesPerView: 2 },
+                1024: { slidesPerView: 3 }
             }
-            alert('Status kamar berhasil diupdate!');
-            loadKamarSection();
-        }
-    }
+        });
 
-    // ========== LIHAT LAPORAN ==========
-    function loadLaporanSection() {
-        updateLaporan();
-    }
+        // Mobile Menu Toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        });
 
-    function updateLaporan() {
-        const periode = document.getElementById('periodeLaporan').value;
-
-        // Hitung total (simulasi)
-        const totalPemasukan = 42850000;
-        const totalTerkumpul = 38750000;
-        const totalTunggakan = 4100000;
-        const kamarKosong = kamarData.filter(k => k.status === 'tersedia').length;
-
-        document.getElementById('laporanPemasukan').textContent = 'Rp ' + totalPemasukan.toLocaleString('id-ID');
-        document.getElementById('laporanTerkumpul').textContent = 'Rp ' + totalTerkumpul.toLocaleString('id-ID');
-        document.getElementById('laporanTunggakan').textContent = 'Rp ' + totalTunggakan.toLocaleString('id-ID');
-        document.getElementById('laporanKamarKosong').textContent = kamarKosong;
-
-        // Detail transaksi
-        const detailTransaksi = [
-            { tanggal: '2026-04-01', penghuni: 'Budi Santoso', ket: 'Pembayaran sewa', masuk: 850000, keluar: 0 },
-            { tanggal: '2026-04-01', penghuni: 'Dewi Lestari', ket: 'Pembayaran sewa', masuk: 650000, keluar: 0 },
-            { tanggal: '2026-04-02', penghuni: '-', ket: 'Listrik & Air', masuk: 0, keluar: 2850000 },
-            { tanggal: '2026-04-03', penghuni: 'Rizki Pratama', ket: 'Pembayaran sewa', masuk: 650000, keluar: 0 },
-            { tanggal: '2026-04-03', penghuni: '-', ket: 'Perbaikan AC', masuk: 0, keluar: 1200000 }
+        // Data Kamar Lengkap (seperti Mamikos)
+        const kamarData = [
+            { id: 1, nama: 'Kos Melati Putra', lokasi: 'Jakarta', tipe: 'Standar', harga: 850000, fasilitas: ['Kasur', 'Lemari', 'Meja', 'WiFi', 'AC'], status: 'tersedia', gambar: 'https://placehold.co/400x300/4f46e5/ffffff?text=Kos+Melati', gender: 'Putra', rating: 4.5, kamar_mandi: 'Luar' },
+            { id: 2, nama: 'Kos Mawar Putri', lokasi: 'Bandung', tipe: 'Premium', harga: 1250000, fasilitas: ['Kasur', 'Lemari', 'AC', 'TV', 'WiFi', 'Kamar Mandi Dalam'], status: 'tersedia', gambar: 'https://placehold.co/400x300/8b5cf6/ffffff?text=Kos+Mawar', gender: 'Putri', rating: 4.8, kamar_mandi: 'Dalam' },
+            { id: 3, nama: 'Kos Anggrek Campur', lokasi: 'Surabaya', tipe: 'VIP', harga: 1750000, fasilitas: ['King Size Bed', 'Lemari', 'AC', 'TV 40"', 'Kulkas', 'Sofa', 'WiFi', 'Kamar Mandi Dalam'], status: 'tersedia', gambar: 'https://placehold.co/400x300/d946ef/ffffff?text=Kos+Anggrek', gender: 'Campuran', rating: 4.9, kamar_mandi: 'Dalam' },
+            { id: 4, nama: 'Kos Kenanga', lokasi: 'Yogyakarta', tipe: 'Deluxe', harga: 1500000, fasilitas: ['Kasur Queen', 'Lemari', 'AC', 'TV', 'Kulkas', 'WiFi', 'Kamar Mandi Dalam', 'Balkon'], status: 'tersedia', gambar: 'https://placehold.co/400x300/ec4899/ffffff?text=Kos+Kenanga', gender: 'Putri', rating: 4.7, kamar_mandi: 'Dalam' },
+            { id: 5, nama: 'Kos Flamboyan', lokasi: 'Jakarta', tipe: 'Ekonomi', harga: 650000, fasilitas: ['Kasur', 'Lemari', 'Kipas Angin', 'WiFi'], status: 'tersedia', gambar: 'https://placehold.co/400x300/10b981/ffffff?text=Kos+Flamboyan', gender: 'Putra', rating: 4.2, kamar_mandi: 'Luar' },
+            { id: 6, nama: 'Kos Bougenville', lokasi: 'Bandung', tipe: 'Premium', harga: 1350000, fasilitas: ['Kasur', 'Lemari', 'AC', 'TV', 'Kulkas', 'WiFi', 'Kamar Mandi Dalam'], status: 'tersedia', gambar: 'https://placehold.co/400x300/f97316/ffffff?text=Kos+Bougenville', gender: 'Campuran', rating: 4.6, kamar_mandi: 'Dalam' },
+            { id: 7, nama: 'Kos Cempaka', lokasi: 'Surabaya', tipe: 'Standar', harga: 900000, fasilitas: ['Kasur', 'Lemari', 'AC', 'WiFi'], status: 'terisi', gambar: 'https://placehold.co/400x300/6b7280/ffffff?text=Kos+Cempaka', gender: 'Putra', rating: 4.3, kamar_mandi: 'Luar' },
+            { id: 8, nama: 'Kos Dahlia', lokasi: 'Yogyakarta', tipe: 'Deluxe', harga: 1600000, fasilitas: ['Kasur Queen', 'Lemari', 'AC', 'TV', 'Kulkas', 'WiFi', 'Kamar Mandi Dalam'], status: 'tersedia', gambar: 'https://placehold.co/400x300/ef4444/ffffff?text=Kos+Dahlia', gender: 'Putri', rating: 4.8, kamar_mandi: 'Dalam' },
         ];
 
-        document.getElementById('detailLaporanTable').innerHTML = detailTransaksi.map(d => `
-            <tr>
-                <td class="px-6 py-4">${new Date(d.tanggal).toLocaleDateString('id-ID')}</td>
-                <td class="px-6 py-4">${d.penghuni}</td>
-                <td class="px-6 py-4">${d.ket}</td>
-                <td class="px-6 py-4 text-indigo-600">${d.masuk > 0 ? 'Rp ' + d.masuk.toLocaleString('id-ID') : '-'}</td>
-                <td class="px-6 py-4 text-rose-600">${d.keluar > 0 ? 'Rp ' + d.keluar.toLocaleString('id-ID') : '-'}</td>
-            </tr>
-        `).join('');
-    }
+        // Render Kamar
+        function renderKamar(data) {
+            const grid = document.getElementById('kamarGrid');
+            if (!grid) return;
 
-    function cetakLaporan() {
-        window.print();
-    }
+            grid.innerHTML = '';
 
-    // Inisialisasi: tampilkan dashboard
-    showSection('dashboard');
-</script>
+            if (data.length === 0) {
+                grid.innerHTML = '<div class="col-span-full text-center py-10"><i class="bx bx-folder-open text-5xl text-gray-300 mb-3"></i><p class="text-gray-500">Tidak ada kamar yang sesuai filter</p></div>';
+                return;
+            }
+
+            data.forEach(kamar => {
+                const statusBadge = kamar.status === 'tersedia'
+                    ? '<span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-medium">Tersedia</span>'
+                    : '<span class="bg-amber-100 text-amber-700 px-2 py-1 rounded-full text-xs font-medium">Terisi</span>';
+
+                const genderIcon = {
+                    'Putra': 'bx-male',
+                    'Putri': 'bx-female',
+                    'Campuran': 'bx-male-female'
+                }[kamar.gender] || 'bx-user';
+
+                const fasilitasIcons = {
+                    'AC': 'bx-wind',
+                    'WiFi': 'bx-wifi',
+                    'TV': 'bx-tv',
+                    'Kulkas': 'bx-fridge',
+                    'Kamar Mandi Dalam': 'bx-bath',
+                    'Kasur': 'bx-bed',
+                    'Lemari': 'bx-closet',
+                    'Meja': 'bx-desk',
+                    'Sofa': 'bx-chair',
+                    'Balkon': 'bx-building-house',
+                    'Kipas Angin': 'bx-wind'
+                };
+
+                const fasilitasHtml = kamar.fasilitas.slice(0, 3).map(f =>
+                    `<i class='bx ${fasilitasIcons[f] || 'bx-check'} text-indigo-600 text-lg' title="${f}"></i>`
+                ).join('');
+
+                const stars = Math.floor(kamar.rating);
+                const halfStar = kamar.rating % 1 >= 0.5;
+
+                grid.innerHTML += `
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover border border-gray-100">
+                        <div class="relative">
+                            <img src="${kamar.gambar}" alt="${kamar.nama}" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 left-3">
+                                ${statusBadge}
+                            </div>
+                            <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1">
+                                <i class='bx bxs-star text-yellow-400'></i> ${kamar.rating}
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex items-center gap-1 text-xs text-gray-500 mb-1">
+                                <i class='bx ${genderIcon}'></i>
+                                <span>${kamar.gender}</span>
+                                <span class="mx-1">•</span>
+                                <i class='bx bx-map'></i>
+                                <span>${kamar.lokasi}</span>
+                                <span class="mx-1">•</span>
+                                <i class='bx bx-bath'></i>
+                                <span>KM ${kamar.kamar_mandi}</span>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-800 mb-1">${kamar.nama}</h3>
+                            <p class="text-xl font-bold text-indigo-600 mb-2">Rp ${kamar.harga.toLocaleString('id-ID')}<span class="text-sm font-normal text-gray-500">/bln</span></p>
+                            <div class="flex items-center gap-2 mb-3">
+                                ${fasilitasHtml}
+                                ${kamar.fasilitas.length > 3 ? `<span class="text-xs text-gray-500">+${kamar.fasilitas.length - 3}</span>` : ''}
+                            </div>
+                            <button onclick="openBookingModal(${kamar.id})" class="w-full bg-indigo-50 hover:bg-indigo-100 text-indigo-700 py-2.5 rounded-xl font-medium transition flex items-center justify-center gap-2 ${kamar.status !== 'tersedia' ? 'opacity-50 cursor-not-allowed' : ''}" ${kamar.status !== 'tersedia' ? 'disabled' : ''}>
+                                <i class='bx bx-calendar-check'></i> Booking Cepat
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Filter Function
+        function applyFilter() {
+            const lokasi = document.getElementById('filterLokasi')?.value || '';
+            const tipe = document.getElementById('filterTipe')?.value || '';
+            const harga = document.getElementById('filterHarga')?.value || '';
+            const status = document.getElementById('filterStatus')?.value || '';
+
+            let filtered = kamarData;
+
+            if (lokasi) filtered = filtered.filter(k => k.lokasi === lokasi);
+            if (tipe) filtered = filtered.filter(k => k.tipe === tipe);
+            if (harga) filtered = filtered.filter(k => k.harga <= parseInt(harga));
+            if (status) filtered = filtered.filter(k => k.status === status);
+
+            renderKamar(filtered);
+        }
+
+        // Search from Hero
+        function searchFromHero() {
+            const searchTerm = document.getElementById('searchHero')?.value.toLowerCase() || '';
+            const tipe = document.getElementById('tipeHero')?.value || '';
+
+            let filtered = kamarData;
+
+            if (searchTerm) {
+                filtered = filtered.filter(k =>
+                    k.nama.toLowerCase().includes(searchTerm) ||
+                    k.lokasi.toLowerCase().includes(searchTerm)
+                );
+            }
+            if (tipe) {
+                filtered = filtered.filter(k => k.tipe === tipe);
+            }
+
+            renderKamar(filtered);
+
+            // Scroll to kamar section
+            document.getElementById('kamar').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Booking Modal
+        let currentKamarId = null;
+
+        function openBookingModal(kamarId) {
+            const kamar = kamarData.find(k => k.id === kamarId);
+            if (!kamar) return;
+
+            currentKamarId = kamarId;
+
+            document.getElementById('bookingDetail').innerHTML = `
+                <div class="flex items-center gap-3">
+                    <img src="${kamar.gambar}" alt="${kamar.nama}" class="w-20 h-20 rounded-lg object-cover">
+                    <div>
+                        <p class="font-semibold text-gray-800">${kamar.nama}</p>
+                        <p class="text-indigo-600 font-bold">Rp ${kamar.harga.toLocaleString('id-ID')}/bulan</p>
+                        <p class="text-xs text-gray-600 flex items-center gap-1 mt-1"><i class='bx bx-map'></i> ${kamar.lokasi}</p>
+                    </div>
+                </div>
+            `;
+
+            // Set default tanggal masuk (besok)
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('bookingTglMasuk').valueAsDate = tomorrow;
+
+            document.getElementById('bookingModal').style.display = 'flex';
+        }
+
+        function closeBookingModal() {
+            document.getElementById('bookingModal').style.display = 'none';
+            document.getElementById('bookingForm').reset();
+        }
+
+        function handleBooking(e) {
+            e.preventDefault();
+
+            const nama = document.getElementById('bookingNama').value;
+            const email = document.getElementById('bookingEmail').value;
+            const telepon = document.getElementById('bookingTelepon').value;
+            const tglMasuk = document.getElementById('bookingTglMasuk').value;
+            const durasi = document.getElementById('bookingDurasi').value;
+
+            const kamar = kamarData.find(k => k.id === currentKamarId);
+
+            alert(`✅ Booking sementara berhasil!\n\nKamar: ${kamar.nama}\nNama: ${nama}\nEmail: ${email}\nWhatsApp: ${telepon}\nTanggal Masuk: ${tglMasuk}\nDurasi: ${durasi} bulan\n\nStaff kami akan menghubungi Anda dalam 1x24 jam.`);
+
+            closeBookingModal();
+        }
+
+        // Filter chips
+        document.querySelectorAll('.filter-chip').forEach(chip => {
+            chip.addEventListener('click', function() {
+                document.querySelectorAll('.filter-chip').forEach(c => {
+                    c.classList.remove('bg-indigo-600', 'text-white');
+                    c.classList.add('bg-white', 'border', 'border-gray-300', 'text-gray-700');
+                });
+                this.classList.remove('bg-white', 'border', 'border-gray-300', 'text-gray-700');
+                this.classList.add('bg-indigo-600', 'text-white');
+
+                // Apply filter based on chip text
+                const filterText = this.innerText.trim();
+                let filtered = kamarData;
+
+                if (filterText === 'Kos Putra') filtered = kamarData.filter(k => k.gender === 'Putra');
+                else if (filterText === 'Kos Putri') filtered = kamarData.filter(k => k.gender === 'Putri');
+                else if (filterText === 'Campuran') filtered = kamarData.filter(k => k.gender === 'Campuran');
+                else if (filterText === 'AC') filtered = kamarData.filter(k => k.fasilitas.includes('AC'));
+                else if (filterText === 'Kamar Mandi Dalam') filtered = kamarData.filter(k => k.kamar_mandi === 'Dalam');
+                else if (filterText === 'WiFi') filtered = kamarData.filter(k => k.fasilitas.includes('WiFi'));
+                else if (filterText === 'Harga < 1jt') filtered = kamarData.filter(k => k.harga < 1000000);
+
+                renderKamar(filtered);
+            });
+        });
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('bookingModal');
+            if (event.target === modal) {
+                closeBookingModal();
+            }
+        }
+
+        // Initial render
+        renderKamar(kamarData);
+    </script>
 
 </body>
 </html>

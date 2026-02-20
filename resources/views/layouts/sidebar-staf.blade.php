@@ -19,7 +19,8 @@
                 Dashboard
             </a>
 
-            <a href="{{ route('penghuni.index') }}"
+            {{-- {{ route('penghuni.index') }} --}}
+            <a href=""
                 class="flex items-center gap-3 px-4 py-3 rounded-xl
                 {{ request()->routeIs('penghuni.*')
                     ? 'bg-indigo-50 border-l-4 border-indigo-600 text-indigo-700 font-medium'

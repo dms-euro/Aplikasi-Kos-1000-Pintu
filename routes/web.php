@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AccountController::class, 'showlogin'])->name('login');
     Route::post('/login', [AccountController::class, 'login'])->name('login.post');
+    // Route::get('/', [])
 });
 
 Route::middleware(['auth', 'role:owner'])->group(function () {
@@ -30,7 +31,7 @@ Route::middleware(['auth', 'role:owner'])->group(function () {
 
 Route::middleware(['auth', 'role:staf'])->group(function () {
     Route::get('/dashboard/staf', [DashboardController::class, 'index'])->name('dashboard.staf');
-    Route::get('/penghuni/staf', [PenghuniController::class, 'index'])->name('penghuni.index');
+    Route::get('/penghuni/staf', [PenghuniController::class, 'index'])->name('penghuni.');
 });
 
 Route::middleware(['auth', 'role:owner,staf'])->group(function(){
