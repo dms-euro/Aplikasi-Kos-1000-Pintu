@@ -3,11 +3,50 @@
 namespace App\Http\Controllers\Account;
 
 use App\Models\User;
-use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AccountController
 {
+    // Auth
+    public function showlogin()
+    {
+        return view('auth.login');
+    }
+
+    public function login(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+
+            $user = Auth::user();
+
+            if ($user->role === 'owner') {
+                return redirect()->route('dashboard.admin');
+            }
+
+            if ($user->role === 'staf') {
+                return redirect()->route('dashboard.staf');
+            }
+        }
+
+        return back()->with('error', 'Email atau Password Salah');
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/login');
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -29,33 +68,11 @@ class AccountController
             'role' => 'required',
         ]);
 
+        $validate['password'] = Hash::make($validate['password']);
+
         User::create($validate);
 
         return redirect()->back()->with('success', 'Account berhasil di Tambahkan');
-    }
-
-    public function showlogin()
-    {
-        return view('auth.login');
-    }
-
-    public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => 'required',
-            'password' => 'required',
-        ]);
-
-        if (Auth::attempt($credentials)){
-            $request->session()->regenerate();
-            $user = Auth::user();
-            if ($user->role === 'owner') {
-                return redirect()->route('dashboard.admin');
-            } elseif ($user->role === 'staf') {
-                return redirect()->route('dashboard.staf');
-            }
-            return back()->with('error', 'Email atau Password Salah');
-        }
     }
 
     /**
