@@ -27,4 +27,10 @@ Route::middleware(['auth', 'role:owner'])->group(function () {
     Route::delete('/kamar/delete/{id}', [KamarController::class, 'destroy'])->name('kamar.destroy');
 });
 
-// Route::get('/dashboard/staf', [DashboardController::class, 'index'])->name('dashboard.staf');
+Route::middleware(['auth', 'role:staf'])->group(function () {
+    Route::get('/dashboard/staf', [DashboardController::class, 'index'])->name('dashboard.staf');
+});
+
+Route::middleware(['auth', 'role:owner,staf'])->group(function(){
+    Route::post('/logout', [AccountController::class, 'logout'])->name('logout');
+});
