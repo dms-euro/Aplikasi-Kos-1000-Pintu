@@ -4,7 +4,12 @@ use App\Http\Controllers\Account\AccountController;
 use App\Http\Controllers\Admin\DashboardCpntroller;
 use App\Http\Controllers\Admin\KamarController;
 use App\Http\Controllers\Admin\KategoriController;
+use App\Http\Controllers\Staf\DashboardController;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/login', [AccountController::class, 'showlogin'])->name('login');
+Route::post('/login', [AccountController::class, 'login'])->name('login.post');
+
 
 Route::get('/', [DashboardCpntroller::class, 'index'])->name('dashboard.admin');
 Route::get('/account/admin', [AccountController::class, 'index'])->name('account.index');
@@ -18,3 +23,6 @@ Route::get('/kamar/admin', [KamarController::class, 'index'])->name('kamar.index
 Route::post('/kamar/add/admin', [KamarController::class, 'store'])->name('kamar.store');
 Route::put('/kamar/update/{id}', [KamarController::class, 'update'])->name('kamar.update');
 Route::delete('/kamar/delete/{id}', [KamarController::class, 'destroy'])->name('kamar.destroy');
+
+
+Route::get('/dashboard/staf', [DashboardController::class, 'index'])->name('dashboard.staf');

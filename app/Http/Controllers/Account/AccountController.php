@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Account;
 
 use App\Models\User;
+use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
 
 class AccountController
@@ -14,14 +15,6 @@ class AccountController
     {
         $user = User::whereIn('role', ['owner', 'staf'])->get();
         return view('admin.users', compact('user'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -41,12 +34,28 @@ class AccountController
         return redirect()->back()->with('success', 'Account berhasil di Tambahkan');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function showlogin()
     {
-        //
+        return view('auth.login');
+    }
+
+    public function login(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => 'required',
+            'password' => 'required',
+        ]);
+
+        if (Auth::attempt($credentials)){
+            $request->session()->regenerate();
+            $user = Auth::user();
+            if ($user->role === 'owner') {
+                return redirect()->route('dashboard.admin');
+            } elseif ($user->role === 'staf') {
+                return redirect()->route('dashboard.staf');
+            }
+            return back()->with('error', 'Email atau Password Salah');
+        }
     }
 
     /**
