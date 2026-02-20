@@ -27,19 +27,23 @@
 <body class="bg-indigo-50/20">
 
     <div class="flex h-screen overflow-hidden">
-        @if (auth()->user()->role === 'owner')
-            @include('layouts.sidebar-owner')
-        @endif
+        @auth
+            @if (auth()->user()->role === 'owner')
+                @include('layouts.sidebar-owner')
+            @endif
 
-        @if (auth()->user()->role === 'staf')
-            @include('layouts.sidebar-staf')
-        @endif
+            @if (auth()->user()->role === 'staf')
+                @include('layouts.sidebar-staf')
+            @endif
 
+        @endauth
         <!-- MAIN CONTENT -->
         <main class="flex-1 overflow-y-auto bg-white/70 backdrop-blur-sm">
 
-            <!-- top bar -->
-            @include('layouts.header')
+            @auth
+                <!-- top bar -->
+                @include('layouts.header')
+            @endauth
 
             <!-- content -->
             @yield('content')

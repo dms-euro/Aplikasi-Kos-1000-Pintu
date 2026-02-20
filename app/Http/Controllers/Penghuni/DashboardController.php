@@ -11,7 +11,7 @@ class DashboardController
      */
     public function index()
     {
-        //
+        return view('penghuni.dashboard');
     }
 
     /**

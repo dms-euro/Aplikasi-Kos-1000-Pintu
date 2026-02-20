@@ -4,6 +4,7 @@ use App\Http\Controllers\Account\AccountController;
 use App\Http\Controllers\Admin\DashboardCpntroller;
 use App\Http\Controllers\Admin\KamarController;
 use App\Http\Controllers\Admin\KategoriController;
+use App\Http\Controllers\Penghuni\DashboardController as PenghuniDashboardController;
 use App\Http\Controllers\Staf\DashboardController;
 use App\Http\Controllers\Staf\PenghuniController;
 use Illuminate\Support\Facades\Route;
@@ -11,11 +12,11 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AccountController::class, 'showlogin'])->name('login');
     Route::post('/login', [AccountController::class, 'login'])->name('login.post');
-    // Route::get('/', [])
+    Route::get('/', [PenghuniDashboardController::class, 'index'])->name('dashboard.penghuni');
 });
 
 Route::middleware(['auth', 'role:owner'])->group(function () {
-    Route::get('/', [DashboardCpntroller::class, 'index'])->name('dashboard.admin');
+    Route::get('/dashboard/admin', [DashboardCpntroller::class, 'index'])->name('dashboard.admin');
     Route::get('/account/admin', [AccountController::class, 'index'])->name('account.index');
     Route::post('/account/add/admin', [AccountController::class, 'store'])->name('account.store');
     Route::delete('/account/delete/{id}', [AccountController::class, 'destroy'])->name('account.delete');

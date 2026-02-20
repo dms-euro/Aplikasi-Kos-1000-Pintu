@@ -34,6 +34,10 @@ class AccountController
             if ($user->role === 'staf') {
                 return redirect()->route('dashboard.staf');
             }
+
+            if ($user->role === 'penghuni') {
+                return redirect()->route('dashboard.penghuni');
+            }
         }
 
         return back()->with('error', 'Email atau Password Salah');
