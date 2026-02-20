@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Penyewa · Kosan优雅</title>
+    <!-- Tailwind CDN v4 -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Flowbite CSS & JS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+    <style>
+        body { font-family: 'Inter', system-ui, sans-serif; background-color: #f8fafc; }
+    </style>
+</head>
+<body class="bg-indigo-50/20">
+
+<div class="flex h-screen overflow-hidden">
+    <!-- SIDEBAR (konsisten) dengan highlight penyewa -->
+    <aside class="w-64 bg-white shadow-lg flex flex-col justify-between border-r border-indigo-100">
+        <div class="py-6 px-4">
+            <div class="flex items-center gap-2 mb-8 px-2">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-emerald-500 flex items-center justify-center shadow-sm">
+                    <i class='bx bx-home-alt-2 text-white text-lg'></i>
+                </div>
+                <span class="text-xl font-semibold text-gray-800">Kos<span class="text-indigo-600">an</span></span>
+                <span class="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full ml-1">owner</span>
+            </div>
+            <nav class="space-y-1">
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-indigo-50/50 rounded-xl transition group">
+                    <i class='bx bxs-dashboard text-xl text-indigo-400 group-hover:text-indigo-500'></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-indigo-50/50 rounded-xl transition group">
+                    <i class='bx bx-building-house text-xl text-emerald-400 group-hover:text-emerald-500'></i>
+                    <span>Properti kos</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-indigo-700 bg-indigo-50 rounded-xl border-l-4 border-indigo-600 font-medium">
+                    <i class='bx bx-group text-xl text-indigo-600'></i>
+                    <span>Manajemen Penyewa</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-indigo-50/50 rounded-xl transition group">
+                    <i class='bx bx-purchase-tag-alt text-xl text-indigo-400 group-hover:text-indigo-500'></i>
+                    <span>Kategori & Harga</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-indigo-50/50 rounded-xl transition group">
+                    <i class='bx bx-bed text-xl text-indigo-400 group-hover:text-indigo-500'></i>
+                    <span>Manajemen Kamar</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-indigo-50/50 rounded-xl transition group">
+                    <i class='bx bx-line-chart text-xl text-indigo-400 group-hover:text-indigo-500'></i>
+                    <span>Laporan Keuangan</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-indigo-50/50 rounded-xl transition group">
+                    <i class='bx bx-receipt text-xl text-amber-400 group-hover:text-amber-500'></i>
+                    <span>Tagihan</span>
+                </a>
+                <div class="pt-4 mt-2 border-t border-indigo-100"></div>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-indigo-50/50 rounded-xl transition group">
+                    <i class='bx bx-cog text-xl text-violet-400 group-hover:text-violet-500'></i>
+                    <span>Pengaturan</span>
+                </a>
+            </nav>
+        </div>
+        <div class="border-t border-indigo-100 p-4 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-400 to-emerald-400 flex items-center justify-center text-white font-bold shadow-sm">
+                <i class='bx bx-user-circle text-2xl'></i>
+            </div>
+            <div>
+                <p class="text-sm font-medium text-gray-800">Rahma W.</p>
+                <p class="text-xs text-indigo-500 flex items-center gap-1"><i class='bx bx-crown text-xs'></i> owner</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 overflow-y-auto bg-white/70 backdrop-blur-sm">
+        <!-- top bar -->
+        <header class="bg-white border-b border-indigo-100 py-4 px-6 flex items-center justify-between sticky top-0 z-10">
+            <div class="flex items-center gap-4">
+                <h1 class="text-2xl font-semibold text-gray-800">Manajemen <span class="text-indigo-600">Penyewa</span></h1>
+                <span class="bg-emerald-100 text-emerald-700 text-sm px-3 py-1 rounded-full flex items-center gap-1"><i class='bx bx-user-check'></i> <span id="totalPenyewaStat">0</span> penyewa aktif</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="relative hidden md:block">
+                    <i class='bx bx-search absolute left-3 top-1/2 -translate-y-1/2 text-indigo-300 text-lg'></i>
+                    <input type="text" id="searchInput" placeholder="Cari penyewa..." class="pl-10 pr-4 py-2 border border-indigo-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 bg-indigo-50/30 w-64">
+                </div>
+                <button class="relative p-2 text-indigo-500 hover:bg-indigo-100 rounded-full">
+                    <i class='bx bx-bell text-2xl'></i>
+                    <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-rose-500 rounded-full border border-white"></span>
+                </button>
+                <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-200 to-emerald-200 flex items-center justify-center text-indigo-700 font-medium border-2 border-white shadow-sm">
+                    <i class='bx bx-user text-xl'></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- konten manajemen penyewa -->
+        <div class="p-6">
+            <!-- header + button tambah penyewa -->
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2"><i class='bx bx-group text-indigo-500'></i> Daftar Penyewa</h2>
+                <button id="createPenyewaBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl text-sm font-medium flex items-center gap-2 transition shadow-sm" data-modal-target="penyewaModal" data-modal-toggle="penyewaModal" onclick="openCreateModal()">
+                    <i class='bx bx-plus-circle'></i> Tambah Penyewa
+                </button>
+            </div>
+
+            <!-- Filter status -->
+            <div class="flex flex-wrap gap-2 mb-4">
+                <button class="filter-btn active px-4 py-2 text-sm rounded-full bg-indigo-600 text-white" data-filter="all">Semua</button>
+                <button class="filter-btn px-4 py-2 text-sm rounded-full bg-white border border-indigo-200 text-gray-600 hover:bg-indigo-50" data-filter="aktif">Aktif</button>
+                <button class="filter-btn px-4 py-2 text-sm rounded-full bg-white border border-indigo-200 text-gray-600 hover:bg-indigo-50" data-filter="nunggak">Nunggak</button>
+                <button class="filter-btn px-4 py-2 text-sm rounded-full bg-white border border-indigo-200 text-gray-600 hover:bg-indigo-50" data-filter="akan_keluar">Akan Keluar</button>
+            </div>
+
+            <!-- Tabel Penyewa -->
+            <div class="bg-white rounded-2xl border border-indigo-100 shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-indigo-50/70 text-indigo-800">
+                            <tr>
+                                <th class="px-6 py-3 text-left font-medium">ID</th>
+                                <th class="px-6 py-3 text-left font-medium">Nama Penyewa</th>
+                                <th class="px-6 py-3 text-left font-medium">Kontak</th>
+                                <th class="px-6 py-3 text-left font-medium">Kamar</th>
+                                <th class="px-6 py-3 text-left font-medium">Tipe Kamar</th>
+                                <th class="px-6 py-3 text-left font-medium">Tanggal Masuk</th>
+                                <th class="px-6 py-3 text-left font-medium">Status</th>
+                                <th class="px-6 py-3 text-left font-medium">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-indigo-100" id="penyewaTableBody">
+                            <!-- data akan diisi via javascript -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="px-6 py-3 border-t border-indigo-100 flex justify-between items-center text-xs text-indigo-400">
+                    <div class="flex gap-3">
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500"></span> Aktif</span>
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Nunggak</span>
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-rose-500"></span> Akan Keluar</span>
+                    </div>
+                    <span>total <span id="penyewaCount">0</span> penyewa</span>
+                </div>
+            </div>
+
+            <!-- Statistik Penyewa -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
+                <div class="bg-white rounded-xl border border-indigo-100 p-4 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
+                        <i class='bx bx-group text-xl'></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-indigo-500">Total Penyewa</p>
+                        <p class="text-lg font-semibold text-gray-800" id="statTotal">0</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl border border-green-100 p-4 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                        <i class='bx bx-check-circle text-xl'></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-green-500">Aktif</p>
+                        <p class="text-lg font-semibold text-gray-800" id="statAktif">0</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl border border-amber-100 p-4 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600">
+                        <i class='bx bx-error text-xl'></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-amber-500">Nunggak</p>
+                        <p class="text-lg font-semibold text-gray-800" id="statNunggak">0</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl border border-rose-100 p-4 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-rose-100 flex items-center justify-center text-rose-600">
+                        <i class='bx bx-calendar-exclamation text-xl'></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-rose-500">Akan Keluar</p>
+                        <p class="text-lg font-semibold text-gray-800" id="statAkanKeluar">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- MODAL FLOWBITE (untuk create & edit penyewa) -->
+<div id="penyewaModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-2xl max-h-full">
+        <div class="relative bg-white rounded-2xl shadow-lg border border-indigo-100">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between p-4 md:p-5 border-b border-indigo-100 rounded-t-2xl">
+                <h3 class="text-lg font-semibold text-gray-900 flex items-center gap-2" id="modalTitle">
+                    <i class='bx bx-user-plus text-indigo-600'></i> Tambah Penyewa
+                </h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-indigo-100 hover:text-indigo-700 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="penyewaModal">
+                    <i class='bx bx-x text-2xl'></i>
+                </button>
+            </div>
+            <!-- Modal body form -->
+            <div class="p-4 md:p-5">
+                <form action="{{ route('penyewa.store') }}" method="POST" id="penyewaForm" class="space-y-4" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" id="penyewaId" name="penyewaId" value="">
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="nama" class="block mb-2 text-sm font-medium text-gray-700 flex items-center gap-1"><i class='bx bx-user text-indigo-400'></i> Nama Lengkap</label>
+                            <input type="text" name="nama" id="nama" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" placeholder="Masukkan nama" required>
+                        </div>
+
+                        <div>
+                            <label for="nik" class="block mb-2 text-sm font-medium text-gray-700 flex items-center gap-1"><i class='bx bx-id-card text-indigo-400'></i> NIK</label>
+                            <input type="text" name="nik" id="nik" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" placeholder="Nomor Induk Kependudukan" required>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="email" class="block mb-2 text-sm font-medium text-gray-700 flex items-center gap-1"><i class='bx bx-envelope text-indigo-400'></i> Email</label>
+                            <input type="email" name="email" id="email" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" placeholder="email@contoh.com" required>
+                        </div>
+
+                        <div>
+                            <label for="telepon" class="block mb-2 text-sm font-medium text-gray-700 flex items-center gap-1"><i class='bx bx-phone text-indigo-400'></i> Nomor Telepon</label>
+                            <input type="text" name="telepon" id="telepon" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" placeholder="08xxxxxxxxxx" required>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="alamat" class="block mb-2 text-sm font-medium text-gray-700 flex items-center gap-1"><i class='bx bx-map text-indigo-400'></i> Alamat Asal</label>
+                        <textarea id="alamat" name="alamat" rows="2" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" placeholder="Alamat lengkap sesuai KTP" required></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="kamar_id" class="block mb-2 text-sm font-medium text-gray-700 flex items-center gap-1"><i class='bx bx-door-open text-indigo-400'></i> Pilih Kamar</label>
+                            <select id="kamar_id" name="kamar_id" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" required>
+                                <option value="" disabled selected>Pilih kamar</option>
+                                <!-- akan diisi via javascript -->
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="tanggal_masuk" class="block mb-2 text-sm font-medium text-gray-700 flex items-center gap-1"><i class='bx bx-calendar text-indigo-400'></i> Tanggal Masuk</label>
+                            <input type="date" name="tanggal_masuk" id="tanggal_masuk" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" required>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="tanggal_keluar" class="block mb-2 text-sm font-medium text-gray-700 flex items-center gap-1"><i class='bx bx-calendar-x text-indigo-400'></i> Tanggal Keluar (opsional)</label>
+                            <input type="date" name="tanggal_keluar" id="tanggal_keluar" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5">
+                        </div>
+
+                        <div>
+                            <label for="status_penyewa" class="block mb-2 text-sm font-medium text-gray-700 flex items-center gap-1"><i class='bx bx-info-circle text-indigo-400'></i> Status</label>
+                            <select id="status_penyewa" name="status_penyewa" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" required>
+                                <option value="" disabled selected>Pilih status</option>
+                                <option value="aktif">Aktif</option>
+                                <option value="nunggak">Nunggak</option>
+                                <option value="akan_keluar">Akan Keluar</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Foto KTP -->
+                    <div>
+                        <label for="foto_ktp" class="block mb-2 text-sm font-medium text-gray-700 flex items-center gap-1"><i class='bx bx-camera text-indigo-400'></i> Foto KTP</label>
+                        <input type="file" name="foto_ktp" id="foto_ktp" accept="image/jpeg,image/png,image/jpg" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition">
+                        <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG. Maksimal 2MB</p>
+                    </div>
+
+                    <!-- Foto Penyewa (opsional) -->
+                    <div>
+                        <label for="foto_penyewa" class="block mb-2 text-sm font-medium text-gray-700 flex items-center gap-1"><i class='bx bx-image text-indigo-400'></i> Foto Penyewa (opsional)</label>
+                        <input type="file" name="foto_penyewa" id="foto_penyewa" accept="image/jpeg,image/png,image/jpg" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition">
+                    </div>
+
+                    <div class="flex gap-3 pt-4">
+                        <button type="submit" class="w-full text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-xl text-sm px-5 py-2.5 text-center transition">Simpan</button>
+                        <button type="button" data-modal-hide="penyewaModal" class="w-full text-indigo-600 bg-white border border-indigo-200 hover:bg-indigo-50 focus:ring-4 focus:outline-none focus:ring-indigo-100 font-medium rounded-xl text-sm px-5 py-2.5 text-center transition">Batal</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Detail Penyewa -->
+<div id="detailModal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-2xl max-h-full">
+        <div class="relative bg-white rounded-2xl shadow-lg border border-indigo-100">
+            <div class="flex items-center justify-between p-4 md:p-5 border-b border-indigo-100 rounded-t-2xl">
+                <h3 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                    <i class='bx bx-user-detail text-indigo-600'></i> Detail Penyewa
+                </h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-indigo-100 hover:text-indigo-700 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="detailModal">
+                    <i class='bx bx-x text-2xl'></i>
+                </button>
+            </div>
+            <div class="p-4 md:p-5" id="detailContent">
+                <!-- akan diisi via javascript -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Hapus -->
+<div id="deleteModal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+        <div class="relative bg-white rounded-2xl shadow-lg border border-rose-100">
+            <div class="p-4 md:p-5 text-center">
+                <i class='bx bx-error-circle text-rose-500 text-6xl mb-3'></i>
+                <h3 class="mb-5 text-lg font-normal text-gray-700">Hapus penyewa <span id="deletePenyewaName" class="font-semibold text-indigo-600"></span>?</h3>
+                <p class="text-sm text-gray-500 mb-4">Data penyewa akan dihapus permanen.</p>
+                <div class="flex justify-center gap-3">
+                    <button id="confirmDeleteBtn" type="button" class="text-white bg-rose-600 hover:bg-rose-700 focus:ring-4 focus:outline-none focus:ring-rose-200 font-medium rounded-xl text-sm px-5 py-2.5 text-center transition">Ya, hapus</button>
+                    <button data-modal-hide="deleteModal" type="button" class="text-gray-600 bg-white border border-gray-200 hover:bg-gray-50 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-xl text-sm px-5 py-2.5 text-center transition">Batal</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Simple JavaScript untuk mengelola data penyewa -->
+<script>
+    // ========== DATA DUMMY ==========
+    // Data kamar (dari halaman sebelumnya)
+    const kamarList = [
+        { id: 1, kode_kamar: 'STD-01', tipe: 'Standar', harga: 850000, status: 'tersedia' },
+        { id: 2, kode_kamar: 'STD-02', tipe: 'Standar', harga: 850000, status: 'terisi' },
+        { id: 3, kode_kamar: 'STD-03', tipe: 'Standar', harga: 850000, status: 'terisi' },
+        { id: 4, kode_kamar: 'PRM-01', tipe: 'Premium', harga: 1250000, status: 'terisi' },
+        { id: 5, kode_kamar: 'PRM-02', tipe: 'Premium', harga: 1250000, status: 'tersedia' },
+        { id: 6, kode_kamar: 'VIP-01', tipe: 'VIP', harga: 1750000, status: 'terisi' },
+        { id: 7, kode_kamar: 'EKO-01', tipe: 'Ekonomi', harga: 650000, status: 'terisi' },
+        { id: 8, kode_kamar: 'EKO-02', tipe: 'Ekonomi', harga: 650000, status: 'terisi' },
+        { id: 9, kode_kamar: 'EKO-03', tipe: 'Ekonomi', harga: 650000, status: 'tersedia' },
+        { id: 10, kode_kamar: 'DLX-01', tipe: 'Deluxe', harga: 1500000, status: 'terisi' },
+        { id: 11, kode_kamar: 'SUP-01', tipe: 'Superior', harga: 1100000, status: 'tersedia' },
+        { id: 12, kode_kamar: 'SUP-02', tipe: 'Superior', harga: 1100000, status: 'terisi' }
+    ];
+
+    // Data penyewa
+    let penyewaList = [
+        {
+            id: 1,
+            nama: 'Budi Santoso',
+            nik: '3273011508900001',
+            email: 'budi@email.com',
+            telepon: '081234567890',
+            alamat: 'Jl. Merdeka No. 45, Jakarta',
+            kamar_id: 2,
+            kamar: kamarList.find(k => k.id === 2),
+            tanggal_masuk: '2026-01-15',
+            tanggal_keluar: null,
+            status_penyewa: 'aktif',
+            foto_ktp: null,
+            foto_penyewa: null
+        },
+        {
+            id: 2,
+            nama: 'Siti Aminah',
+            nik: '3273011508900002',
+            email: 'siti@email.com',
+            telepon: '081298765432',
+            alamat: 'Jl. Melati No. 12, Bandung',
+            kamar_id: 4,
+            kamar: kamarList.find(k => k.id === 4),
+            tanggal_masuk: '2026-02-01',
+            tanggal_keluar: null,
+            status_penyewa: 'nunggak',
+            foto_ktp: null,
+            foto_penyewa: null
+        },
+        {
+            id: 3,
+            nama: 'Ahmad Fauzi',
+            nik: '3273011508900003',
+            email: 'ahmad@email.com',
+            telepon: '081312345678',
+            alamat: 'Jl. Kenanga No. 7, Surabaya',
+            kamar_id: 6,
+            kamar: kamarList.find(k => k.id === 6),
+            tanggal_masuk: '2025-12-10',
+            tanggal_keluar: '2026-04-30',
+            status_penyewa: 'akan_keluar',
+            foto_ktp: null,
+            foto_penyewa: null
+        },
+        {
+            id: 4,
+            nama: 'Dewi Lestari',
+            nik: '3273011508900004',
+            email: 'dewi@email.com',
+            telepon: '081398765432',
+            alamat: 'Jl. Mawar No. 23, Yogyakarta',
+            kamar_id: 7,
+            kamar: kamarList.find(k => k.id === 7),
+            tanggal_masuk: '2026-03-05',
+            tanggal_keluar: null,
+            status_penyewa: 'aktif',
+            foto_ktp: null,
+            foto_penyewa: null
+        },
+        {
+            id: 5,
+            nama: 'Rizki Pratama',
+            nik: '3273011508900005',
+            email: 'rizki@email.com',
+            telepon: '081311223344',
+            alamat: 'Jl. Anggrek No. 8, Semarang',
+            kamar_id: 8,
+            kamar: kamarList.find(k => k.id === 8),
+            tanggal_masuk: '2026-02-20',
+            tanggal_keluar: null,
+            status_penyewa: 'aktif',
+            foto_ktp: null,
+            foto_penyewa: null
+        },
+        {
+            id: 6,
+            nama: 'Maya Sari',
+            nik: '3273011508900006',
+            email: 'maya@email.com',
+            telepon: '081377889900',
+            alamat: 'Jl. Flamboyan No. 15, Medan',
+            kamar_id: 10,
+            kamar: kamarList.find(k => k.id === 10),
+            tanggal_masuk: '2026-01-25',
+            tanggal_keluar: null,
+            status_penyewa: 'nunggak',
+            foto_ktp: null,
+            foto_penyewa: null
+        }
+    ];
+
+    let currentDeleteId = null;
+    let currentFilter = 'all';
+    let searchTerm = '';
+
+    // Load kamar ke dropdown (hanya yang tersedia atau sedang digunakan)
+    function loadKamarDropdown(selectedId = null) {
+        const select = document.getElementById('kamar_id');
+        select.innerHTML = '<option value="" disabled selected>Pilih kamar</option>';
+
+        kamarList.forEach(kamar => {
+            // Tampilkan kamar yang tersedia atau sedang dipilih (untuk edit)
+            const isAvailable = kamar.status === 'tersedia';
+            const isSelected = selectedId === kamar.id;
+            const isOccupied = penyewaList.some(p => p.kamar_id === kamar.id && p.id !== selectedId);
+
+            if (isAvailable || isSelected || isOccupied) {
+                const option = document.createElement('option');
+                option.value = kamar.id;
+                option.textContent = `${kamar.kode_kamar} - ${kamar.tipe} (Rp ${kamar.harga.toLocaleString('id-ID')})`;
+
+                if (!isAvailable && !isSelected) {
+                    option.disabled = true;
+                    option.textContent += ' - Tidak Tersedia';
+                }
+
+                if (selectedId === kamar.id) {
+                    option.selected = true;
+                }
+
+                select.appendChild(option);
+            }
+        });
+    }
+
+    // Render tabel penyewa dengan filter dan search
+    function renderTable() {
+        const tbody = document.getElementById('penyewaTableBody');
+        const countSpan = document.getElementById('penyewaCount');
+        const totalStat = document.getElementById('statTotal');
+        const aktifStat = document.getElementById('statAktif');
+        const nunggakStat = document.getElementById('statNunggak');
+        const akanKeluarStat = document.getElementById('statAkanKeluar');
+        const totalPenyewaStat = document.getElementById('totalPenyewaStat');
+
+        // Filter data
+        let filteredData = penyewaList;
+
+        // Filter by status
+        if (currentFilter !== 'all') {
+            filteredData = filteredData.filter(p => p.status_penyewa === currentFilter);
+        }
+
+        // Filter by search
+        if (searchTerm) {
+            const term = searchTerm.toLowerCase();
+            filteredData = filteredData.filter(p =>
+                p.nama.toLowerCase().includes(term) ||
+                p.email.toLowerCase().includes(term) ||
+                p.telepon.includes(term) ||
+                (p.kamar && p.kamar.kode_kamar.toLowerCase().includes(term))
+            );
+        }
+
+        if (filteredData.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="8" class="px-6 py-8 text-center text-gray-500"><i class='bx bx-folder-open text-4xl text-indigo-300 mb-2'></i><br>Tidak ada data penyewa</td></tr>`;
+            countSpan.textContent = '0';
+            updateStatistik();
+            return;
+        }
+
+        let html = '';
+        filteredData.forEach(item => {
+            const kamar = item.kamar || { kode_kamar: '-', tipe: '-' };
+
+            // Badge status
+            let statusBadge = '';
+            if (item.status_penyewa === 'aktif') statusBadge = '<span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full flex items-center gap-1 w-fit"><i class="bx bx-check-circle"></i> Aktif</span>';
+            else if (item.status_penyewa === 'nunggak') statusBadge = '<span class="bg-amber-100 text-amber-700 text-xs px-2 py-1 rounded-full flex items-center gap-1 w-fit"><i class="bx bx-error"></i> Nunggak</span>';
+            else if (item.status_penyewa === 'akan_keluar') statusBadge = '<span class="bg-rose-100 text-rose-700 text-xs px-2 py-1 rounded-full flex items-center gap-1 w-fit"><i class="bx bx-calendar-exclamation"></i> Akan Keluar</span>';
+
+            // Format tanggal
+            const tglMasuk = new Date(item.tanggal_masuk).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+
+            html += `<tr>
+                <td class="px-6 py-4 text-gray-600 font-mono text-xs">${item.id}</td>
+                <td class="px-6 py-4">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 text-sm font-medium">
+                            ${item.nama.charAt(0)}
+                        </div>
+                        <div>
+                            <p class="font-medium text-gray-800">${item.nama}</p>
+                            <p class="text-xs text-gray-500">${item.email}</p>
+                        </div>
+                    </div>
+                </td>
+                <td class="px-6 py-4 text-gray-600">${item.telepon}</td>
+                <td class="px-6 py-4 font-medium text-gray-800">${kamar.kode_kamar}</td>
+                <td class="px-6 py-4 text-gray-600">${kamar.tipe}</td>
+                <td class="px-6 py-4 text-gray-600">${tglMasuk}</td>
+                <td class="px-6 py-4">${statusBadge}</td>
+                <td class="px-6 py-4">
+                    <div class="flex items-center gap-2">
+                        <button onclick="openDetailModal(${item.id})" class="text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 p-2 rounded-lg transition" title="Detail">
+                            <i class='bx bx-show'></i>
+                        </button>
+                        <button onclick="openEditModal(${item.id})" class="text-emerald-600 hover:text-emerald-800 bg-emerald-50 hover:bg-emerald-100 p-2 rounded-lg transition" title="Edit">
+                            <i class='bx bx-edit-alt'></i>
+                        </button>
+                        <button onclick="openDeleteModal(${item.id}, '${item.nama}')" class="text-rose-600 hover:text-rose-800 bg-rose-50 hover:bg-rose-100 p-2 rounded-lg transition" title="Hapus">
+                            <i class='bx bx-trash'></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>`;
+        });
+        tbody.innerHTML = html;
+        countSpan.textContent = filteredData.length;
+        totalPenyewaStat.textContent = penyewaList.length;
+        updateStatistik();
+    }
+
+    // Update statistik
+    function updateStatistik() {
+        const total = penyewaList.length;
+        const aktif = penyewaList.filter(p => p.status_penyewa === 'aktif').length;
+        const nunggak = penyewaList.filter(p => p.status_penyewa === 'nunggak').length;
+        const akanKeluar = penyewaList.filter(p => p.status_penyewa === 'akan_keluar').length;
+
+        document.getElementById('statTotal').textContent = total;
+        document.getElementById('statAktif').textContent = aktif;
+        document.getElementById('statNunggak').textContent = nunggak;
+        document.getElementById('statAkanKeluar').textContent = akanKeluar;
+    }
+
+    // Modal handlers
+    function openCreateModal() {
+        document.getElementById('modalTitle').innerHTML = `<i class='bx bx-user-plus text-indigo-600'></i> Tambah Penyewa`;
+        document.getElementById('penyewaForm').reset();
+        document.getElementById('penyewaId').value = '';
+        loadKamarDropdown();
+        const modal = document.getElementById('penyewaModal');
+        modal.classList.remove('hidden');
+        modal.setAttribute('aria-hidden', 'false');
+    }
+
+    function openEditModal(id) {
+        const item = penyewaList.find(p => p.id === id);
+        if (!item) return;
+
+        document.getElementById('modalTitle').innerHTML = `<i class='bx bx-edit text-indigo-600'></i> Edit Penyewa`;
+        document.getElementById('penyewaId').value = item.id;
+        document.getElementById('nama').value = item.nama;
+        document.getElementById('nik').value = item.nik;
+        document.getElementById('email').value = item.email;
+        document.getElementById('telepon').value = item.telepon;
+        document.getElementById('alamat').value = item.alamat;
+        document.getElementById('tanggal_masuk').value = item.tanggal_masuk;
+        document.getElementById('tanggal_keluar').value = item.tanggal_keluar || '';
+        document.getElementById('status_penyewa').value = item.status_penyewa;
+
+        loadKamarDropdown(item.kamar_id);
+
+        const modal = document.getElementById('penyewaModal');
+        modal.classList.remove('hidden');
+        modal.setAttribute('aria-hidden', 'false');
+    }
+
+    function openDetailModal(id) {
+        const item = penyewaList.find(p => p.id === id);
+        if (!item) return;
+
+        const kamar = item.kamar || { kode_kamar: '-', tipe: '-', harga: 0 };
+        const tglMasuk = new Date(item.tanggal_masuk).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+        const tglKeluar = item.tanggal_keluar ? new Date(item.tanggal_keluar).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '-';
+
+        let statusClass = '';
+        let statusText = '';
+        if (item.status_penyewa === 'aktif') { statusClass = 'bg-green-100 text-green-700'; statusText = 'Aktif'; }
+        else if (item.status_penyewa === 'nunggak') { statusClass = 'bg-amber-100 text-amber-700'; statusText = 'Nunggak'; }
+        else { statusClass = 'bg-rose-100 text-rose-700'; statusText = 'Akan Keluar'; }
+
+        const detailHtml = `
+            <div class="flex items-center gap-4 mb-4">
+                <div class="w-20 h-20 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 text-3xl font-bold">
+                    ${item.nama.charAt(0)}
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold text-gray-800">${item.nama}</h4>
+                    <p class="text-sm text-gray-500">${item.email} · ${item.telepon}</p>
+                    <span class="${statusClass} text-xs px-2 py-1 rounded-full inline-flex items-center gap-1 mt-1"><i class="bx bx-user"></i> ${statusText}</span>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 border-t border-indigo-100 pt-4">
+                <div>
+                    <p class="text-xs text-indigo-500">NIK</p>
+                    <p class="text-sm font-medium text-gray-800">${item.nik}</p>
+                </div>
+                <div>
+                    <p class="text-xs text-indigo-500">Alamat Asal</p>
+                    <p class="text-sm text-gray-800">${item.alamat}</p>
+                </div>
+                <div>
+                    <p class="text-xs text-indigo-500">Kamar</p>
+                    <p class="text-sm font-medium text-gray-800">${kamar.kode_kamar} - ${kamar.tipe}</p>
+                </div>
+                <div>
+                    <p class="text-xs text-indigo-500">Harga Sewa</p>
+                    <p class="text-sm font-medium text-indigo-600">Rp ${kamar.harga.toLocaleString('id-ID')}/bulan</p>
+                </div>
+                <div>
+                    <p class="text-xs text-indigo-500">Tanggal Masuk</p>
+                    <p class="text-sm text-gray-800">${tglMasuk}</p>
+                </div>
+                <div>
+                    <p class="text-xs text-indigo-500">Tanggal Keluar</p>
+                    <p class="text-sm text-gray-800">${tglKeluar}</p>
+                </div>
+            </div>
+        `;
+
+        document.getElementById('detailContent').innerHTML = detailHtml;
+        const modal = document.getElementById('detailModal');
+        modal.classList.remove('hidden');
+        modal.setAttribute('aria-hidden', 'false');
+    }
+
+    function openDeleteModal(id, nama) {
+        currentDeleteId = id;
+        document.getElementById('deletePenyewaName').textContent = nama;
+        const modal = document.getElementById('deleteModal');
+        modal.classList.remove('hidden');
+        modal.setAttribute('aria-hidden', 'false');
+    }
+
+    // Close modal handlers
+    document.querySelectorAll('[data-modal-hide]').forEach(button => {
+        button.addEventListener('click', function() {
+            const modalId = this.getAttribute('data-modal-hide');
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.setAttribute('aria-hidden', 'true');
+            }
+        });
+    });
+
+    // Form submit handler
+    document.getElementById('penyewaForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const id = document.getElementById('penyewaId').value;
+        const kamar_id = parseInt(document.getElementById('kamar_id').value);
+        const kamar = kamarList.find(k => k.id === kamar_id);
+
+        const penyewaData = {
+            id: id ? parseInt(id) : (penyewaList.length > 0 ? Math.max(...penyewaList.map(p => p.id)) + 1 : 1),
+            nama: document.getElementById('nama').value,
+            nik: document.getElementById('nik').value,
+            email: document.getElementById('email').value,
+            telepon: document.getElementById('telepon').value,
+            alamat: document.getElementById('alamat').value,
+            kamar_id: kamar_id,
+            kamar: kamar,
+            tanggal_masuk: document.getElementById('tanggal_masuk').value,
+            tanggal_keluar: document.getElementById('tanggal_keluar').value || null,
+            status_penyewa: document.getElementById('status_penyewa').value,
+            foto_ktp: null,
+            foto_penyewa: null
+        };
+
+        if (id) {
+            // EDIT
+            const index = penyewaList.findIndex(p => p.id === parseInt(id));
+            if (index !== -1) {
+                // Update kamar status jika berubah
+                const oldKamarId = penyewaList[index].kamar_id;
+                if (oldKamarId !== kamar_id) {
+                    // Set old kamar to available
+                    const oldKamar = kamarList.find(k => k.id === oldKamarId);
+                    if (oldKamar) oldKamar.status = 'tersedia';
+                    // Set new kamar to occupied
+                    if (kamar) kamar.status = 'terisi';
+                }
+
+                penyewaList[index] = { ...penyewaList[index], ...penyewaData };
+            }
+        } else {
+            // CREATE
+            if (kamar) kamar.status = 'terisi';
+            penyewaList.push(penyewaData);
+        }
+
+        // Close modal
+        document.getElementById('penyewaModal').classList.add('hidden');
+        document.getElementById('penyewaModal').setAttribute('aria-hidden', 'true');
+
+        renderTable();
+    });
+
+    // Delete confirmation
+    document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+        if (currentDeleteId) {
+            const penyewa = penyewaList.find(p => p.id === currentDeleteId);
+            if (penyewa) {
+                // Set kamar to available
+                const kamar = kamarList.find(k => k.id === penyewa.kamar_id);
+                if (kamar) kamar.status = 'tersedia';
+            }
+
+            penyewaList = penyewaList.filter(p => p.id !== currentDeleteId);
+            renderTable();
+            document.getElementById('deleteModal').classList.add('hidden');
+            document.getElementById('deleteModal').setAttribute('aria-hidden', 'true');
+            currentDeleteId = null;
+        }
+    });
+
+    // Filter buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.filter-btn').forEach(b => {
+                b.classList.remove('bg-indigo-600', 'text-white');
+                b.classList.add('bg-white', 'border', 'border-indigo-200', 'text-gray-600');
+            });
+            this.classList.remove('bg-white', 'border', 'border-indigo-200', 'text-gray-600');
+            this.classList.add('bg-indigo-600', 'text-white');
+
+            currentFilter = this.getAttribute('data-filter');
+            renderTable();
+        });
+    });
+
+    // Search input
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+        searchTerm = e.target.value;
+        renderTable();
+    });
+
+    // Click outside to close modal
+    window.addEventListener('click', function(e) {
+        if (e.target.classList.contains('fixed') && e.target.hasAttribute('aria-hidden')) {
+            const modals = document.querySelectorAll('.fixed[aria-hidden="false"]');
+            modals.forEach(modal => {
+                modal.classList.add('hidden');
+                modal.setAttribute('aria-hidden', 'true');
+            });
+        }
+    });
+
+    // Initial render
+    renderTable();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Dashboard · Kosan优雅</title>
+    <!-- Tailwind CDN v4 -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Flowbite CSS & JS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+    <!-- Chart.js untuk grafik -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        body { font-family: 'Inter', system-ui, sans-serif; background-color: #f8fafc; }
+        @media print {
+            .no-print { display: none; }
+            .print-only { display: block; }
+        }
+    </style>
+</head>
+<body class="bg-indigo-50/20">
+
+<div class="flex h-screen overflow-hidden">
+    <!-- SIDEBAR STAFF (akses terbatas sesuai acuan) -->
+    <aside class="w-64 bg-white shadow-lg flex flex-col justify-between border-r border-indigo-100 no-print">
+        <div class="py-6 px-4">
+            <div class="flex items-center gap-2 mb-8 px-2">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-emerald-500 flex items-center justify-center shadow-sm">
+                    <i class='bx bx-home-alt-2 text-white text-lg'></i>
+                </div>
+                <span class="text-xl font-semibold text-gray-800">Kos<span class="text-indigo-600">an</span></span>
+                <span class="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full ml-1">staff</span>
+            </div>
+            <nav class="space-y-1">
+                <a href="#" onclick="showSection('dashboard'); return false;" class="flex items-center gap-3 px-4 py-3 text-indigo-700 bg-indigo-50 rounded-xl border-l-4 border-indigo-600 font-medium" id="menu-dashboard">
+                    <i class='bx bxs-dashboard text-xl text-indigo-600'></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" onclick="showSection('penghuni'); return false;" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-indigo-50/50 rounded-xl transition group" id="menu-penghuni">
+                    <i class='bx bx-user-plus text-xl text-indigo-400 group-hover:text-indigo-500'></i>
+                    <span>Input Penghuni</span>
+                </a>
+                <a href="#" onclick="showSection('pembayaran'); return false;" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-indigo-50/50 rounded-xl transition group" id="menu-pembayaran">
+                    <i class='bx bx-credit-card text-xl text-emerald-400 group-hover:text-emerald-500'></i>
+                    <span>Input Pembayaran</span>
+                </a>
+                <a href="#" onclick="showSection('kamar'); return false;" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-indigo-50/50 rounded-xl transition group" id="menu-kamar">
+                    <i class='bx bx-bed text-xl text-indigo-400 group-hover:text-indigo-500'></i>
+                    <span>Data Kamar</span>
+                </a>
+                <a href="#" onclick="showSection('laporan'); return false;" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-indigo-50/50 rounded-xl transition group" id="menu-laporan">
+                    <i class='bx bx-file text-xl text-violet-400 group-hover:text-violet-500'></i>
+                    <span>Lihat Laporan</span>
+                </a>
+                <div class="pt-4 mt-2 border-t border-indigo-100"></div>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-indigo-50/50 rounded-xl transition group">
+                    <i class='bx bx-log-out text-xl text-rose-400 group-hover:text-rose-500'></i>
+                    <span>Logout</span>
+                </a>
+            </nav>
+        </div>
+        <div class="border-t border-indigo-100 p-4 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-400 to-emerald-400 flex items-center justify-center text-white font-bold shadow-sm">
+                <i class='bx bx-user-circle text-2xl'></i>
+            </div>
+            <div>
+                <p class="text-sm font-medium text-gray-800">Budi Santoso</p>
+                <p class="text-xs text-emerald-500 flex items-center gap-1"><i class='bx bx-badge-check text-xs'></i> staff</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 overflow-y-auto bg-white/70 backdrop-blur-sm">
+        <!-- top bar -->
+        <header class="bg-white border-b border-indigo-100 py-4 px-6 flex items-center justify-between sticky top-0 z-10 no-print">
+            <div class="flex items-center gap-4">
+                <h1 class="text-2xl font-semibold text-gray-800" id="pageTitle">Dashboard <span class="text-indigo-600">Staff</span></h1>
+                <span class="bg-emerald-100 text-emerald-700 text-sm px-3 py-1 rounded-full flex items-center gap-1"><i class='bx bx-calendar'></i> <span id="currentDate"></span></span>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="relative hidden md:block">
+                    <i class='bx bx-search absolute left-3 top-1/2 -translate-y-1/2 text-indigo-300 text-lg'></i>
+                    <input type="text" id="globalSearch" placeholder="Cari..." class="pl-10 pr-4 py-2 border border-indigo-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 bg-indigo-50/30 w-64">
+                </div>
+                <button class="relative p-2 text-indigo-500 hover:bg-indigo-100 rounded-full">
+                    <i class='bx bx-bell text-2xl'></i>
+                    <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-rose-500 rounded-full border border-white"></span>
+                </button>
+                <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-200 to-emerald-200 flex items-center justify-center text-indigo-700 font-medium border-2 border-white shadow-sm">
+                    <i class='bx bx-user text-xl'></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- KONTEN UTAMA - SEMUA SECTION DALAM SATU FILE -->
+        <div class="p-6" id="mainContent">
+
+            <!-- ========== SECTION DASHBOARD ========== -->
+            <div id="dashboardSection">
+                <!-- Statistik Cepat -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
+                    <div class="bg-white rounded-2xl shadow-sm border border-indigo-100 p-5 flex items-center justify-between hover:shadow-md transition">
+                        <div>
+                            <p class="text-sm text-indigo-500 font-medium flex items-center gap-1"><i class='bx bx-group text-indigo-400'></i> Total Penghuni</p>
+                            <p class="text-3xl font-bold text-gray-800" id="totalPenghuni">24</p>
+                            <p class="text-xs text-gray-400 mt-1">Aktif semua</p>
+                        </div>
+                        <div class="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 text-2xl">
+                            <i class='bx bx-group'></i>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-sm border border-indigo-100 p-5 flex items-center justify-between hover:shadow-md transition">
+                        <div>
+                            <p class="text-sm text-emerald-500 font-medium flex items-center gap-1"><i class='bx bx-bed text-emerald-400'></i> Kamar Terisi</p>
+                            <p class="text-3xl font-bold text-gray-800" id="kamarTerisi">19</p>
+                            <p class="text-xs text-gray-400 mt-1">dari 24 kamar</p>
+                        </div>
+                        <div class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 text-2xl">
+                            <i class='bx bx-bed'></i>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-sm border border-indigo-100 p-5 flex items-center justify-between hover:shadow-md transition">
+                        <div>
+                            <p class="text-sm text-amber-500 font-medium flex items-center gap-1"><i class='bx bx-error-circle text-amber-400'></i> Tagihan Bulan Ini</p>
+                            <p class="text-3xl font-bold text-gray-800" id="tagihanBulanIni">18</p>
+                            <p class="text-xs text-amber-600 mt-1">3 belum dibayar</p>
+                        </div>
+                        <div class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 text-2xl">
+                            <i class='bx bx-receipt'></i>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-sm border border-indigo-100 p-5 flex items-center justify-between hover:shadow-md transition">
+                        <div>
+                            <p class="text-sm text-rose-500 font-medium flex items-center gap-1"><i class='bx bx-calendar-check text-rose-400'></i> Check-out Hari Ini</p>
+                            <p class="text-3xl font-bold text-gray-800" id="checkOutHariIni">2</p>
+                            <p class="text-xs text-rose-600 mt-1">Perlu persiapan</p>
+                        </div>
+                        <div class="w-12 h-12 rounded-full bg-rose-100 flex items-center justify-center text-rose-600 text-2xl">
+                            <i class='bx bx-calendar-x'></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grafik dan Aktivitas -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                    <!-- Grafik Okupansi -->
+                    <div class="lg:col-span-2 bg-white rounded-2xl border border-indigo-100 p-5 shadow-sm">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-semibold text-gray-800 flex items-center gap-2"><i class='bx bx-line-chart text-indigo-500 text-xl'></i> Okupansi 7 Hari Terakhir</h3>
+                            <span class="text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full">rata-rata 79%</span>
+                        </div>
+                        <div class="h-64">
+                            <canvas id="okupansiChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Aktivitas Terkini -->
+                    <div class="bg-white rounded-2xl border border-indigo-100 p-5 shadow-sm">
+                        <h3 class="font-semibold text-gray-800 flex items-center gap-2 mb-4"><i class='bx bx-bell-ring text-amber-500 text-xl'></i> Aktivitas Terkini</h3>
+                        <div class="space-y-4" id="aktivitasList">
+                            <!-- akan diisi javascript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabel Penghuni Baru -->
+                <div class="bg-white rounded-2xl border border-indigo-100 shadow-sm overflow-hidden">
+                    <div class="px-6 py-4 border-b border-indigo-100 flex justify-between items-center">
+                        <h3 class="font-semibold text-gray-800 flex items-center gap-2"><i class='bx bx-user-plus text-indigo-500'></i> Penghuni Baru (7 Hari Terakhir)</h3>
+                        <button class="text-xs bg-indigo-50 text-indigo-600 px-4 py-2 rounded-full hover:bg-indigo-100 transition" onclick="showSection('penghuni')">Lihat Semua</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead class="bg-indigo-50/70 text-indigo-800">
+                                <tr>
+                                    <th class="px-6 py-3 text-left">Nama</th>
+                                    <th class="px-6 py-3 text-left">Kamar</th>
+                                    <th class="px-6 py-3 text-left">Tanggal Masuk</th>
+                                    <th class="px-6 py-3 text-left">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-indigo-100" id="penghuniBaruTable">
+                                <!-- akan diisi javascript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SECTION INPUT PENGHUNI ========== -->
+            <div id="penghuniSection" class="hidden">
+                <div class="bg-white rounded-2xl border border-indigo-100 shadow-sm overflow-hidden">
+                    <div class="px-6 py-4 border-b border-indigo-100 flex justify-between items-center">
+                        <h3 class="font-semibold text-gray-800 flex items-center gap-2"><i class='bx bx-user-plus text-indigo-500'></i> Form Input Penghuni Baru</h3>
+                    </div>
+                    <div class="p-6">
+                        <form id="formPenghuni" class="space-y-4" onsubmit="simpanPenghuni(event)">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block mb-2 text-sm font-medium text-gray-700">Nama Lengkap</label>
+                                    <input type="text" id="namaPenghuni" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" required>
+                                </div>
+                                <div>
+                                    <label class="block mb-2 text-sm font-medium text-gray-700">NIK</label>
+                                    <input type="text" id="nikPenghuni" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" required>
+                                </div>
+                                <div>
+                                    <label class="block mb-2 text-sm font-medium text-gray-700">Email</label>
+                                    <input type="email" id="emailPenghuni" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" required>
+                                </div>
+                                <div>
+                                    <label class="block mb-2 text-sm font-medium text-gray-700">No. Telepon</label>
+                                    <input type="text" id="teleponPenghuni" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" required>
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block mb-2 text-sm font-medium text-gray-700">Alamat Asal</label>
+                                    <textarea id="alamatPenghuni" rows="2" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" required></textarea>
+                                </div>
+                                <div>
+                                    <label class="block mb-2 text-sm font-medium text-gray-700">Pilih Kamar</label>
+                                    <select id="kamarPenghuni" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" required>
+                                        <option value="" disabled selected>Pilih kamar tersedia</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block mb-2 text-sm font-medium text-gray-700">Tanggal Masuk</label>
+                                    <input type="date" id="tanggalMasuk" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" required>
+                                </div>
+                            </div>
+                            <div class="flex gap-3 pt-4">
+                                <button type="submit" class="text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-xl text-sm px-5 py-2.5 text-center transition">Simpan Penghuni</button>
+                                <button type="button" onclick="resetFormPenghuni()" class="text-indigo-600 bg-white border border-indigo-200 hover:bg-indigo-50 focus:ring-4 focus:outline-none focus:ring-indigo-100 font-medium rounded-xl text-sm px-5 py-2.5 text-center transition">Reset</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Tabel Daftar Penghuni (untuk referensi) -->
+                <div class="bg-white rounded-2xl border border-indigo-100 shadow-sm overflow-hidden mt-6">
+                    <div class="px-6 py-4 border-b border-indigo-100">
+                        <h3 class="font-semibold text-gray-800 flex items-center gap-2"><i class='bx bx-group text-indigo-500'></i> Daftar Penghuni Aktif</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead class="bg-indigo-50/70 text-indigo-800">
+                                <tr>
+                                    <th class="px-6 py-3 text-left">Nama</th>
+                                    <th class="px-6 py-3 text-left">Kamar</th>
+                                    <th class="px-6 py-3 text-left">No. Telepon</th>
+                                    <th class="px-6 py-3 text-left">Tanggal Masuk</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-indigo-100" id="daftarPenghuniTable">
+                                <!-- akan diisi javascript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SECTION INPUT PEMBAYARAN ========== -->
+            <div id="pembayaranSection" class="hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Form Input Pembayaran -->
+                    <div class="bg-white rounded-2xl border border-indigo-100 shadow-sm overflow-hidden">
+                        <div class="px-6 py-4 border-b border-indigo-100">
+                            <h3 class="font-semibold text-gray-800 flex items-center gap-2"><i class='bx bx-credit-card text-indigo-500'></i> Form Input Pembayaran</h3>
+                        </div>
+                        <div class="p-6">
+                            <form id="formPembayaran" onsubmit="simpanPembayaran(event)">
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block mb-2 text-sm font-medium text-gray-700">Cari Penghuni</label>
+                                        <select id="penghuniPembayaran" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" required>
+                                            <option value="" disabled selected>Pilih penghuni</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block mb-2 text-sm font-medium text-gray-700">Informasi Tagihan</label>
+                                        <div id="infoTagihan" class="bg-indigo-50 p-3 rounded-xl text-sm hidden">
+                                            <!-- akan diisi javascript -->
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block mb-2 text-sm font-medium text-gray-700">Jumlah Bayar (Rp)</label>
+                                        <input type="number" id="jumlahBayar" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" required>
+                                    </div>
+                                    <div>
+                                        <label class="block mb-2 text-sm font-medium text-gray-700">Tanggal Bayar</label>
+                                        <input type="date" id="tanggalBayar" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" required>
+                                    </div>
+                                    <div>
+                                        <label class="block mb-2 text-sm font-medium text-gray-700">Metode Pembayaran</label>
+                                        <select id="metodeBayar" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" required>
+                                            <option value="" disabled selected>Pilih metode</option>
+                                            <option value="Tunai">Tunai</option>
+                                            <option value="Transfer Bank">Transfer Bank</option>
+                                            <option value="QRIS">QRIS</option>
+                                            <option value="Kartu Debit/Kredit">Kartu Debit/Kredit</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="w-full text-white bg-emerald-600 hover:bg-emerald-700 focus:ring-4 focus:outline-none focus:ring-emerald-300 font-medium rounded-xl text-sm px-5 py-2.5 text-center transition">Catat Pembayaran</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Bukti Pembayaran Terakhir & Tombol Cetak -->
+                    <div class="bg-white rounded-2xl border border-indigo-100 shadow-sm overflow-hidden">
+                        <div class="px-6 py-4 border-b border-indigo-100">
+                            <h3 class="font-semibold text-gray-800 flex items-center gap-2"><i class='bx bx-printer text-indigo-500'></i> Bukti Pembayaran Terakhir</h3>
+                        </div>
+                        <div class="p-6">
+                            <div id="buktiPembayaranTerakhir" class="space-y-3">
+                                <!-- akan diisi javascript -->
+                                <p class="text-gray-500 text-center py-4">Belum ada pembayaran hari ini</p>
+                            </div>
+                            <button onclick="cetakBuktiPembayaran()" class="w-full mt-4 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 font-medium rounded-xl text-sm px-5 py-2.5 text-center transition flex items-center justify-center gap-2">
+                                <i class='bx bx-printer'></i> Cetak Bukti Pembayaran
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Riwayat Pembayaran -->
+                <div class="bg-white rounded-2xl border border-indigo-100 shadow-sm overflow-hidden mt-6">
+                    <div class="px-6 py-4 border-b border-indigo-100">
+                        <h3 class="font-semibold text-gray-800 flex items-center gap-2"><i class='bx bx-history text-indigo-500'></i> Riwayat Pembayaran Hari Ini</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead class="bg-indigo-50/70 text-indigo-800">
+                                <tr>
+                                    <th class="px-6 py-3 text-left">Waktu</th>
+                                    <th class="px-6 py-3 text-left">Penghuni</th>
+                                    <th class="px-6 py-3 text-left">Kamar</th>
+                                    <th class="px-6 py-3 text-left">Jumlah</th>
+                                    <th class="px-6 py-3 text-left">Metode</th>
+                                    <th class="px-6 py-3 text-left">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-indigo-100" id="riwayatPembayaranTable">
+                                <!-- akan diisi javascript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SECTION DATA KAMAR ========== -->
+            <div id="kamarSection" class="hidden">
+                <div class="bg-white rounded-2xl border border-indigo-100 shadow-sm overflow-hidden">
+                    <div class="px-6 py-4 border-b border-indigo-100 flex justify-between items-center">
+                        <h3 class="font-semibold text-gray-800 flex items-center gap-2"><i class='bx bx-bed text-indigo-500'></i> Data Kamar & Update Status</h3>
+                        <div class="flex gap-2">
+                            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs flex items-center gap-1"><i class='bx bx-check-circle'></i> Tersedia</span>
+                            <span class="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs flex items-center gap-1"><i class='bx bx-user'></i> Terisi</span>
+                            <span class="bg-rose-100 text-rose-700 px-3 py-1 rounded-full text-xs flex items-center gap-1"><i class='bx bx-wrench'></i> Perbaikan</span>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead class="bg-indigo-50/70 text-indigo-800">
+                                <tr>
+                                    <th class="px-6 py-3 text-left">Kode Kamar</th>
+                                    <th class="px-6 py-3 text-left">Tipe Kamar</th>
+                                    <th class="px-6 py-3 text-left">Harga/bulan</th>
+                                    <th class="px-6 py-3 text-left">Status</th>
+                                    <th class="px-6 py-3 text-left">Penghuni Saat Ini</th>
+                                    <th class="px-6 py-3 text-left">Aksi Update</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-indigo-100" id="dataKamarTable">
+                                <!-- akan diisi javascript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SECTION LIHAT LAPORAN (TANPA EDIT) ========== -->
+            <div id="laporanSection" class="hidden">
+                <!-- Filter Laporan -->
+                <div class="bg-white rounded-2xl border border-indigo-100 shadow-sm p-5 mb-6">
+                    <div class="flex flex-wrap gap-4 items-end">
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-700">Periode Laporan</label>
+                            <select id="periodeLaporan" class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 p-2.5">
+                                <option value="bulanini">Bulan Ini</option>
+                                <option value="bulanlalu">Bulan Lalu</option>
+                                <option value="tahunini">Tahun Ini</option>
+                            </select>
+                        </div>
+                        <button onclick="updateLaporan()" class="bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-indigo-700 transition flex items-center gap-2">
+                            <i class='bx bx-show'></i> Tampilkan
+                        </button>
+                        <button onclick="cetakLaporan()" class="bg-white border border-indigo-200 text-indigo-600 px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-indigo-50 transition flex items-center gap-2">
+                            <i class='bx bx-printer'></i> Cetak Laporan
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Ringkasan Laporan -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-5 mb-6">
+                    <div class="bg-white rounded-2xl border border-indigo-100 p-5">
+                        <p class="text-sm text-indigo-500">Total Pemasukan</p>
+                        <p class="text-2xl font-bold text-gray-800" id="laporanPemasukan">Rp 42.850.000</p>
+                    </div>
+                    <div class="bg-white rounded-2xl border border-emerald-100 p-5">
+                        <p class="text-sm text-emerald-500">Terkumpul</p>
+                        <p class="text-2xl font-bold text-gray-800" id="laporanTerkumpul">Rp 38.750.000</p>
+                    </div>
+                    <div class="bg-white rounded-2xl border border-amber-100 p-5">
+                        <p class="text-sm text-amber-500">Tunggakan</p>
+                        <p class="text-2xl font-bold text-gray-800" id="laporanTunggakan">Rp 4.100.000</p>
+                    </div>
+                    <div class="bg-white rounded-2xl border border-rose-100 p-5">
+                        <p class="text-sm text-rose-500">Kamar Kosong</p>
+                        <p class="text-2xl font-bold text-gray-800" id="laporanKamarKosong">5</p>
+                    </div>
+                </div>
+
+                <!-- Tabel Detail Laporan -->
+                <div class="bg-white rounded-2xl border border-indigo-100 shadow-sm overflow-hidden">
+                    <div class="px-6 py-4 border-b border-indigo-100">
+                        <h3 class="font-semibold text-gray-800">Detail Transaksi</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead class="bg-indigo-50/70 text-indigo-800">
+                                <tr>
+                                    <th class="px-6 py-3 text-left">Tanggal</th>
+                                    <th class="px-6 py-3 text-left">Penghuni</th>
+                                    <th class="px-6 py-3 text-left">Keterangan</th>
+                                    <th class="px-6 py-3 text-left">Pemasukan</th>
+                                    <th class="px-6 py-3 text-left">Pengeluaran</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-indigo-100" id="detailLaporanTable">
+                                <!-- akan diisi javascript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bukti Pembayaran Print (hidden, muncul saat print) -->
+        <div id="buktiPrint" class="hidden print-only p-8">
+            <!-- akan diisi javascript -->
+        </div>
+    </main>
+</div>
+
+<!-- JavaScript untuk Staff -->
+<script>
+    // ========== DATA DUMMY ==========
+    let kamarData = [
+        { id: 1, kode: 'STD-01', tipe: 'Standar', harga: 850000, status: 'terisi', penghuni: 'Budi Santoso' },
+        { id: 2, kode: 'STD-02', tipe: 'Standar', harga: 850000, status: 'tersedia', penghuni: '-' },
+        { id: 3, kode: 'STD-03', tipe: 'Standar', harga: 850000, status: 'terisi', penghuni: 'Joko Widodo' },
+        { id: 4, kode: 'PRM-01', tipe: 'Premium', harga: 1250000, status: 'terisi', penghuni: 'Siti Aminah' },
+        { id: 5, kode: 'PRM-02', tipe: 'Premium', harga: 1250000, status: 'tersedia', penghuni: '-' },
+        { id: 6, kode: 'VIP-01', tipe: 'VIP', harga: 1750000, status: 'terisi', penghuni: 'Ahmad Fauzi' },
+        { id: 7, kode: 'EKO-01', tipe: 'Ekonomi', harga: 650000, status: 'terisi', penghuni: 'Dewi Lestari' },
+        { id: 8, kode: 'EKO-02', tipe: 'Ekonomi', harga: 650000, status: 'terisi', penghuni: 'Rizki Pratama' },
+        { id: 9, kode: 'EKO-03', tipe: 'Ekonomi', harga: 650000, status: 'tersedia', penghuni: '-' },
+        { id: 10, kode: 'DLX-01', tipe: 'Deluxe', harga: 1500000, status: 'terisi', penghuni: 'Maya Sari' },
+        { id: 11, kode: 'SUP-01', tipe: 'Superior', harga: 1100000, status: 'perbaikan', penghuni: '-' },
+        { id: 12, kode: 'SUP-02', tipe: 'Superior', harga: 1100000, status: 'terisi', penghuni: 'Rina Wijaya' }
+    ];
+
+    let penghuniData = [
+        { id: 1, nama: 'Budi Santoso', nik: '3273011508900001', email: 'budi@email.com', telepon: '081234567890', alamat: 'Jl. Merdeka No. 45, Jakarta', kamar_id: 1, kamar: 'STD-01', tgl_masuk: '2026-01-15' },
+        { id: 2, nama: 'Siti Aminah', nik: '3273011508900002', email: 'siti@email.com', telepon: '081298765432', alamat: 'Jl. Melati No. 12, Bandung', kamar_id: 4, kamar: 'PRM-01', tgl_masuk: '2026-02-01' },
+        { id: 3, nama: 'Ahmad Fauzi', nik: '3273011508900003', email: 'ahmad@email.com', telepon: '081312345678', alamat: 'Jl. Kenanga No. 7, Surabaya', kamar_id: 6, kamar: 'VIP-01', tgl_masuk: '2025-12-10' },
+        { id: 4, nama: 'Dewi Lestari', nik: '3273011508900004', email: 'dewi@email.com', telepon: '081398765432', alamat: 'Jl. Mawar No. 23, Yogyakarta', kamar_id: 7, kamar: 'EKO-01', tgl_masuk: '2026-03-05' },
+        { id: 5, nama: 'Rizki Pratama', nik: '3273011508900005', email: 'rizki@email.com', telepon: '081311223344', alamat: 'Jl. Anggrek No. 8, Semarang', kamar_id: 8, kamar: 'EKO-02', tgl_masuk: '2026-02-20' },
+        { id: 6, nama: 'Maya Sari', nik: '3273011508900006', email: 'maya@email.com', telepon: '081377889900', alamat: 'Jl. Flamboyan No. 15, Medan', kamar_id: 10, kamar: 'DLX-01', tgl_masuk: '2026-01-25' },
+        { id: 7, nama: 'Rina Wijaya', nik: '3273011508900007', email: 'rina@email.com', telepon: '081355667788', alamat: 'Jl. Cendana No. 3, Bali', kamar_id: 12, kamar: 'SUP-02', tgl_masuk: '2026-03-15' }
+    ];
+
+    let pembayaranData = [
+        { id: 1, penghuni_id: 1, nama: 'Budi Santoso', kamar: 'STD-01', jumlah: 850000, tanggal: '2026-04-05', metode: 'Transfer Bank', waktu: '10:30' },
+        { id: 2, penghuni_id: 4, nama: 'Dewi Lestari', kamar: 'EKO-01', jumlah: 650000, tanggal: '2026-04-05', metode: 'Tunai', waktu: '11:15' },
+        { id: 3, penghuni_id: 5, nama: 'Rizki Pratama', kamar: 'EKO-02', jumlah: 650000, tanggal: '2026-04-05', metode: 'QRIS', waktu: '13:20' }
+    ];
+
+    let tagihanData = [
+        { id: 1, penghuni_id: 2, nama: 'Siti Aminah', kamar: 'PRM-01', jumlah: 1250000, periode: '2026-04', status: 'belum' },
+        { id: 2, penghuni_id: 6, nama: 'Maya Sari', kamar: 'DLX-01', jumlah: 1500000, periode: '2026-04', status: 'belum' },
+        { id: 3, penghuni_id: 3, nama: 'Ahmad Fauzi', kamar: 'VIP-01', jumlah: 1750000, periode: '2026-04', status: 'belum' }
+    ];
+
+    // ========== FUNGSI UMUM ==========
+    document.getElementById('currentDate').textContent = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+
+    // Fungsi berpindah section
+    function showSection(section) {
+        // Sembunyikan semua section
+        document.getElementById('dashboardSection').classList.add('hidden');
+        document.getElementById('penghuniSection').classList.add('hidden');
+        document.getElementById('pembayaranSection').classList.add('hidden');
+        document.getElementById('kamarSection').classList.add('hidden');
+        document.getElementById('laporanSection').classList.add('hidden');
+
+        // Tampilkan section yang dipilih
+        document.getElementById(section + 'Section').classList.remove('hidden');
+
+        // Update judul halaman
+        const titles = {
+            'dashboard': 'Dashboard Staff',
+            'penghuni': 'Input Penghuni',
+            'pembayaran': 'Input Pembayaran',
+            'kamar': 'Data Kamar',
+            'laporan': 'Lihat Laporan'
+        };
+        document.getElementById('pageTitle').innerHTML = '<span class="text-indigo-600">' + titles[section] + '</span>';
+
+        // Update active menu
+        document.querySelectorAll('nav a').forEach(a => {
+            a.classList.remove('text-indigo-700', 'bg-indigo-50', 'border-l-4', 'border-indigo-600', 'font-medium');
+            a.classList.add('text-gray-600');
+        });
+        document.getElementById('menu-' + section).classList.remove('text-gray-600');
+        document.getElementById('menu-' + section).classList.add('text-indigo-700', 'bg-indigo-50', 'border-l-4', 'border-indigo-600', 'font-medium');
+
+        // Load data sesuai section
+        if (section === 'dashboard') loadDashboard();
+        if (section === 'penghuni') loadPenghuniSection();
+        if (section === 'pembayaran') loadPembayaranSection();
+        if (section === 'kamar') loadKamarSection();
+        if (section === 'laporan') loadLaporanSection();
+    }
+
+    // ========== DASHBOARD ==========
+    function loadDashboard() {
+        // Update statistik
+        document.getElementById('totalPenghuni').textContent = penghuniData.length;
+        document.getElementById('kamarTerisi').textContent = kamarData.filter(k => k.status === 'terisi').length;
+        document.getElementById('tagihanBulanIni').textContent = tagihanData.length;
+
+        const today = new Date().toISOString().split('T')[0];
+        const checkOutToday = penghuniData.filter(p => p.tgl_keluar === today).length;
+        document.getElementById('checkOutHariIni').textContent = checkOutToday || 2;
+
+        // Aktivitas
+        const aktivitas = [
+            { waktu: '10 menit lalu', deskripsi: 'Pembayaran dari Budi Santoso', tipe: 'pembayaran' },
+            { waktu: '1 jam lalu', deskripsi: 'Penghuni baru: Joko Widodo (STD-03)', tipe: 'penghuni' },
+            { waktu: '3 jam lalu', deskripsi: 'Kamar SUP-01 status menjadi perbaikan', tipe: 'kamar' },
+            { waktu: 'Kemarin', deskripsi: '3 tagihan belum dibayar', tipe: 'tagihan' }
+        ];
+
+        document.getElementById('aktivitasList').innerHTML = aktivitas.map(a => `
+            <div class="flex items-start gap-3">
+                <div class="w-2 h-2 mt-2 rounded-full ${a.tipe === 'pembayaran' ? 'bg-green-400' : a.tipe === 'penghuni' ? 'bg-indigo-400' : a.tipe === 'kamar' ? 'bg-amber-400' : 'bg-rose-400'}"></div>
+                <div>
+                    <p class="text-sm text-gray-700">${a.deskripsi}</p>
+                    <p class="text-xs text-indigo-400">${a.waktu}</p>
+                </div>
+            </div>
+        `).join('');
+
+        // Penghuni baru 7 hari
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        const penghuniBaru = penghuniData.filter(p => new Date(p.tgl_masuk) >= sevenDaysAgo);
+
+        document.getElementById('penghuniBaruTable').innerHTML = penghuniBaru.map(p => `
+            <tr>
+                <td class="px-6 py-4">${p.nama}</td>
+                <td class="px-6 py-4">${p.kamar}</td>
+                <td class="px-6 py-4">${new Date(p.tgl_masuk).toLocaleDateString('id-ID')}</td>
+                <td class="px-6 py-4"><span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs">Aktif</span></td>
+            </tr>
+        `).join('');
+
+        // Chart
+        const ctx = document.getElementById('okupansiChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['H-6', 'H-5', 'H-4', 'H-3', 'H-2', 'Kemarin', 'Hari Ini'],
+                datasets: [{
+                    label: 'Kamar Terisi',
+                    data: [18, 19, 19, 20, 19, 19, kamarData.filter(k => k.status === 'terisi').length],
+                    borderColor: '#4f46e5',
+                    backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, max: 24 } }
+            }
+        });
+    }
+
+    // ========== INPUT PENGHUNI ==========
+    function loadPenghuniSection() {
+        // Load kamar tersedia ke dropdown
+        const select = document.getElementById('kamarPenghuni');
+        select.innerHTML = '<option value="" disabled selected>Pilih kamar tersedia</option>';
+        kamarData.filter(k => k.status === 'tersedia').forEach(k => {
+            select.innerHTML += `<option value="${k.id}">${k.kode} - ${k.tipe} (Rp ${k.harga.toLocaleString('id-ID')})</option>`;
+        });
+
+        // Load daftar penghuni
+        document.getElementById('daftarPenghuniTable').innerHTML = penghuniData.map(p => `
+            <tr>
+                <td class="px-6 py-4">${p.nama}</td>
+                <td class="px-6 py-4">${p.kamar}</td>
+                <td class="px-6 py-4">${p.telepon}</td>
+                <td class="px-6 py-4">${new Date(p.tgl_masuk).toLocaleDateString('id-ID')}</td>
+            </tr>
+        `).join('');
+    }
+
+    function simpanPenghuni(e) {
+        e.preventDefault();
+
+        const kamarId = parseInt(document.getElementById('kamarPenghuni').value);
+        const kamar = kamarData.find(k => k.id === kamarId);
+
+        const newPenghuni = {
+            id: penghuniData.length + 1,
+            nama: document.getElementById('namaPenghuni').value,
+            nik: document.getElementById('nikPenghuni').value,
+            email: document.getElementById('emailPenghuni').value,
+            telepon: document.getElementById('teleponPenghuni').value,
+            alamat: document.getElementById('alamatPenghuni').value,
+            kamar_id: kamarId,
+            kamar: kamar.kode,
+            tgl_masuk: document.getElementById('tanggalMasuk').value
+        };
+
+        penghuniData.push(newPenghuni);
+
+        // Update status kamar
+        kamar.status = 'terisi';
+        kamar.penghuni = newPenghuni.nama;
+
+        alert('Penghuni berhasil ditambahkan!');
+        resetFormPenghuni();
+        loadPenghuniSection();
+        loadKamarSection(); // Update data kamar
+    }
+
+    function resetFormPenghuni() {
+        document.getElementById('formPenghuni').reset();
+    }
+
+    // ========== INPUT PEMBAYARAN ==========
+    function loadPembayaranSection() {
+        // Load dropdown penghuni
+        const select = document.getElementById('penghuniPembayaran');
+        select.innerHTML = '<option value="" disabled selected>Pilih penghuni</option>';
+        penghuniData.forEach(p => {
+            select.innerHTML += `<option value="${p.id}">${p.nama} - ${p.kamar}</option>`;
+        });
+
+        // Load riwayat pembayaran hari ini
+        const today = new Date().toISOString().split('T')[0];
+        const pembayaranHariIni = pembayaranData.filter(p => p.tanggal === today);
+
+        if (pembayaranHariIni.length > 0) {
+            let html = '';
+            pembayaranHariIni.forEach(p => {
+                html += `
+                <tr>
+                    <td class="px-6 py-4">${p.waktu}</td>
+                    <td class="px-6 py-4">${p.nama}</td>
+                    <td class="px-6 py-4">${p.kamar}</td>
+                    <td class="px-6 py-4">Rp ${p.jumlah.toLocaleString('id-ID')}</td>
+                    <td class="px-6 py-4">${p.metode}</td>
+                    <td class="px-6 py-4">
+                        <button onclick="cetakBuktiPembayaranById(${p.id})" class="text-indigo-600 hover:text-indigo-900">
+                            <i class='bx bx-printer'></i>
+                        </button>
+                    </td>
+                </tr>`;
+            });
+            document.getElementById('riwayatPembayaranTable').innerHTML = html;
+
+            // Bukti terakhir
+            const last = pembayaranHariIni[pembayaranHariIni.length - 1];
+            document.getElementById('buktiPembayaranTerakhir').innerHTML = `
+                <div class="bg-indigo-50 p-4 rounded-xl">
+                    <p class="font-medium">${last.nama} - ${last.kamar}</p>
+                    <p class="text-lg font-bold text-indigo-600">Rp ${last.jumlah.toLocaleString('id-ID')}</p>
+                    <p class="text-sm">${last.metode} · ${last.waktu}</p>
+                </div>
+            `;
+        }
+    }
+
+    document.getElementById('penghuniPembayaran').addEventListener('change', function() {
+        const penghuniId = parseInt(this.value);
+        const penghuni = penghuniData.find(p => p.id === penghuniId);
+        const tagihan = tagihanData.find(t => t.penghuni_id === penghuniId && t.status === 'belum');
+
+        if (tagihan) {
+            document.getElementById('infoTagihan').innerHTML = `
+                <p class="text-sm">Tagihan periode ${tagihan.periode}: <span class="font-bold text-indigo-600">Rp ${tagihan.jumlah.toLocaleString('id-ID')}</span></p>
+            `;
+            document.getElementById('infoTagihan').classList.remove('hidden');
+            document.getElementById('jumlahBayar').value = tagihan.jumlah;
+        } else {
+            document.getElementById('infoTagihan').innerHTML = '<p class="text-sm text-amber-600">Tidak ada tagihan belum dibayar</p>';
+            document.getElementById('infoTagihan').classList.remove('hidden');
+        }
+    });
+
+    function simpanPembayaran(e) {
+        e.preventDefault();
+
+        const penghuniId = parseInt(document.getElementById('penghuniPembayaran').value);
+        const penghuni = penghuniData.find(p => p.id === penghuniId);
+        const now = new Date();
+        const waktu = now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
+
+        const newPembayaran = {
+            id: pembayaranData.length + 1,
+            penghuni_id: penghuniId,
+            nama: penghuni.nama,
+            kamar: penghuni.kamar,
+            jumlah: parseInt(document.getElementById('jumlahBayar').value),
+            tanggal: document.getElementById('tanggalBayar').value,
+            metode: document.getElementById('metodeBayar').value,
+            waktu: waktu
+        };
+
+        pembayaranData.push(newPembayaran);
+
+        // Update status tagihan
+        const tagihan = tagihanData.find(t => t.penghuni_id === penghuniId && t.status === 'belum');
+        if (tagihan) tagihan.status = 'lunas';
+
+        alert('Pembayaran berhasil dicatat!');
+        document.getElementById('formPembayaran').reset();
+        loadPembayaranSection();
+    }
+
+    function cetakBuktiPembayaran() {
+        const lastPembayaran = pembayaranData[pembayaranData.length - 1];
+        if (!lastPembayaran) {
+            alert('Tidak ada pembayaran untuk dicetak');
+            return;
+        }
+
+        cetakBuktiPembayaranById(lastPembayaran.id);
+    }
+
+    function cetakBuktiPembayaranById(id) {
+        const bayar = pembayaranData.find(p => p.id === id);
+        if (!bayar) return;
+
+        const printContent = `
+            <div style="text-align: center; margin-bottom: 30px;">
+                <h2 style="font-size: 24px; color: #4f46e5;">Kosan优雅</h2>
+                <p style="color: #666;">Bukti Pembayaran Sewa Kamar</p>
+            </div>
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                <tr><td style="padding: 8px; border: 1px solid #ddd;">Nama Penyewa</td><td style="padding: 8px; border: 1px solid #ddd;">${bayar.nama}</td></tr>
+                <tr><td style="padding: 8px; border: 1px solid #ddd;">Kamar</td><td style="padding: 8px; border: 1px solid #ddd;">${bayar.kamar}</td></tr>
+                <tr><td style="padding: 8px; border: 1px solid #ddd;">Jumlah Pembayaran</td><td style="padding: 8px; border: 1px solid #ddd;">Rp ${bayar.jumlah.toLocaleString('id-ID')}</td></tr>
+                <tr><td style="padding: 8px; border: 1px solid #ddd;">Tanggal Bayar</td><td style="padding: 8px; border: 1px solid #ddd;">${new Date(bayar.tanggal).toLocaleDateString('id-ID')} ${bayar.waktu}</td></tr>
+                <tr><td style="padding: 8px; border: 1px solid #ddd;">Metode Pembayaran</td><td style="padding: 8px; border: 1px solid #ddd;">${bayar.metode}</td></tr>
+            </table>
+            <div style="text-align: center; margin-top: 30px;">
+                <p>Terima kasih telah melakukan pembayaran tepat waktu</p>
+                <p style="margin-top: 40px;">Petugas,</p>
+                <p style="margin-top: 50px;">( Budi Santoso )</p>
+            </div>
+        `;
+
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <html>
+            <head>
+                <title>Bukti Pembayaran</title>
+                <style>
+                    body { font-family: Arial, sans-serif; padding: 40px; }
+                </style>
+            </head>
+            <body>${printContent}</body>
+            </html>
+        `);
+        printWindow.document.close();
+        printWindow.print();
+    }
+
+    // ========== DATA KAMAR ==========
+    function loadKamarSection() {
+        let html = '';
+        kamarData.forEach(k => {
+            let statusClass = '';
+            let statusText = '';
+            if (k.status === 'tersedia') { statusClass = 'bg-green-100 text-green-700'; statusText = 'Tersedia'; }
+            else if (k.status === 'terisi') { statusClass = 'bg-amber-100 text-amber-700'; statusText = 'Terisi'; }
+            else { statusClass = 'bg-rose-100 text-rose-700'; statusText = 'Perbaikan'; }
+
+            html += `
+            <tr>
+                <td class="px-6 py-4 font-medium">${k.kode}</td>
+                <td class="px-6 py-4">${k.tipe}</td>
+                <td class="px-6 py-4">Rp ${k.harga.toLocaleString('id-ID')}</td>
+                <td class="px-6 py-4"><span class="${statusClass} px-2 py-1 rounded-full text-xs">${statusText}</span></td>
+                <td class="px-6 py-4">${k.penghuni || '-'}</td>
+                <td class="px-6 py-4">
+                    <select onchange="updateStatusKamar(${k.id}, this.value)" class="bg-indigo-50/30 border border-indigo-200 text-sm rounded-lg p-1">
+                        <option value="tersedia" ${k.status === 'tersedia' ? 'selected' : ''}>Tersedia</option>
+                        <option value="terisi" ${k.status === 'terisi' ? 'selected' : ''}>Terisi</option>
+                        <option value="perbaikan" ${k.status === 'perbaikan' ? 'selected' : ''}>Perbaikan</option>
+                    </select>
+                </td>
+            </tr>`;
+        });
+        document.getElementById('dataKamarTable').innerHTML = html;
+    }
+
+    function updateStatusKamar(id, newStatus) {
+        const kamar = kamarData.find(k => k.id === id);
+        if (kamar) {
+            kamar.status = newStatus;
+            if (newStatus !== 'terisi') {
+                kamar.penghuni = '-';
+            }
+            alert('Status kamar berhasil diupdate!');
+            loadKamarSection();
+        }
+    }
+
+    // ========== LIHAT LAPORAN ==========
+    function loadLaporanSection() {
+        updateLaporan();
+    }
+
+    function updateLaporan() {
+        const periode = document.getElementById('periodeLaporan').value;
+
+        // Hitung total (simulasi)
+        const totalPemasukan = 42850000;
+        const totalTerkumpul = 38750000;
+        const totalTunggakan = 4100000;
+        const kamarKosong = kamarData.filter(k => k.status === 'tersedia').length;
+
+        document.getElementById('laporanPemasukan').textContent = 'Rp ' + totalPemasukan.toLocaleString('id-ID');
+        document.getElementById('laporanTerkumpul').textContent = 'Rp ' + totalTerkumpul.toLocaleString('id-ID');
+        document.getElementById('laporanTunggakan').textContent = 'Rp ' + totalTunggakan.toLocaleString('id-ID');
+        document.getElementById('laporanKamarKosong').textContent = kamarKosong;
+
+        // Detail transaksi
+        const detailTransaksi = [
+            { tanggal: '2026-04-01', penghuni: 'Budi Santoso', ket: 'Pembayaran sewa', masuk: 850000, keluar: 0 },
+            { tanggal: '2026-04-01', penghuni: 'Dewi Lestari', ket: 'Pembayaran sewa', masuk: 650000, keluar: 0 },
+            { tanggal: '2026-04-02', penghuni: '-', ket: 'Listrik & Air', masuk: 0, keluar: 2850000 },
+            { tanggal: '2026-04-03', penghuni: 'Rizki Pratama', ket: 'Pembayaran sewa', masuk: 650000, keluar: 0 },
+            { tanggal: '2026-04-03', penghuni: '-', ket: 'Perbaikan AC', masuk: 0, keluar: 1200000 }
+        ];
+
+        document.getElementById('detailLaporanTable').innerHTML = detailTransaksi.map(d => `
+            <tr>
+                <td class="px-6 py-4">${new Date(d.tanggal).toLocaleDateString('id-ID')}</td>
+                <td class="px-6 py-4">${d.penghuni}</td>
+                <td class="px-6 py-4">${d.ket}</td>
+                <td class="px-6 py-4 text-indigo-600">${d.masuk > 0 ? 'Rp ' + d.masuk.toLocaleString('id-ID') : '-'}</td>
+                <td class="px-6 py-4 text-rose-600">${d.keluar > 0 ? 'Rp ' + d.keluar.toLocaleString('id-ID') : '-'}</td>
+            </tr>
+        `).join('');
+    }
+
+    function cetakLaporan() {
+        window.print();
+    }
+
+    // Inisialisasi: tampilkan dashboard
+    showSection('dashboard');
+</script>
+
+</body>
+</html>

@@ -177,37 +177,60 @@
                         <i class='bx bx-x text-2xl'></i>
                     </button>
                 </div>
-                <!-- Modal body form (field: tipe_kamar_id, kode_kamar, status) -->
                 <div class="p-4 md:p-5">
-                    <form action="{{ route('kamar.store') }}" method="POST" id="kamarForm" class="space-y-4">
+                    <form action="{{ route('kamar.store') }}" method="POST" id="kamarForm" class="space-y-4"
+                        enctype="multipart/form-data">
                         @csrf
                         <div>
                             <label for="tipe_kamar_id"
-                                class="block mb-2 text-sm font-medium text-gray-700 flex items-center gap-1"><i
-                                    class='bx bx-purchase-tag-alt text-indigo-400'></i> Tipe Kamar</label>
+                                class="block mb-2 text-sm font-medium text-gray-700 flex items-center gap-1">
+                                <i class='bx bx-purchase-tag-alt text-indigo-400'></i> Tipe Kamar
+                            </label>
                             <select id="tipe_kamar_id" name="tipe_kamar_id"
                                 class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
                                 required>
                                 <option value="" disabled selected>Pilih tipe kamar</option>
                                 @foreach ($tipe as $item)
-                                    <option value="{{ $item->id }}">{{ $item->tipe }}</option>
+                                    <option value="{{ $item->id }}">{{ $item->tipe }} - Rp
+                                        {{ number_format($item->harga, 0, ',', '.') }}</option>
                                 @endforeach
                             </select>
                         </div>
 
                         <div>
                             <label for="kode_kamar"
-                                class="block mb-2 text-sm font-medium text-gray-700 flex items-center gap-1"><i
-                                    class='bx bx-barcode text-indigo-400'></i> Kode Kamar</label>
+                                class="block mb-2 text-sm font-medium text-gray-700 flex items-center gap-1">
+                                <i class='bx bx-barcode text-indigo-400'></i> Kode Kamar
+                            </label>
                             <input type="text" name="kode_kamar" id="kode_kamar"
                                 class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
                                 placeholder="Contoh: A-101, Melati-01" required>
                         </div>
 
                         <div>
+                            <label for="foto_kamar"
+                                class="block mb-2 text-sm font-medium text-gray-700 flex items-center gap-1">
+                                <i class='bx bx-camera text-indigo-400'></i> Foto Kamar
+                            </label>
+                            <div class="flex items-center gap-3">
+                                <input type="file" name="foto_kamar" id="foto_kamar"
+                                    accept="image/jpeg,image/png,image/jpg,image/webp"
+                                    class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition">
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1 flex items-center gap-1"><i
+                                    class='bx bx-info-circle'></i> Format: JPG, PNG, WEBP. Maksimal 2MB</p>
+                            <!-- Preview foto (opsional) -->
+                            <div id="fotoPreview" class="mt-2 hidden">
+                                <img src="#" alt="Preview Foto Kamar"
+                                    class="w-32 h-32 object-cover rounded-lg border border-indigo-200">
+                            </div>
+                        </div>
+
+                        <div>
                             <label for="status"
-                                class="block mb-2 text-sm font-medium text-gray-700 flex items-center gap-1"><i
-                                    class='bx bx-info-circle text-indigo-400'></i> Status</label>
+                                class="block mb-2 text-sm font-medium text-gray-700 flex items-center gap-1">
+                                <i class='bx bx-info-circle text-indigo-400'></i> Status
+                            </label>
                             <select id="status" name="status"
                                 class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
                                 required>
@@ -241,7 +264,7 @@
                     </button>
                 </div>
                 <div class="p-5">
-                    <form id="editForm" method="POST" class="space-y-4"
+                    <form id="editForm" method="POST" class="space-y-4" enctype="multipart/form-data"
                         data-action-template="{{ route('kamar.update', ':id') }}">
                         @csrf
                         @method('PUT')
@@ -266,6 +289,26 @@
                             <input type="text" name="kode_kamar" id="edit-kode"
                                 class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
                                 placeholder="Contoh: A-101, Melati-01" required>
+                        </div>
+
+
+                        <div>
+                            <label for="foto_kamar"
+                                class="block mb-2 text-sm font-medium text-gray-700 flex items-center gap-1">
+                                <i class='bx bx-camera text-indigo-400'></i> Foto Kamar
+                            </label>
+                            <div class="flex items-center gap-3">
+                                <input type="file" name="foto_kamar" id="edit_foto_kamar"
+                                    accept="image/jpeg,image/png,image/jpg,image/webp"
+                                    class="bg-indigo-50/30 border border-indigo-200 text-gray-900 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition">
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1 flex items-center gap-1"><i
+                                    class='bx bx-info-circle'></i> Format: JPG, PNG, WEBP. Maksimal 2MB</p>
+                            <!-- Preview foto (opsional) -->
+                            <div id="editfotoPreview" class="mt-2 hidden">
+                                <img src="#" alt="Preview Foto Kamar"
+                                    class="w-32 h-32 object-cover rounded-lg border border-indigo-200">
+                            </div>
                         </div>
 
                         <div>
@@ -295,6 +338,25 @@
     </div>
 @endsection
 @push('scripts')
+    <script>
+        document.getElementById('edit_foto_kamar').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const preview = document.getElementById('editFotoPreview');
+            const previewImg = preview.querySelector('img');
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                    preview.classList.remove('hidden');
+                }
+                reader.readAsDataURL(file);
+            } else {
+                preview.classList.add('hidden');
+                previewImg.src = '#';
+            }
+        });
+    </script>
     <script>
         function setEditData(button) {
             let id = button.getAttribute('data-id');

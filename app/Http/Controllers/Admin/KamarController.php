@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Kamar;
 use App\Models\Tipe_kamar;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class KamarController
 {
@@ -39,12 +40,18 @@ class KamarController
             [
                 'tipe_kamar_id' => 'required',
                 'kode_kamar' => 'required|unique:kamar,kode_kamar',
+                'foto_kamar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
                 'status' => 'required',
             ],
             [
                 'kode_kamar.unique' => 'Kode kamar sudah digunakan!',
             ]
         );
+
+        if ($request->hasFile('foto_kamar')) {
+            $validated['foto_kamar'] = $request->file('foto_kamar')->store('foto_kamar', 'public');
+        }
+
 
         Kamar::create($validated);
 
@@ -72,10 +79,13 @@ class KamarController
      */
     public function update(Request $request, string $id)
     {
+        $kamar = Kamar::findOrFail($id);
+
         $validated = $request->validate(
             [
                 'tipe_kamar_id' => 'required',
                 'kode_kamar' => 'required|unique:kamar,kode_kamar,' . $id,
+                'foto_kamar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
                 'status' => 'required',
             ],
             [
@@ -83,7 +93,13 @@ class KamarController
             ]
         );
 
-        $kamar = Kamar::findOrFail($id);
+        if ($request->hasFile('foto_kamar')) {
+            if ($kamar->foto_kamar) {
+                Storage::disk('public')->delete($kamar->foto_kamar);
+            }
+
+            $validated['foto_kamar'] = $request->file('foto_kamar')->store('foto_kamar', 'public');
+        }
 
         $kamar->update($validated);
 
@@ -96,7 +112,13 @@ class KamarController
     public function destroy(string $id)
     {
         $kamar = Kamar::findOrFail($id);
+
+        if ($kamar->foto_kamar) {
+            Storage::disk('public')->delete($kamar->foto_kamar);
+        }
+
         $kamar->delete();
+
         return redirect()->back()->with('success', 'Data Kamar Telah Dihapus');
     }
 }
