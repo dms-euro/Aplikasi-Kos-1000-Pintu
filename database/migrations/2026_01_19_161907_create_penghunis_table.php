@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('users_id')->constrained('users');
             $table->string('nama');
             $table->enum('kelamin',['Laki-laki','Perempuan']);
-            $table->date('taggal_lahir');
+            $table->date('tanggal_lahir');
             $table->enum('pekerjaan',['Karyawan','Mahasiswa','Lainnya'])->default('Lainnya');
             $table->string('kontak');
             $table->string('kontak_darurat');

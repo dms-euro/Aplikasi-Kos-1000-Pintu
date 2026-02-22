@@ -1,18 +1,26 @@
 <?php
 
 use App\Http\Controllers\Account\AccountController;
+use App\Http\Controllers\Account\PenghuniAuthController;
 use App\Http\Controllers\Admin\DashboardCpntroller;
 use App\Http\Controllers\Admin\KamarController;
 use App\Http\Controllers\Admin\KategoriController;
 use App\Http\Controllers\Penghuni\DashboardController as PenghuniDashboardController;
+use App\Http\Controllers\Penghuni\SewaController;
 use App\Http\Controllers\Staf\DashboardController;
 use App\Http\Controllers\Staf\PenghuniController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/', [PenghuniDashboardController::class, 'index'])->name('dashboard.penghuni');
+Route::get('/detail-kamar/{id}', [PenghuniDashboardController::class, 'show'])->name('detail.kamar');
+Route::post('/sewa/{kamar_id}', [SewaController::class, 'store'])
+    ->name('sewa.store');
+
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AccountController::class, 'showlogin'])->name('login');
     Route::post('/login', [AccountController::class, 'login'])->name('login.post');
-    Route::get('/', [PenghuniDashboardController::class, 'index'])->name('dashboard.penghuni');
+    Route::get('/register', [PenghuniAuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [PenghuniAuthController::class, 'register'])->name('register.post');
 });
 
 Route::middleware(['auth', 'role:owner'])->group(function () {
@@ -35,6 +43,6 @@ Route::middleware(['auth', 'role:staf'])->group(function () {
     Route::get('/penghuni/staf', [PenghuniController::class, 'index'])->name('penghuni.');
 });
 
-Route::middleware(['auth', 'role:owner,staf'])->group(function(){
+Route::middleware(['auth', 'role:owner,staf'])->group(function () {
     Route::post('/logout', [AccountController::class, 'logout'])->name('logout');
 });

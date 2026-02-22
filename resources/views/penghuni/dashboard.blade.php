@@ -1,743 +1,174 @@
-@extends('layouts.app')
-@section('title', 'Landing Page | Bapak Kos')
+@extends('layouts.public')
+@section('title', 'Beranda - Kosan优雅')
+
 @section('content')
-
-<style>
-    /* Hero Gradient */
-    .hero-gradient {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-
-    /* Card Hover Effect */
-    .card-hover {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .card-hover:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    }
-
-    /* Glass Effect */
-    .glass-effect {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    /* Filter Scroll */
-    .filter-scroll {
-        overflow-x: auto;
-        scrollbar-width: thin;
-        scrollbar-color: #4f46e5 #e0e7ff;
-    }
-    .filter-scroll::-webkit-scrollbar {
-        height: 6px;
-    }
-    .filter-scroll::-webkit-scrollbar-track {
-        background: #e0e7ff;
-        border-radius: 10px;
-    }
-    .filter-scroll::-webkit-scrollbar-thumb {
-        background: #4f46e5;
-        border-radius: 10px;
-    }
-
-    /* Swiper Pagination */
-    .swiper-pagination-bullet-active {
-        background: #4f46e5 !important;
-    }
-</style>
-
-<!-- ========== LANDING PAGE ========== -->
-<div id="landingPage">
-    <!-- ========== NAVBAR ========== -->
-    <nav class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <!-- Logo -->
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-emerald-500 flex items-center justify-center shadow-sm">
-                        <i class='bx bx-home-alt-2 text-white text-lg'></i>
-                    </div>
-                    <span class="text-xl font-semibold text-gray-800">Kos<span class="text-indigo-600">an</span></span>
-                    <span class="hidden md:inline-block ml-2 text-xs bg-indigo-100 text-indigo-700 px-2 py-1 rounded-full">#NyamanSepertiRumah</span>
-                </div>
-
-                <!-- Search Bar Desktop -->
-                <div class="hidden lg:flex items-center bg-gray-100 rounded-full px-4 py-2 w-96">
-                    <i class='bx bx-search text-gray-400 mr-2'></i>
-                    <input type="text" placeholder="Cari lokasi, nama kos, atau tipe kamar..." class="bg-transparent border-none focus:outline-none w-full text-sm">
-                </div>
-
-                <!-- Desktop Menu -->
-                <div class="hidden md:flex items-center space-x-6">
-                    <a href="#beranda" class="text-gray-700 hover:text-indigo-600 transition text-sm font-medium">Beranda</a>
-                    <a href="#kamar" class="text-gray-700 hover:text-indigo-600 transition text-sm font-medium">Cari Kos</a>
-                    <a href="#tips" class="text-gray-700 hover:text-indigo-600 transition text-sm font-medium">Tips Ngekos</a>
-                    <a href="#kontak" class="text-gray-700 hover:text-indigo-600 transition text-sm font-medium">Kontak</a>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="flex items-center gap-2">
-                    <a href="login.html" class="text-indigo-600 hover:text-indigo-700 font-medium px-4 py-2 rounded-lg hover:bg-indigo-50 transition text-sm">Masuk</a>
-                    <a href="register.html" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition shadow-md text-sm hidden md:block">Daftar</a>
-
-                    <!-- Mobile Menu Button -->
-                    <button id="mobileMenuBtn" class="md:hidden text-gray-700 hover:text-indigo-600 p-2">
-                        <i class='bx bx-menu text-2xl'></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Mobile Menu -->
-        <div id="mobileMenu" class="hidden md:hidden bg-white border-t border-gray-200 py-4 px-4">
-            <div class="flex flex-col space-y-3">
-                <div class="bg-gray-100 rounded-full px-4 py-2 flex items-center mb-2">
-                    <i class='bx bx-search text-gray-400 mr-2'></i>
-                    <input type="text" placeholder="Cari kos..." class="bg-transparent border-none focus:outline-none w-full text-sm">
-                </div>
-                <a href="#beranda" class="text-gray-700 hover:text-indigo-600 py-2">Beranda</a>
-                <a href="#kamar" class="text-gray-700 hover:text-indigo-600 py-2">Cari Kos</a>
-                <a href="#tips" class="text-gray-700 hover:text-indigo-600 py-2">Tips Ngekos</a>
-                <a href="#kontak" class="text-gray-700 hover:text-indigo-600 py-2">Kontak</a>
-                <a href="register.html" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium text-center">Daftar</a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- ========== HERO SECTION ========== -->
-    <section id="beranda" class="hero-gradient text-white py-16 md:py-24">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid md:grid-cols-2 gap-12 items-center">
-                <div data-aos="fade-right">
-                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+    <!-- Hero Section -->
+    <section class="bg-purple-500 text-white py-12 md:py-20 px-4 md:px-0">
+        <div class="container mx-auto">
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <h1 class="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
                         Temukan Kos <span class="text-yellow-300">Idaman</span> dengan Mudah
                     </h1>
-                    <p class="text-lg md:text-xl mb-8 text-indigo-100">
-                        10.000+ kamar kos tersedia di 50+ kota. Filter sesuai budget dan preferensimu, booking langsung tanpa perantara!
+                    <p class="text-base md:text-lg mb-6 text-indigo-100">
+                        10.000+ kamar kos tersedia di 50+ kota. Filter sesuai budget dan preferensimu, booking langsung
+                        tanpa perantara!
                     </p>
 
-                    <!-- Search Box Hero -->
-                    <div class="bg-white rounded-2xl p-4 shadow-2xl">
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
-                            <div class="relative md:col-span-2">
+                    <!-- Search Box -->
+                    <div class="bg-white rounded-2xl p-3 shadow-2xl">
+                        <div class="flex flex-col md:flex-row gap-3">
+                            <div class="relative flex-1">
                                 <i class='bx bx-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400'></i>
-                                <input type="text" id="searchHero" placeholder="Nama kos atau lokasi (Jakarta, Bandung, dll)" class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-800">
+                                <input type="text" placeholder="Nama kos atau lokasi..."
+                                    class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-800 text-sm">
                             </div>
-                            <div class="relative">
-                                <i class='bx bx-calendar absolute left-3 top-1/2 -translate-y-1/2 text-gray-400'></i>
-                                <select id="tipeHero" class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent appearance-none text-gray-800">
-                                    <option value="">Semua Tipe</option>
-                                    <option value="Standar">Standar</option>
-                                    <option value="Premium">Premium</option>
-                                    <option value="VIP">VIP</option>
-                                    <option value="Deluxe">Deluxe</option>
-                                    <option value="Ekonomi">Ekonomi</option>
+                            <div class="relative md:w-48">
+                                <i class='bx bx-home absolute left-3 top-1/2 -translate-y-1/2 text-gray-400'></i>
+                                <select
+                                    class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent appearance-none text-gray-800 text-sm">
+                                    <option>Semua Tipe</option>
+                                    <option>Standar</option>
+                                    <option>Premium</option>
+                                    <option>VIP</option>
+                                    <option>Deluxe</option>
                                 </select>
                             </div>
-                            <button onclick="searchFromHero()" class="bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-6 rounded-xl font-semibold transition transform hover:scale-105">
+                            <button
+                                class="bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-6 rounded-xl font-semibold transition w-full md:w-auto">
                                 Cari
                             </button>
                         </div>
                     </div>
 
-                    <!-- Popular Search -->
-                    <div class="flex flex-wrap gap-2 mt-6">
-                        <span class="text-indigo-200 text-sm">Populer:</span>
-                        <a href="#" class="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition">Jakarta Pusat</a>
-                        <a href="#" class="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition">Bandung</a>
-                        <a href="#" class="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition">Surabaya</a>
-                        <a href="#" class="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition">Kos Putra</a>
-                        <a href="#" class="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition">Kos Putri</a>
-                        <a href="#" class="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition">Under 1 Juta</a>
-                    </div>
-                </div>
-                <div data-aos="fade-left" class="hidden md:block">
-                    <img src="https://placehold.co/600x500/4f46e5/ffffff?text=Kosan+Elegant" alt="Hero Image" class="rounded-2xl shadow-2xl">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ========== STATS SECTION ========== -->
-    <section class="py-12 bg-white">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div class="text-center p-4">
-                    <p class="text-3xl md:text-4xl font-bold text-indigo-600">50+</p>
-                    <p class="text-gray-600 text-sm">Kota Tersedia</p>
-                </div>
-                <div class="text-center p-4">
-                    <p class="text-3xl md:text-4xl font-bold text-indigo-600">10rb+</p>
-                    <p class="text-gray-600 text-sm">Kamar Kos</p>
-                </div>
-                <div class="text-center p-4">
-                    <p class="text-3xl md:text-4xl font-bold text-indigo-600">25rb+</p>
-                    <p class="text-gray-600 text-sm">Penghuni Aktif</p>
-                </div>
-                <div class="text-center p-4">
-                    <p class="text-3xl md:text-4xl font-bold text-indigo-600">⭐ 4.8</p>
-                    <p class="text-gray-600 text-sm">Rating Aplikasi</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ========== FILTER CEPAT ========== -->
-    <section class="py-6 bg-gray-50">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="filter-scroll flex gap-2 pb-2">
-                <button class="filter-chip active px-4 py-2 bg-indigo-600 text-white rounded-full text-sm whitespace-nowrap">Semua</button>
-                <button class="filter-chip px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-full text-sm whitespace-nowrap hover:bg-indigo-50">Kos Putra</button>
-                <button class="filter-chip px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-full text-sm whitespace-nowrap hover:bg-indigo-50">Kos Putri</button>
-                <button class="filter-chip px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-full text-sm whitespace-nowrap hover:bg-indigo-50">Campuran</button>
-                <button class="filter-chip px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-full text-sm whitespace-nowrap hover:bg-indigo-50">Dekat Kampus</button>
-                <button class="filter-chip px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-full text-sm whitespace-nowrap hover:bg-indigo-50">Dekat Kantor</button>
-                <button class="filter-chip px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-full text-sm whitespace-nowrap hover:bg-indigo-50">AC</button>
-                <button class="filter-chip px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-full text-sm whitespace-nowrap hover:bg-indigo-50">Kamar Mandi Dalam</button>
-                <button class="filter-chip px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-full text-sm whitespace-nowrap hover:bg-indigo-50">WiFi</button>
-                <button class="filter-chip px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-full text-sm whitespace-nowrap hover:bg-indigo-50">Harga < 1jt</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- ========== REKOMENDASI KAMAR ========== -->
-    <section id="kamar" class="py-12 bg-white">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-2xl md:text-3xl font-bold text-gray-800">Rekomendasi <span class="text-indigo-600">Kamar Kos</span></h2>
-                <a href="#" class="text-indigo-600 hover:text-indigo-700 text-sm font-medium flex items-center gap-1">
-                    Lihat Semua <i class='bx bx-right-arrow-alt'></i>
-                </a>
-            </div>
-
-            <!-- Filter Bar -->
-            <div class="bg-gray-50 rounded-xl p-4 mb-8 flex flex-wrap gap-3 items-center">
-                <span class="text-sm font-medium text-gray-700">Filter:</span>
-                <select id="filterLokasi" class="bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500">
-                    <option value="">Semua Lokasi</option>
-                    <option value="Jakarta">Jakarta</option>
-                    <option value="Bandung">Bandung</option>
-                    <option value="Surabaya">Surabaya</option>
-                    <option value="Yogyakarta">Yogyakarta</option>
-                </select>
-                <select id="filterTipe" class="bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500">
-                    <option value="">Semua Tipe</option>
-                    <option value="Standar">Standar</option>
-                    <option value="Premium">Premium</option>
-                    <option value="VIP">VIP</option>
-                    <option value="Deluxe">Deluxe</option>
-                    <option value="Ekonomi">Ekonomi</option>
-                </select>
-                <select id="filterHarga" class="bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500">
-                    <option value="">Semua Harga</option>
-                    <option value="1000000">< Rp 1 Juta</option>
-                    <option value="1500000">< Rp 1.5 Juta</option>
-                    <option value="2000000">< Rp 2 Juta</option>
-                </select>
-                <select id="filterStatus" class="bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500">
-                    <option value="">Semua Status</option>
-                    <option value="tersedia">Tersedia</option>
-                    <option value="terisi">Terisi</option>
-                </select>
-                <button onclick="applyFilter()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium ml-auto">
-                    <i class='bx bx-filter-alt mr-1'></i> Terapkan
-                </button>
-            </div>
-
-            <!-- Kamar Grid -->
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="kamarGrid">
-                <!-- Akan diisi via JavaScript -->
-            </div>
-
-            <!-- Load More -->
-            <div class="text-center mt-12">
-                <button class="border border-indigo-600 text-indigo-600 hover:bg-indigo-50 px-8 py-3 rounded-xl font-medium transition inline-flex items-center gap-2">
-                    Muat Lebih Banyak <i class='bx bx-loader-alt bx-spin'></i>
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- ========== TIPS NGEKOS ========== -->
-    <section id="tips" class="py-12 bg-gray-50">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-8 text-center">Tips <span class="text-indigo-600">Ngekos</span></h2>
-
-            <div class="grid md:grid-cols-3 gap-6">
-                <div class="bg-white rounded-2xl shadow-sm p-5 card-hover">
-                    <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center mb-4">
-                        <i class='bx bx-search-alt-2 text-2xl text-indigo-600'></i>
-                    </div>
-                    <h3 class="text-lg font-semibold mb-2">Cek Lokasi Strategis</h3>
-                    <p class="text-gray-600 text-sm">Pastikan kos dekat dengan kampus, kantor, atau akses transportasi umum agar mobilitas lebih mudah.</p>
-                </div>
-                <div class="bg-white rounded-2xl shadow-sm p-5 card-hover">
-                    <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center mb-4">
-                        <i class='bx bx-wallet text-2xl text-indigo-600'></i>
-                    </div>
-                    <h3 class="text-lg font-semibold mb-2">Sesuaikan Budget</h3>
-                    <p class="text-gray-600 text-sm">Hitung pengeluaran bulanan, pastikan harga kos tidak lebih dari 30% pendapatan bulananmu.</p>
-                </div>
-                <div class="bg-white rounded-2xl shadow-sm p-5 card-hover">
-                    <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center mb-4">
-                        <i class='bx bx-shield-quarter text-2xl text-indigo-600'></i>
-                    </div>
-                    <h3 class="text-lg font-semibold mb-2">Prioritaskan Keamanan</h3>
-                    <p class="text-gray-600 text-sm">Pastikan ada CCTV, security, dan sistem keamanan yang baik untuk kenyamanan tinggal.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ========== PROMO BANNER ========== -->
-    <section class="py-12 bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row items-center justify-between">
-                <div class="mb-4 md:mb-0">
-                    <h3 class="text-2xl md:text-3xl font-bold mb-2">Dapatkan Promo Spesial!</h3>
-                    <p class="text-indigo-100">Booking sekarang dan dapatkan diskon 10% untuk bulan pertama.</p>
-                </div>
-                <button class="bg-white text-indigo-600 hover:bg-gray-100 px-6 py-3 rounded-xl font-semibold transition shadow-lg">
-                    <i class='bx bx-gift mr-2'></i>Klaim Promo
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- ========== TESTIMONIAL ========== -->
-    <section id="kontak" class="py-12 bg-white">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-8 text-center">Apa Kata <span class="text-indigo-600">Mereka</span></h2>
-
-            <div class="swiper mySwiper">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                        <div class="bg-gray-50 p-6 rounded-2xl">
-                            <div class="flex items-center gap-2 mb-3">
-                                <i class='bx bxs-star text-yellow-400'></i>
-                                <i class='bx bxs-star text-yellow-400'></i>
-                                <i class='bx bxs-star text-yellow-400'></i>
-                                <i class='bx bxs-star text-yellow-400'></i>
-                                <i class='bx bxs-star text-yellow-400'></i>
-                            </div>
-                            <p class="text-gray-700 mb-4">"Kosnya nyaman, bersih, dan lokasi strategis. Proses booking mudah dan cepat. Recommended!"</p>
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-full bg-indigo-200 flex items-center justify-center font-bold">A</div>
-                                <div>
-                                    <p class="font-semibold">Ahmad Fauzi</p>
-                                    <p class="text-xs text-gray-500">Penghuni VIP-01</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="bg-gray-50 p-6 rounded-2xl">
-                            <div class="flex items-center gap-2 mb-3">
-                                <i class='bx bxs-star text-yellow-400'></i>
-                                <i class='bx bxs-star text-yellow-400'></i>
-                                <i class='bx bxs-star text-yellow-400'></i>
-                                <i class='bx bxs-star text-yellow-400'></i>
-                                <i class='bx bxs-star-half text-yellow-400'></i>
-                            </div>
-                            <p class="text-gray-700 mb-4">"Harga terjangkau dengan fasilitas lengkap. AC dingin, WiFi kencang. Bakal perpanjang kontrak."</p>
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-full bg-emerald-200 flex items-center justify-center font-bold">S</div>
-                                <div>
-                                    <p class="font-semibold">Siti Aminah</p>
-                                    <p class="text-xs text-gray-500">Penghuni PRM-01</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="bg-gray-50 p-6 rounded-2xl">
-                            <div class="flex items-center gap-2 mb-3">
-                                <i class='bx bxs-star text-yellow-400'></i>
-                                <i class='bx bxs-star text-yellow-400'></i>
-                                <i class='bx bxs-star text-yellow-400'></i>
-                                <i class='bx bxs-star text-yellow-400'></i>
-                                <i class='bx bxs-star text-yellow-400'></i>
-                            </div>
-                            <p class="text-gray-700 mb-4">"Pelayanan cepat, petugas ramah. Kalau ada masalah cepat ditangani. Worth it banget!"</p>
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-full bg-amber-200 flex items-center justify-center font-bold">R</div>
-                                <div>
-                                    <p class="font-semibold">Rizki Pratama</p>
-                                    <p class="text-xs text-gray-500">Penghuni EKO-02</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="swiper-pagination"></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ========== FOOTER ========== -->
-    <footer class="bg-gray-900 text-white py-12">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid md:grid-cols-4 gap-8">
-                <div>
-                    <div class="flex items-center gap-2 mb-4">
-                        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-emerald-500 flex items-center justify-center">
-                            <i class='bx bx-home-alt-2 text-white text-lg'></i>
-                        </div>
-                        <span class="text-xl font-semibold">Kos<span class="text-indigo-400">an</span></span>
-                    </div>
-                    <p class="text-gray-400 text-sm mb-4">Platform cari kos terpercaya #1 di Indonesia. Temukan kos impianmu dengan mudah dan cepat.</p>
-                    <div class="flex gap-3">
-                        <a href="#" class="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-indigo-600 transition"><i class='bx bxl-facebook'></i></a>
-                        <a href="#" class="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-indigo-600 transition"><i class='bx bxl-instagram'></i></a>
-                        <a href="#" class="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-indigo-600 transition"><i class='bx bxl-twitter'></i></a>
-                        <a href="#" class="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-indigo-600 transition"><i class='bx bxl-tiktok'></i></a>
-                    </div>
-                </div>
-                <div>
-                    <h4 class="font-semibold text-lg mb-4">Jelajahi</h4>
-                    <ul class="space-y-2 text-gray-400">
-                        <li><a href="#" class="hover:text-indigo-400 transition">Beranda</a></li>
-                        <li><a href="#" class="hover:text-indigo-400 transition">Cari Kos</a></li>
-                        <li><a href="#" class="hover:text-indigo-400 transition">Tips Ngekos</a></li>
-                        <li><a href="#" class="hover:text-indigo-400 transition">Blog</a></li>
-                        <li><a href="#" class="hover:text-indigo-400 transition">FAQ</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-semibold text-lg mb-4">Kota Populer</h4>
-                    <ul class="space-y-2 text-gray-400">
-                        <li><a href="#" class="hover:text-indigo-400 transition">Kos Jakarta</a></li>
-                        <li><a href="#" class="hover:text-indigo-400 transition">Kos Bandung</a></li>
-                        <li><a href="#" class="hover:text-indigo-400 transition">Kos Surabaya</a></li>
-                        <li><a href="#" class="hover:text-indigo-400 transition">Kos Yogyakarta</a></li>
-                        <li><a href="#" class="hover:text-indigo-400 transition">Kos Bali</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-semibold text-lg mb-4">Kontak Kami</h4>
-                    <ul class="space-y-2 text-gray-400">
-                        <li class="flex items-center gap-2"><i class='bx bx-phone text-indigo-400'></i> 1500-123</li>
-                        <li class="flex items-center gap-2"><i class='bx bx-envelope text-indigo-400'></i> hello@kosan.id</li>
-                        <li class="flex items-center gap-2"><i class='bx bx-map text-indigo-400'></i> Jakarta, Indonesia</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 text-sm">
-                <p>© 2026 Kosan优雅. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-</div>
-
-<!-- ========== BOOKING MODAL ========== -->
-<div id="bookingModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto" data-aos="zoom-in">
-        <div class="sticky top-0 bg-white border-b border-gray-200 p-4 flex justify-between items-center">
-            <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
-                <i class='bx bx-calendar-check text-indigo-600'></i> Booking Kamar
-            </h3>
-            <button onclick="closeBookingModal()" class="text-gray-400 hover:text-gray-600 p-1">
-                <i class='bx bx-x text-2xl'></i>
-            </button>
-        </div>
-        <div class="p-6">
-            <div id="bookingDetail" class="bg-indigo-50 p-4 rounded-xl mb-6">
-                <!-- akan diisi javascript -->
-            </div>
-            <form id="bookingForm" onsubmit="handleBooking(event)">
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap</label>
-                        <input type="text" id="bookingNama" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500" placeholder="Masukkan nama sesuai KTP" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                        <input type="email" id="bookingEmail" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500" placeholder="nama@email.com" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">No. WhatsApp</label>
-                        <input type="text" id="bookingTelepon" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500" placeholder="081234567890" required>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3">
+                    <!-- Stats -->
+                    <div class="flex gap-6 mt-6">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Masuk</label>
-                            <input type="date" id="bookingTglMasuk" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500" required>
+                            <p class="text-xl md:text-2xl font-bold">500+</p>
+                            <p class="text-indigo-200 text-xs">Kamar Tersedia</p>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Durasi</label>
-                            <select id="bookingDurasi" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500" required>
-                                <option value="3">3 Bulan</option>
-                                <option value="6">6 Bulan</option>
-                                <option value="12">12 Bulan</option>
-                            </select>
+                            <p class="text-xl md:text-2xl font-bold">300+</p>
+                            <p class="text-indigo-200 text-xs">Penghuni Aktif</p>
+                        </div>
+                        <div>
+                            <p class="text-xl md:text-2xl font-bold">50+</p>
+                            <p class="text-indigo-200 text-xs">Lokasi Strategis</p>
                         </div>
                     </div>
-                    <div class="bg-yellow-50 p-3 rounded-xl text-sm text-yellow-700 flex gap-2">
-                        <i class='bx bx-info-circle text-xl'></i>
-                        <span>Booking ini masih bersifat sementara. Staff kami akan menghubungimu untuk konfirmasi dan pembayaran DP.</span>
-                    </div>
-                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-medium transition">
-                        <i class='bx bx-check-circle mr-2'></i>Konfirmasi Booking
-                    </button>
                 </div>
-            </form>
+                <div class="hidden md:block">
+                    <img src="https://placehold.co/600x500/4f46e5/ffffff?text=Kosan+Elegant" alt="Hero Image"
+                        class="rounded-2xl shadow-2xl">
+                </div>
+            </div>
         </div>
-    </div>
-</div>
+    </section>
 
+    <!-- Kategori Cepat -->
+    <section class="py-8 px-4">
+        <div class="container mx-auto">
+            <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-4">Kategori Populer</h2>
+            <div class="flex gap-3 overflow-x-auto pb-2">
+                <span class="bg-indigo-600 text-white px-5 py-2.5 rounded-full text-sm whitespace-nowrap">Semua</span>
+                <span
+                    class="bg-white border border-gray-300 text-gray-700 px-5 py-2.5 rounded-full text-sm whitespace-nowrap">Kos
+                    Putra</span>
+                <span
+                    class="bg-white border border-gray-300 text-gray-700 px-5 py-2.5 rounded-full text-sm whitespace-nowrap">Kos
+                    Putri</span>
+                <span
+                    class="bg-white border border-gray-300 text-gray-700 px-5 py-2.5 rounded-full text-sm whitespace-nowrap">Campuran</span>
+                <span
+                    class="bg-white border border-gray-300 text-gray-700 px-5 py-2.5 rounded-full text-sm whitespace-nowrap">Dekat
+                    Kampus</span>
+                <span
+                    class="bg-white border border-gray-300 text-gray-700 px-5 py-2.5 rounded-full text-sm whitespace-nowrap">AC</span>
+                <span
+                    class="bg-white border border-gray-300 text-gray-700 px-5 py-2.5 rounded-full text-sm whitespace-nowrap">WiFi</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rekomendasi Kamar -->
+    <section class="py-4 px-4">
+        <div class="container mx-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl md:text-2xl font-bold text-gray-800">Rekomendasi</h2>
+                <a href="/kamar" class="text-indigo-600 text-sm font-medium">Lihat semua</a>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4">
+                @forelse ($kamar as $item)
+                    <a href="{{ route('detail.kamar', $item->id) }}"
+                        class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+
+                        <img src="{{ asset('storage/' . $item->foto_kamar) }}" class="w-full h-40 object-cover">
+
+                        <div class="p-4">
+                            <h3 class="font-semibold text-gray-800">
+                                {{ $item->tipe_kamar->tipe }}
+                            </h3>
+
+                            <p class="text-xs text-gray-500 mt-1">
+                                Kode: {{ $item->kode_kamar }}
+                            </p>
+
+                            <div class="flex justify-between items-center mt-3">
+                                <span class="text-indigo-600 font-bold">
+                                    Rp{{ number_format($item->tipe_kamar->harga) }}
+                                </span>
+
+                                @if ($item->status == 'tersedia')
+                                    <span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full">
+                                        Tersedia
+                                    </span>
+                                @else
+                                    <span class="bg-amber-100 text-amber-700 text-xs px-2 py-1 rounded-full">
+                                        Terisi
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                    </a>
+                @empty
+                    <p class="col-span-4 text-center text-gray-500">
+                        Belum ada kamar tersedia
+                    </p>
+                @endforelse
+            </div>
+        </div>
+    </section>
+
+    <!-- Tips Section -->
+    <section class="py-8 px-4 bg-gray-50 mt-4">
+        <div class="container mx-auto">
+            <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-4">Tips Ngekos</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white p-5 rounded-2xl shadow-sm flex items-start gap-3">
+                    <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0"><i
+                            class='bx bx-map text-indigo-600 text-xl'></i></div>
+                    <div>
+                        <h3 class="font-medium">Lokasi Strategis</h3>
+                        <p class="text-sm text-gray-600 mt-1">Dekat kampus, kantor, dan transportasi umum</p>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm flex items-start gap-3">
+                    <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0"><i
+                            class='bx bx-wallet text-indigo-600 text-xl'></i></div>
+                    <div>
+                        <h3 class="font-medium">Sesuaikan Budget</h3>
+                        <p class="text-sm text-gray-600 mt-1">Pilih kos sesuai kemampuan finansial</p>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm flex items-start gap-3">
+                    <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0"><i
+                            class='bx bx-shield-quarter text-indigo-600 text-xl'></i></div>
+                    <div>
+                        <h3 class="font-medium">Prioritas Keamanan</h3>
+                        <p class="text-sm text-gray-600 mt-1">CCTV dan security 24 jam</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 @endsection
-
-@push('styles')
-<!-- AOS Animation -->
-<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-<!-- Swiper Slider -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-@endpush
-
-@push('scripts')
-<!-- AOS -->
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<!-- Swiper JS -->
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-
-<script>
-    // Initialize AOS
-    AOS.init({
-        duration: 800,
-        once: true
-    });
-
-    // Initialize Swiper
-    const swiper = new Swiper('.mySwiper', {
-        slidesPerView: 1,
-        spaceBetween: 20,
-        pagination: {
-            el: '.swiper-pagination',
-            clickable: true,
-        },
-        breakpoints: {
-            640: { slidesPerView: 2 },
-            1024: { slidesPerView: 3 }
-        }
-    });
-
-    // Mobile Menu Toggle
-    document.getElementById('mobileMenuBtn')?.addEventListener('click', function() {
-        const menu = document.getElementById('mobileMenu');
-        if (menu) {
-            menu.classList.toggle('hidden');
-        }
-    });
-
-    // Data Kamar
-    const kamarData = [
-        { id: 1, nama: 'Kos Melati Putra', lokasi: 'Jakarta', tipe: 'Standar', harga: 850000, fasilitas: ['Kasur', 'Lemari', 'Meja', 'WiFi', 'AC'], status: 'tersedia', gambar: 'https://placehold.co/400x300/4f46e5/ffffff?text=Kos+Melati', gender: 'Putra', rating: 4.5, kamar_mandi: 'Luar' },
-        { id: 2, nama: 'Kos Mawar Putri', lokasi: 'Bandung', tipe: 'Premium', harga: 1250000, fasilitas: ['Kasur', 'Lemari', 'AC', 'TV', 'WiFi', 'Kamar Mandi Dalam'], status: 'tersedia', gambar: 'https://placehold.co/400x300/8b5cf6/ffffff?text=Kos+Mawar', gender: 'Putri', rating: 4.8, kamar_mandi: 'Dalam' },
-        { id: 3, nama: 'Kos Anggrek Campur', lokasi: 'Surabaya', tipe: 'VIP', harga: 1750000, fasilitas: ['King Size Bed', 'Lemari', 'AC', 'TV 40"', 'Kulkas', 'Sofa', 'WiFi', 'Kamar Mandi Dalam'], status: 'tersedia', gambar: 'https://placehold.co/400x300/d946ef/ffffff?text=Kos+Anggrek', gender: 'Campuran', rating: 4.9, kamar_mandi: 'Dalam' },
-        { id: 4, nama: 'Kos Kenanga', lokasi: 'Yogyakarta', tipe: 'Deluxe', harga: 1500000, fasilitas: ['Kasur Queen', 'Lemari', 'AC', 'TV', 'Kulkas', 'WiFi', 'Kamar Mandi Dalam', 'Balkon'], status: 'tersedia', gambar: 'https://placehold.co/400x300/ec4899/ffffff?text=Kos+Kenanga', gender: 'Putri', rating: 4.7, kamar_mandi: 'Dalam' },
-        { id: 5, nama: 'Kos Flamboyan', lokasi: 'Jakarta', tipe: 'Ekonomi', harga: 650000, fasilitas: ['Kasur', 'Lemari', 'Kipas Angin', 'WiFi'], status: 'tersedia', gambar: 'https://placehold.co/400x300/10b981/ffffff?text=Kos+Flamboyan', gender: 'Putra', rating: 4.2, kamar_mandi: 'Luar' }
-    ];
-
-    // Render Kamar
-    function renderKamar(data) {
-        const grid = document.getElementById('kamarGrid');
-        if (!grid) return;
-
-        grid.innerHTML = '';
-
-        if (data.length === 0) {
-            grid.innerHTML = '<div class="col-span-full text-center py-10"><i class="bx bx-folder-open text-5xl text-gray-300 mb-3"></i><p class="text-gray-500">Tidak ada kamar yang sesuai filter</p></div>';
-            return;
-        }
-
-        data.forEach(kamar => {
-            const statusBadge = kamar.status === 'tersedia'
-                ? '<span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-medium">Tersedia</span>'
-                : '<span class="bg-amber-100 text-amber-700 px-2 py-1 rounded-full text-xs font-medium">Terisi</span>';
-
-            const genderIcon = {
-                'Putra': 'bx-male',
-                'Putri': 'bx-female',
-                'Campuran': 'bx-male-female'
-            }[kamar.gender] || 'bx-user';
-
-            const fasilitasIcons = {
-                'AC': 'bx-wind',
-                'WiFi': 'bx-wifi',
-                'TV': 'bx-tv',
-                'Kulkas': 'bx-fridge',
-                'Kamar Mandi Dalam': 'bx-bath',
-                'Kasur': 'bx-bed',
-                'Lemari': 'bx-closet'
-            };
-
-            const fasilitasHtml = kamar.fasilitas.slice(0, 3).map(f =>
-                `<i class='bx ${fasilitasIcons[f] || 'bx-check'} text-indigo-600 text-lg' title="${f}"></i>`
-            ).join('');
-
-            grid.innerHTML += `
-                <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover border border-gray-100">
-                    <div class="relative">
-                        <img src="${kamar.gambar}" alt="${kamar.nama}" class="w-full h-48 object-cover">
-                        <div class="absolute top-3 left-3">
-                            ${statusBadge}
-                        </div>
-                        <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1">
-                            <i class='bx bxs-star text-yellow-400'></i> ${kamar.rating}
-                        </div>
-                    </div>
-                    <div class="p-4">
-                        <div class="flex items-center gap-1 text-xs text-gray-500 mb-1">
-                            <i class='bx ${genderIcon}'></i>
-                            <span>${kamar.gender}</span>
-                            <span class="mx-1">•</span>
-                            <i class='bx bx-map'></i>
-                            <span>${kamar.lokasi}</span>
-                            <span class="mx-1">•</span>
-                            <i class='bx bx-bath'></i>
-                            <span>KM ${kamar.kamar_mandi}</span>
-                        </div>
-                        <h3 class="text-lg font-semibold text-gray-800 mb-1">${kamar.nama}</h3>
-                        <p class="text-xl font-bold text-indigo-600 mb-2">Rp ${kamar.harga.toLocaleString('id-ID')}<span class="text-sm font-normal text-gray-500">/bln</span></p>
-                        <div class="flex items-center gap-2 mb-3">
-                            ${fasilitasHtml}
-                            ${kamar.fasilitas.length > 3 ? `<span class="text-xs text-gray-500">+${kamar.fasilitas.length - 3}</span>` : ''}
-                        </div>
-                        <button onclick="openBookingModal(${kamar.id})" class="w-full bg-indigo-50 hover:bg-indigo-100 text-indigo-700 py-2.5 rounded-xl font-medium transition flex items-center justify-center gap-2 ${kamar.status !== 'tersedia' ? 'opacity-50 cursor-not-allowed' : ''}" ${kamar.status !== 'tersedia' ? 'disabled' : ''}>
-                            <i class='bx bx-calendar-check'></i> Booking Cepat
-                        </button>
-                    </div>
-                </div>
-            `;
-        });
-    }
-
-    // Filter Function
-    function applyFilter() {
-        const lokasi = document.getElementById('filterLokasi')?.value || '';
-        const tipe = document.getElementById('filterTipe')?.value || '';
-        const harga = document.getElementById('filterHarga')?.value || '';
-        const status = document.getElementById('filterStatus')?.value || '';
-
-        let filtered = kamarData;
-
-        if (lokasi) filtered = filtered.filter(k => k.lokasi === lokasi);
-        if (tipe) filtered = filtered.filter(k => k.tipe === tipe);
-        if (harga) filtered = filtered.filter(k => k.harga <= parseInt(harga));
-        if (status) filtered = filtered.filter(k => k.status === status);
-
-        renderKamar(filtered);
-    }
-
-    // Search from Hero
-    function searchFromHero() {
-        const searchTerm = document.getElementById('searchHero')?.value.toLowerCase() || '';
-        const tipe = document.getElementById('tipeHero')?.value || '';
-
-        let filtered = kamarData;
-
-        if (searchTerm) {
-            filtered = filtered.filter(k =>
-                k.nama.toLowerCase().includes(searchTerm) ||
-                k.lokasi.toLowerCase().includes(searchTerm)
-            );
-        }
-        if (tipe) {
-            filtered = filtered.filter(k => k.tipe === tipe);
-        }
-
-        renderKamar(filtered);
-
-        // Scroll to kamar section
-        document.getElementById('kamar').scrollIntoView({ behavior: 'smooth' });
-    }
-
-    // Booking Modal
-    let currentKamarId = null;
-
-    function openBookingModal(kamarId) {
-        const kamar = kamarData.find(k => k.id === kamarId);
-        if (!kamar) return;
-
-        currentKamarId = kamarId;
-
-        document.getElementById('bookingDetail').innerHTML = `
-            <div class="flex items-center gap-3">
-                <img src="${kamar.gambar}" alt="${kamar.nama}" class="w-20 h-20 rounded-lg object-cover">
-                <div>
-                    <p class="font-semibold text-gray-800">${kamar.nama}</p>
-                    <p class="text-indigo-600 font-bold">Rp ${kamar.harga.toLocaleString('id-ID')}/bulan</p>
-                    <p class="text-xs text-gray-600 flex items-center gap-1 mt-1"><i class='bx bx-map'></i> ${kamar.lokasi}</p>
-                </div>
-            </div>
-        `;
-
-        // Set default tanggal masuk (besok)
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        document.getElementById('bookingTglMasuk').valueAsDate = tomorrow;
-
-        document.getElementById('bookingModal').style.display = 'flex';
-    }
-
-    function closeBookingModal() {
-        document.getElementById('bookingModal').style.display = 'none';
-        document.getElementById('bookingForm').reset();
-    }
-
-    function handleBooking(e) {
-        e.preventDefault();
-
-        const nama = document.getElementById('bookingNama').value;
-        const email = document.getElementById('bookingEmail').value;
-        const telepon = document.getElementById('bookingTelepon').value;
-        const tglMasuk = document.getElementById('bookingTglMasuk').value;
-        const durasi = document.getElementById('bookingDurasi').value;
-
-        const kamar = kamarData.find(k => k.id === currentKamarId);
-
-        alert(`✅ Booking sementara berhasil!\n\nKamar: ${kamar.nama}\nNama: ${nama}\nEmail: ${email}\nWhatsApp: ${telepon}\nTanggal Masuk: ${tglMasuk}\nDurasi: ${durasi} bulan\n\nStaff kami akan menghubungi Anda dalam 1x24 jam.`);
-
-        closeBookingModal();
-    }
-
-    // Filter chips
-    document.querySelectorAll('.filter-chip').forEach(chip => {
-        chip.addEventListener('click', function() {
-            document.querySelectorAll('.filter-chip').forEach(c => {
-                c.classList.remove('bg-indigo-600', 'text-white');
-                c.classList.add('bg-white', 'border', 'border-gray-300', 'text-gray-700');
-            });
-            this.classList.remove('bg-white', 'border', 'border-gray-300', 'text-gray-700');
-            this.classList.add('bg-indigo-600', 'text-white');
-
-            // Apply filter based on chip text
-            const filterText = this.innerText.trim();
-            let filtered = kamarData;
-
-            if (filterText === 'Kos Putra') filtered = kamarData.filter(k => k.gender === 'Putra');
-            else if (filterText === 'Kos Putri') filtered = kamarData.filter(k => k.gender === 'Putri');
-            else if (filterText === 'Campuran') filtered = kamarData.filter(k => k.gender === 'Campuran');
-            else if (filterText === 'AC') filtered = kamarData.filter(k => k.fasilitas.includes('AC'));
-            else if (filterText === 'Kamar Mandi Dalam') filtered = kamarData.filter(k => k.kamar_mandi === 'Dalam');
-            else if (filterText === 'WiFi') filtered = kamarData.filter(k => k.fasilitas.includes('WiFi'));
-            else if (filterText === 'Harga < 1jt') filtered = kamarData.filter(k => k.harga < 1000000);
-
-            renderKamar(filtered);
-        });
-    });
-
-    // Close modal when clicking outside
-    window.onclick = function(event) {
-        const modal = document.getElementById('bookingModal');
-        if (event.target === modal) {
-            closeBookingModal();
-        }
-    }
-
-    // Initial render
-    renderKamar(kamarData);
-</script>
-@endpush

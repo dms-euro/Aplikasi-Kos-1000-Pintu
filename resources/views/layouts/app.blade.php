@@ -35,8 +35,8 @@
             @if (auth()->user()->role === 'staf')
                 @include('layouts.sidebar-staf')
             @endif
-
         @endauth
+
         <!-- MAIN CONTENT -->
         <main class="flex-1 overflow-y-auto bg-white/70 backdrop-blur-sm">
 

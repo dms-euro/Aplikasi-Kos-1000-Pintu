@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('kamar_id')->constrained('kamar');
             $table->date('tanggal_masuk');
             $table->date('tanggal_keluar');
-            $table->integer('durasi_bulan');
+            $table->integer('durasi_bulanan');
             $table->decimal('total',10,2);
             $table->enum('status', ['pending', 'confirmed', 'cancelled'])->default('pending');
             $table->timestamps();

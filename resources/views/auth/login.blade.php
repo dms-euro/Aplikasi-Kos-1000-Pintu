@@ -128,32 +128,13 @@
                 <!-- Register Link -->
                 <p class="text-center text-sm text-gray-600">
                     Belum punya akun?
-                    <a href="register.html"
+                    <a href="{{ route('register') }}"
                         class="text-indigo-600 hover:text-indigo-700 font-medium hover:underline transition-colors duration-200">
                         Daftar sekarang
                     </a>
                 </p>
             </form>
-
-            <!-- Demo Credentials -->
-            <div class="mt-6 p-4 bg-indigo-50 rounded-xl border border-indigo-100">
-                <p class="text-xs text-indigo-600 font-medium mb-2">
-                    <i class='bx bx-info-circle align-middle mr-1'></i>
-                    Demo Credentials:
-                </p>
-                <div class="space-y-1 text-sm">
-                    <p class="text-gray-600"><span class="font-medium">Owner:</span> owner@kosan.id / owner123</p>
-                    <p class="text-gray-600"><span class="font-medium">Staff:</span> staff@kosan.id / staff123</p>
-                    <p class="text-gray-600"><span class="font-medium">Penghuni:</span> penghuni@kosan.id / penghuni123
-                    </p>
-                </div>
-            </div>
         </div>
-
-        <!-- Footer -->
-        <p class="text-center text-indigo-200 text-sm mt-8">
-            © 2026 Kosan优雅. All rights reserved.
-        </p>
     </div>
 {{--
     <script>

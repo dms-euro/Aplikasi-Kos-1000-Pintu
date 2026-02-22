@@ -21,9 +21,8 @@ class User extends Authenticatable
 
     public function penghuni()
     {
-        return $this->hasOne(Penghuni::class);
+        return $this->hasOne(Penghuni::class, 'users_id');
     }
-
 
     public  function log_aktifitas()
     {
