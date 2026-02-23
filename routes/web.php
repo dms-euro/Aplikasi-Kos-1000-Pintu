@@ -5,7 +5,9 @@ use App\Http\Controllers\Account\PenghuniAuthController;
 use App\Http\Controllers\Admin\DashboardCpntroller;
 use App\Http\Controllers\Admin\KamarController;
 use App\Http\Controllers\Admin\KategoriController;
+use App\Http\Controllers\Admin\SewaController as AdminSewaController;
 use App\Http\Controllers\Penghuni\DashboardController as PenghuniDashboardController;
+use App\Http\Controllers\Penghuni\PembayaranController;
 use App\Http\Controllers\Penghuni\SewaController;
 use App\Http\Controllers\Staf\DashboardController;
 use App\Http\Controllers\Staf\PenghuniController;
@@ -15,6 +17,8 @@ Route::get('/', [PenghuniDashboardController::class, 'index'])->name('dashboard.
 Route::get('/detail-kamar/{id}', [PenghuniDashboardController::class, 'show'])->name('detail.kamar');
 Route::post('/sewa/{kamar_id}', [SewaController::class, 'store'])
     ->name('sewa.store');
+Route::get('/pembayaran/{id}', [PembayaranController::class, 'form'])->name('pembayaran.form');
+Route::post('/pembayaran/{id}', [PembayaranController::class, 'store'])->name('pembayaran.store');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AccountController::class, 'showlogin'])->name('login');
@@ -36,6 +40,10 @@ Route::middleware(['auth', 'role:owner'])->group(function () {
     Route::post('/kamar/add/admin', [KamarController::class, 'store'])->name('kamar.store');
     Route::put('/kamar/update/{id}', [KamarController::class, 'update'])->name('kamar.update');
     Route::delete('/kamar/delete/{id}', [KamarController::class, 'destroy'])->name('kamar.destroy');
+    Route::get('/pemesanan/admin', [AdminSewaController::class, 'index'])->name('pemesanan.index');
+    Route::get('/pemesanan/store', [AdminSewaController::class, 'store'])->name('pemesanan.store');
+    Route::get('/pembayaran/admin/{id}', [PembayaranController::class, 'form'])->name('pembayaran.form');
+    Route::post('/pembayaran/admin/{id}', [PembayaranController::class, 'store'])->name('pembayaran.store');
 });
 
 Route::middleware(['auth', 'role:staf'])->group(function () {
@@ -43,6 +51,6 @@ Route::middleware(['auth', 'role:staf'])->group(function () {
     Route::get('/penghuni/staf', [PenghuniController::class, 'index'])->name('penghuni.');
 });
 
-Route::middleware(['auth', 'role:owner,staf'])->group(function () {
+Route::middleware(['auth', 'role:owner,staf,penghuni'])->group(function () {
     Route::post('/logout', [AccountController::class, 'logout'])->name('logout');
 });

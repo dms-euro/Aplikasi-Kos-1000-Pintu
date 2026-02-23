@@ -45,6 +45,16 @@
                 <span>Kategori & Harga</span>
             </a>
 
+            {{-- Kategori --}}
+            <a href="{{ route('pemesanan.index') }}"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl transition group
+                {{ request()->routeIs('pemesanan.*')
+                    ? 'text-indigo-700 bg-indigo-50 border-l-4 border-indigo-600 font-medium'
+                    : 'text-gray-600 hover:bg-indigo-50/50' }}">
+                <i class='bx bx-purchase-tag-alt text-xl'></i>
+                <span>Pemesanan</span>
+            </a>
+
             {{-- Kamar --}}
             <a href="{{ route('kamar.index') }}"
                 class="flex items-center gap-3 px-4 py-3 rounded-xl transition group
@@ -82,7 +92,7 @@
             </p>
             <p class="text-xs text-indigo-500 flex items-center gap-1">
                 <i class='bx bx-crown text-xs'></i>
-                {{ auth()->user()->role }}  
+                {{ auth()->user()->role }}
             </p>
         </div>
     </div>

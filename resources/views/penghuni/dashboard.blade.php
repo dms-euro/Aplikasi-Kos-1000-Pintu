@@ -7,6 +7,12 @@
         <div class="container mx-auto">
             <div class="grid md:grid-cols-2 gap-8 items-center">
                 <div>
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit">
+                            Logout
+                        </button>
+                    </form>
                     <h1 class="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
                         Temukan Kos <span class="text-yellow-300">Idaman</span> dengan Mudah
                     </h1>

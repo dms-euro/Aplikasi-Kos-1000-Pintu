@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('pemesanan_id')->constrained('pemesanan');
             $table->date('tanggal_bayar');
             $table->decimal('jumlah',10,2);
-            $table->foreignId('petugas_id')->constrained('users');
+            $table->foreignId('petugas_id')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
         });
     }

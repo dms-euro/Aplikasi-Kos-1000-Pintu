@@ -151,23 +151,19 @@
                 @csrf
 
                 <div class="mb-4">
-                    <label class="block text-sm mb-1">
-                        Tanggal Masuk
-                    </label>
+                    <label class="block text-sm mb-1">Tanggal Masuk</label>
                     <input type="date" name="tanggal_masuk" class="w-full border rounded-lg p-2" required>
                 </div>
 
                 <div class="mb-4">
-                    <label class="block text-sm mb-1">
-                        Durasi (bulan)
-                    </label>
+                    <label class="block text-sm mb-1">Durasi (bulan)</label>
                     <input type="number" name="durasi_bulanan" min="1" value="1"
                         class="w-full border rounded-lg p-2" required>
                 </div>
 
                 <button type="submit"
                     class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-semibold">
-                    Konfirmasi Sewa
+                    Lanjut ke Pembayaran
                 </button>
             </form>
 

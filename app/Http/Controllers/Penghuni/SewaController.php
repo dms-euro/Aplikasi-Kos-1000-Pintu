@@ -30,60 +30,35 @@ class SewaController
      */
     public function store(Request $request, $kamar_id)
     {
-        $user = Auth::user();
-        $penghuni = $user->penghuni;
+        $kamar = Kamar::findOrFail($kamar_id);
 
-        $kamar = Kamar::with('tipe_kamar')->findOrFail($kamar_id);
-
-        // ❗ Cek kamar masih tersedia
-        if ($kamar->status !== 'tersedia') {
-            return back()->with('error', 'Kamar sudah terisi.');
+        // Cegah kalau kamar sudah terisi
+        if ($kamar->status == 'terisi') {
+            return back()->with('error', 'Kamar sudah terisi');
         }
 
-        // ❗ Batasi 1 penghuni hanya boleh 1 kamar aktif
-        $cekSewa = Pemesanan::where('penghuni_id', $penghuni->id)
-            ->where('status', 'aktif')
-            ->exists();
+        $penghuni = auth()->user()->penghuni;
 
-        if ($cekSewa) {
-            return back()->with('error', 'Anda masih memiliki kamar aktif.');
-        }
+        $tanggal_keluar = \Carbon\Carbon::parse($request->tanggal_masuk)
+            ->addMonths((int) $request->durasi_bulanan);
 
-        $request->validate([
-            'tanggal_masuk' => 'required|date',
-            'durasi_bulanan' => 'required|integer|min:1'
-        ]);
+        $harga_per_bulan = $kamar->tipe_kamar->harga;
 
-        $harga = $kamar->tipe_kamar->harga;
-        $durasi = $request->durasi_bulanan;
+        $total = $harga_per_bulan * $request->durasi_bulanan;
 
-        $total = $harga * $durasi;
-
-        $tanggal_keluar = date(
-            'Y-m-d',
-            strtotime("+$durasi month", strtotime($request->tanggal_masuk))
-        );
-
-        // ✅ Simpan pemesanan
-        Pemesanan::create([
+        // Buat pemesanan (status menunggu)
+        $pemesanan = Pemesanan::create([
             'penghuni_id' => $penghuni->id,
             'kamar_id' => $kamar->id,
             'tanggal_masuk' => $request->tanggal_masuk,
             'tanggal_keluar' => $tanggal_keluar,
-            'durasi_bulanan' => $durasi,
+            'durasi_bulanan' => $request->durasi_bulanan,
             'total' => $total,
             'status' => 'pending',
         ]);
 
-        // ✅ Update status kamar
-        $kamar->update([
-            'status' => 'terisi'
-        ]);
-
-        return redirect('/')
-            ->with('success', 'Berhasil menyewa kamar!');
+        return redirect()->route('pembayaran.form', $pemesanan->id);
     }
-
 
     /**
      * Display the specified resource.
