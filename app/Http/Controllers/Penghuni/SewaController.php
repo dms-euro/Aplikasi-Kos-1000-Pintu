@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Penghuni;
 
 use App\Models\Kamar;
 use App\Models\Pemesanan;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -30,31 +31,41 @@ class SewaController
      */
     public function store(Request $request, $kamar_id)
     {
+        $request->validate([
+            'tanggal_masuk' => 'required|date',
+            'durasi_bulanan' => 'required|integer|min:1'
+        ]);
+
         $kamar = Kamar::findOrFail($kamar_id);
 
-        // Cegah kalau kamar sudah terisi
-        if ($kamar->status == 'terisi') {
-            return back()->with('error', 'Kamar sudah terisi');
+        // Cegah kalau kamar tidak tersedia
+        if ($kamar->status != 'tersedia') {
+            return back()->with('error', 'Kamar tidak tersedia');
         }
 
-        $penghuni = auth()->user()->penghuni;
+        // $penghuni = auth()->user()->penghuni;
 
-        $tanggal_keluar = \Carbon\Carbon::parse($request->tanggal_masuk)
+        $tanggal_keluar = Carbon::parse($request->tanggal_masuk)
             ->addMonths((int) $request->durasi_bulanan);
 
         $harga_per_bulan = $kamar->tipe_kamar->harga;
 
-        $total = $harga_per_bulan * $request->durasi_bulanan;
+        $total = $harga_per_bulan * (int) $request->durasi_bulanan;
 
-        // Buat pemesanan (status menunggu)
+        // Buat pemesanan
         $pemesanan = Pemesanan::create([
-            'penghuni_id' => $penghuni->id,
+            // 'penghuni_id' => $penghuni->id,
             'kamar_id' => $kamar->id,
             'tanggal_masuk' => $request->tanggal_masuk,
             'tanggal_keluar' => $tanggal_keluar,
             'durasi_bulanan' => $request->durasi_bulanan,
             'total' => $total,
-            'status' => 'pending',
+            'status' => 'pending', // sesuaikan enum kamu
+        ]);
+
+        // 🔥 UBAH STATUS KAMAR JADI DIPESAN
+        $kamar->update([
+            'status' => 'dipesan'
         ]);
 
         return redirect()->route('pembayaran.form', $pemesanan->id);

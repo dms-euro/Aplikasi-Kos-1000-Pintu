@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('pemesanan_id')->constrained('pemesanan');
             $table->date('tanggal_bayar');
             $table->decimal('jumlah',10,2);
+            $table->enum('status', ['pending', 'paid', 'failed'])->default('pending');
+            $table->string('bukti_bayar')->nullable();
             $table->foreignId('petugas_id')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
         });

@@ -113,10 +113,10 @@
             @if ($kamar->status == 'tersedia')
                 @auth
                     @if (auth()->user()->role == 'penghuni')
-                        <button onclick="openModal()"
+                        <a href="{{ route('pemesanan.create', $kamar->id) }}"
                             class="block w-full bg-indigo-600 hover:bg-indigo-700 text-white py-4 rounded-xl font-semibold shadow-lg transition text-lg text-center">
                             Sewa Sekarang
-                        </button>
+                        </a>
                     @endif
                 @else
                     <a href="{{ route('login') }}"
@@ -134,7 +134,7 @@
 
     </div>
 
-    <!-- Modal Sewa -->
+    {{-- <!-- Modal Sewa -->
     <div id="sewaModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
 
         <div class="bg-white rounded-xl p-6 w-full max-w-md relative">
@@ -168,7 +168,7 @@
             </form>
 
         </div>
-    </div>
+    </div> --}}
 
 @endsection
 @push('scripts')

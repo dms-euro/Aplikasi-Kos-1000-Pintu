@@ -30,6 +30,6 @@ class Pemesanan extends Model
 
     public function pembayaran()
     {
-        return $this->hasMany(Pembayaran::class, 'sewa_id');
+        return $this->hasMany(Pembayaran::class, 'pemesanan_id');
     }
 }

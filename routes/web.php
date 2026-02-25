@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\KategoriController;
 use App\Http\Controllers\Admin\SewaController as AdminSewaController;
 use App\Http\Controllers\Penghuni\DashboardController as PenghuniDashboardController;
 use App\Http\Controllers\Penghuni\PembayaranController;
+use App\Http\Controllers\Penghuni\PemesananController as PenghuniPemesananController;
 use App\Http\Controllers\Penghuni\SewaController;
 use App\Http\Controllers\Staf\DashboardController;
 use App\Http\Controllers\Staf\PenghuniController;
@@ -15,10 +16,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PenghuniDashboardController::class, 'index'])->name('dashboard.penghuni');
 Route::get('/detail-kamar/{id}', [PenghuniDashboardController::class, 'show'])->name('detail.kamar');
-Route::post('/sewa/{kamar_id}', [SewaController::class, 'store'])
-    ->name('sewa.store');
-Route::get('/pembayaran/{id}', [PembayaranController::class, 'form'])->name('pembayaran.form');
-Route::post('/pembayaran/{id}', [PembayaranController::class, 'store'])->name('pembayaran.store');
+Route::get('/kamar/{id}/sewa', [PenghuniPemesananController::class, 'create'])->name('pemesanan.create');
+Route::post('/pemesanan', [PenghuniPemesananController::class, 'store'])->name('pemesanan.store');Route::get('/pemesanan/{id}', [PenghuniPemesananController::class, 'show'])
+    ->whereNumber('id')
+    ->name('pemesanan.show');
+Route::post('/pembayaran/{pemesanan_id}', [PenghuniPemesananController::class, 'storePembayaran'])->name('pembayaran.store');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AccountController::class, 'showlogin'])->name('login');
@@ -42,6 +44,10 @@ Route::middleware(['auth', 'role:owner'])->group(function () {
     Route::delete('/kamar/delete/{id}', [KamarController::class, 'destroy'])->name('kamar.destroy');
     Route::get('/pemesanan/admin', [AdminSewaController::class, 'index'])->name('pemesanan.index');
     Route::get('/pemesanan/store', [AdminSewaController::class, 'store'])->name('pemesanan.store');
+    Route::get('/pemesanan/show/{id}', [AdminSewaController::class, 'show'])->name('pemesanan.show');
+    Route::get('/pemesanan/confirm/{id}', [AdminSewaController::class, 'confirm'])->name('pemesanan.confirm');
+    Route::get('/pemesanan/cancel/{id}', [AdminSewaController::class, 'cancel'])->name('pemesanan.cancel');
+    Route::get('/pemesanan/history', [AdminSewaController::class, 'history'])->name('pemesanan.history');
     Route::get('/pembayaran/admin/{id}', [PembayaranController::class, 'form'])->name('pembayaran.form');
     Route::post('/pembayaran/admin/{id}', [PembayaranController::class, 'store'])->name('pembayaran.store');
 });

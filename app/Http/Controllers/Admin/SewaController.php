@@ -4,98 +4,110 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Pemesanan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SewaController
 {
+
     /**
-     * Display a listing of the resource.
+     * Menampilkan daftar pemesanan yang perlu dikonfirmasi
      */
     public function index()
     {
-        $penyewaan = Pemesanan::with(['penghuni', 'kamar.tipe_kamar'])->paginate(10);
+        $pemesanan = Pemesanan::with(['penghuni', 'kamar.tipe_kamar', 'pembayaran'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
 
-        $totalPenyewaan = Pemesanan::count();
-        $aktif = Pemesanan::where('status', 'aktif')->count();
-        $pending = Pemesanan::where('status', 'pending')->count();
-        $selesai = Pemesanan::where('status', 'selesai')->count();
-        $batal = Pemesanan::where('status', 'batal')->count();
-
-        $totalPendapatan = Pemesanan::whereIn('status', ['aktif', 'selesai'])->sum('total');
-        $pendapatanBulanIni = Pemesanan::whereIn('status', ['aktif', 'selesai'])
-            ->whereMonth('created_at', now()->month)
-            ->sum('total');
-        $pendapatanTahunIni = Pemesanan::whereIn('status', ['aktif', 'selesai'])
-            ->whereYear('created_at', now()->year)
-            ->sum('total');
-
-        $total = max($totalPenyewaan, 1); // hindari division by zero
-        $aktifPersen = round(($aktif / $total) * 100);
-        $pendingPersen = round(($pending / $total) * 100);
-        $selesaiPersen = round(($selesai / $total) * 100);
-        $batalPersen = round(($batal / $total) * 100);
-
-        return view('admin.pemesanan', compact(
-            'penyewaan',
-            'totalPenyewaan',
-            'aktif',
-            'pending',
-            'selesai',
-            'batal',
-            'totalPendapatan',
-            'pendapatanBulanIni',
-            'pendapatanTahunIni',
-            'aktifPersen',
-            'pendingPersen',
-            'selesaiPersen',
-            'batalPersen'
-        ));
+        return view('admin.pemesanan', compact('pemesanan'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Menampilkan detail pemesanan
      */
-    public function create()
+    public function show($id)
     {
-        //
+        $pemesanan = Pemesanan::with(['penghuni', 'kamar.tipe_kamar', 'pembayaran'])
+            ->findOrFail($id);
+
+        return view('staf.detail-sewa', compact('pemesanan'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Mengkonfirmasi pesanan (sudah dibayar)
      */
-    public function store(Request $request)
+    public function confirm(Request $request, $id)
     {
-        //
+        $pemesanan = Pemesanan::with('kamar')->findOrFail($id);
+
+        if ($pemesanan->status !== 'pending') {
+            return redirect()->back()->with('error', 'Pemesanan sudah diproses sebelumnya.');
+        }
+
+        // Validasi apakah sudah ada pembayaran
+        $pembayaran = $pemesanan->pembayaran()->latest()->first();
+
+        if (!$pembayaran) {
+            return redirect()->back()->with('error', 'Belum ada data pembayaran untuk pemesanan ini.');
+        }
+
+        // Update status pemesanan menjadi confirmed
+        $pemesanan->update([
+            'status' => 'confirmed',
+        ]);
+
+        // Update status kamar menjadi terisi
+        $pemesanan->kamar->update([
+            'status' => 'terisi',
+        ]);
+
+        // Update pembayaran dengan petugas yang mengkonfirmasi
+        $pembayaran->update([
+            'petugas_id' => Auth::id(),
+        ]);
+
+        return redirect()->back()->with('success', 'Pemesanan berhasil dikonfirmasi. Kamar sekarang berstatus terisi.');
     }
 
     /**
-     * Display the specified resource.
+     * Membatalkan pesanan (jika belum bayar atau ada masalah)
      */
-    public function show(string $id)
+    public function cancel(Request $request, $id)
     {
-        //
+        $request->validate([
+            'alasan' => 'required|string|max:255',
+        ]);
+
+        $pemesanan = Pemesanan::with('kamar')->findOrFail($id);
+
+        if ($pemesanan->status !== 'pending') {
+            return redirect()->back()->with('error', 'Pemesanan sudah diproses sebelumnya.');
+        }
+
+        // Update status pemesanan menjadi cancelled
+        $pemesanan->update([
+            'status' => 'cancelled',
+        ]);
+
+        // Update status kamar kembali menjadi tersedia
+        $pemesanan->kamar->update([
+            'status' => 'tersedia',
+        ]);
+
+        // Catat alasan pembatalan (bisa disimpan di tabel tersendiri jika perlu)
+
+        return redirect()->back()->with('success', 'Pemesanan dibatalkan. Kamar kembali tersedia.');
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Menampilkan riwayat pemesanan yang sudah dikonfirmasi
      */
-    public function edit(string $id)
-    {
-        //
-    }
+    // public function history()
+    // {
+    //     $pemesanan = Pemesanan::with(['penghuni', 'kamar.tipeKamar', 'pembayaran.petugas'])
+    //         ->whereIn('status', ['confirmed', 'cancelled'])
+    //         ->orderBy('updated_at', 'desc')
+    //         ->paginate(10);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+    //     return view('petugas.konfirmasi.history', compact('pemesanan'));
+    // }
 }
