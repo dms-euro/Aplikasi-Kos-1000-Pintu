@@ -10,7 +10,6 @@ use App\Http\Controllers\Penghuni\DashboardController as PenghuniDashboardContro
 use App\Http\Controllers\Penghuni\KamarController as PenghuniKamarController;
 use App\Http\Controllers\Penghuni\PembayaranController;
 use App\Http\Controllers\Penghuni\PemesananController as PenghuniPemesananController;
-use App\Http\Controllers\Penghuni\SewaController;
 use App\Http\Controllers\Staf\DashboardController;
 use App\Http\Controllers\Staf\PenghuniController;
 use Illuminate\Support\Facades\Route;
@@ -19,11 +18,10 @@ Route::get('/', [PenghuniDashboardController::class, 'index'])->name('dashboard.
 Route::get('/detail-kamar/{id}', [PenghuniDashboardController::class, 'show'])->name('detail.kamar');
 Route::get('/sewa/{id}/sewa', [PenghuniPemesananController::class, 'create'])->name('pemesanan.create');
 Route::post('/pemesanan', [PenghuniPemesananController::class, 'store'])->name('pemesanan.store');
-Route::get('/pemesanan/{id}', [PenghuniPemesananController::class, 'show'])
-    ->whereNumber('id')
-    ->name('pemesanan.show');
+Route::get('/pemesanan/{id}', [PenghuniPemesananController::class, 'show'])->whereNumber('id')->name('pemesanan.show');
 Route::post('/pembayaran/{pemesanan_id}', [PenghuniPemesananController::class, 'storePembayaran'])->name('pembayaran.store');
 
+//Ketika Belum Login
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AccountController::class, 'showlogin'])->name('login');
     Route::post('/login', [AccountController::class, 'login'])->name('login.post');
@@ -31,41 +29,53 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [PenghuniAuthController::class, 'register'])->name('register.post');
 });
 
-Route::middleware(['auth', 'role:owner'])->group(function () {
-    Route::get('/dashboard/admin', [DashboardCpntroller::class, 'index'])->name('dashboard.admin');
-    Route::get('/account/admin', [AccountController::class, 'index'])->name('account.index');
-    Route::post('/account/add/admin', [AccountController::class, 'store'])->name('account.store');
-    Route::delete('/account/delete/{id}', [AccountController::class, 'destroy'])->name('account.delete');
-    Route::get('/Kategori/admin', [KategoriController::class, 'index'])->name('kategori.index');
-    Route::post('/Kategori/add/admin', [KategoriController::class, 'store'])->name('kategori.store');
-    Route::put('/Kategori/update/{id}', [KategoriController::class, 'update'])->name('kategori.update');
-    Route::delete('/Kategori/delete/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
-    Route::get('/kamar/admin', [KamarController::class, 'index'])->name('kamar.index');
-    Route::post('/kamar/add/admin', [KamarController::class, 'store'])->name('kamar.store');
-    Route::put('/kamar/update/{id}', [KamarController::class, 'update'])->name('kamar.update');
-    Route::delete('/kamar/delete/{id}', [KamarController::class, 'destroy'])->name('kamar.destroy');
-    Route::get('/pemesanan/admin', [AdminSewaController::class, 'index'])->name('pemesanan.index');
-    Route::get('/pemesanan/store', [AdminSewaController::class, 'store'])->name('pemesanan.store');
-    Route::get('/pemesanan/show/{id}', [AdminSewaController::class, 'show'])->name('pemesanan.show');
+//Role:admin
+Route::middleware(['auth', 'role:owner'])->prefix('admin')->name('admin.')->group(function () {
+    //dashboard
+    Route::get('/dashboard', [DashboardCpntroller::class, 'index'])->name('dashboard.admin');
+    //account
+    Route::get('/account', [AccountController::class, 'index'])->name('account.index');
+    Route::post('/account', [AccountController::class, 'store'])->name('account.store');
+    Route::delete('/account/{id}', [AccountController::class, 'destroy'])->name('account.delete');
+    //penghuni
+    Route::get('/penghuni', [AccountController::class, 'penghuni'])->name('account.penghuni');
+    //kategori kamar
+    Route::get('/Kategori', [KategoriController::class, 'index'])->name('kategori.index');
+    Route::post('/Kategori', [KategoriController::class, 'store'])->name('kategori.store');
+    Route::put('/Kategori/{id}', [KategoriController::class, 'update'])->name('kategori.update');
+    Route::delete('/Kategori/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
+    //kamar
+    Route::get('/kamar', [KamarController::class, 'index'])->name('kamar.index');
+    Route::post('/kamar/add', [KamarController::class, 'store'])->name('kamar.store');
+    Route::put('/kamar/{id}', [KamarController::class, 'update'])->name('kamar.update');
+    Route::delete('/kamar/{id}', [KamarController::class, 'destroy'])->name('kamar.destroy');
+    //pemesanan
+    Route::get('/pemesanan', [AdminSewaController::class, 'index'])->name('pemesanan.index');
+    Route::post('/pemesanan', [AdminSewaController::class, 'store'])->name('pemesanan.store');
+    Route::get('/pemesanan/{id}', [AdminSewaController::class, 'show'])->name('pemesanan.show');
+    Route::get('/pemesanan/history', [AdminSewaController::class, 'history'])->name('pemesanan.history');
     Route::get('/pemesanan/confirm/{id}', [AdminSewaController::class, 'confirm'])->name('pemesanan.confirm');
     Route::get('/pemesanan/cancel/{id}', [AdminSewaController::class, 'cancel'])->name('pemesanan.cancel');
-    Route::get('/pemesanan/history', [AdminSewaController::class, 'history'])->name('pemesanan.history');
-    Route::get('/pembayaran/admin/{id}', [PembayaranController::class, 'form'])->name('pembayaran.form');
-    Route::post('/pembayaran/admin/{id}', [PembayaranController::class, 'store'])->name('pembayaran.store');
+    //pembayaran
+    Route::get('/pembayaran/{id}', [PembayaranController::class, 'form'])->name('pembayaran.form');
+    Route::post('/pembayaran/{id}', [PembayaranController::class, 'store'])->name('pembayaran.store');
 });
 
+//Role:staf
 Route::middleware(['auth', 'role:staf'])->group(function () {
+    //dashboard
     Route::get('/dashboard/staf', [DashboardController::class, 'index'])->name('dashboard.staf');
     Route::get('/penghuni/staf', [PenghuniController::class, 'index'])->name('penghuni.');
 });
 
+//Role:penghuni
 Route::middleware(['auth', 'role:penghuni'])->prefix('penghuni')->name('penghuni.')->group(function () {
     Route::get('/kamar', [PenghuniKamarController::class, 'index'])->name('kamar.index');
     Route::get('/kamar/{id}', [PenghuniKamarController::class, 'show'])->name('kamar.show');
     Route::get('/kamar-saya', [PenghuniKamarController::class, 'saya'])->name('kamar.saya');
 });
 
-
+//Logout
 Route::middleware(['auth', 'role:owner,staf,penghuni'])->group(function () {
     Route::post('/logout', [AccountController::class, 'logout'])->name('logout');
 });

@@ -60,6 +60,12 @@ class AccountController
         return view('admin.users', compact('user'));
     }
 
+    public function penghuni()
+    {
+        $user = User::where('role', 'penghuni')->get();
+        return view('admin.penghuni', compact('user'));
+    }
+
     /**
      * Store a newly created resource in storage.
      */
