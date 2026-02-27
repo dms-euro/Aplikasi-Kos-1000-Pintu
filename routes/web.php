@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\KamarController;
 use App\Http\Controllers\Admin\KategoriController;
 use App\Http\Controllers\Admin\SewaController as AdminSewaController;
 use App\Http\Controllers\Penghuni\DashboardController as PenghuniDashboardController;
+use App\Http\Controllers\Penghuni\KamarController as PenghuniKamarController;
 use App\Http\Controllers\Penghuni\PembayaranController;
 use App\Http\Controllers\Penghuni\PemesananController as PenghuniPemesananController;
 use App\Http\Controllers\Penghuni\SewaController;
@@ -16,8 +17,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PenghuniDashboardController::class, 'index'])->name('dashboard.penghuni');
 Route::get('/detail-kamar/{id}', [PenghuniDashboardController::class, 'show'])->name('detail.kamar');
-Route::get('/kamar/{id}/sewa', [PenghuniPemesananController::class, 'create'])->name('pemesanan.create');
-Route::post('/pemesanan', [PenghuniPemesananController::class, 'store'])->name('pemesanan.store');Route::get('/pemesanan/{id}', [PenghuniPemesananController::class, 'show'])
+Route::get('/sewa/{id}/sewa', [PenghuniPemesananController::class, 'create'])->name('pemesanan.create');
+Route::post('/pemesanan', [PenghuniPemesananController::class, 'store'])->name('pemesanan.store');
+Route::get('/pemesanan/{id}', [PenghuniPemesananController::class, 'show'])
     ->whereNumber('id')
     ->name('pemesanan.show');
 Route::post('/pembayaran/{pemesanan_id}', [PenghuniPemesananController::class, 'storePembayaran'])->name('pembayaran.store');
@@ -56,6 +58,13 @@ Route::middleware(['auth', 'role:staf'])->group(function () {
     Route::get('/dashboard/staf', [DashboardController::class, 'index'])->name('dashboard.staf');
     Route::get('/penghuni/staf', [PenghuniController::class, 'index'])->name('penghuni.');
 });
+
+Route::middleware(['auth', 'role:penghuni'])->prefix('penghuni')->name('penghuni.')->group(function () {
+    Route::get('/kamar', [PenghuniKamarController::class, 'index'])->name('kamar.index');
+    Route::get('/kamar/{id}', [PenghuniKamarController::class, 'show'])->name('kamar.show');
+    Route::get('/kamar-saya', [PenghuniKamarController::class, 'saya'])->name('kamar.saya');
+});
+
 
 Route::middleware(['auth', 'role:owner,staf,penghuni'])->group(function () {
     Route::post('/logout', [AccountController::class, 'logout'])->name('logout');

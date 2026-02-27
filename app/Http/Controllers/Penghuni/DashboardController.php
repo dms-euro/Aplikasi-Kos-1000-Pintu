@@ -13,12 +13,7 @@ class DashboardController
      */
     public function index()
     {
-        // ambil hanya kamar tersedia + eager loading
-        $kamar = Kamar::with('tipe_kamar')
-                    ->where('status', 'tersedia')
-                    ->latest()
-                    ->get();
-
+        $kamar = Kamar::with('tipe_kamar')->latest()->get();
         $kategori = Tipe_kamar::all();
 
         return view('penghuni.dashboard', compact('kamar', 'kategori'));
@@ -28,7 +23,7 @@ class DashboardController
     {
         $kamar = Kamar::with('tipe_kamar')->findOrFail($id);
 
-        return view('penghuni.detail-kamar', compact('kamar'));
+        return view('penghuni.kamar_detail', compact('kamar'));
     }
 
     /**
