@@ -12,6 +12,8 @@ class Pembayaran extends Model
         'pemesanan_id',
         'tanggal_bayar',
         'jumlah',
+        'status',
+        'bukti_bayar',
         'petugas_id',
     ];
 

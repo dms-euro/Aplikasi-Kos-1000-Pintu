@@ -73,7 +73,7 @@
                                 </td>
                                 <td class="px-6 py-4">
                                     <form id="delete-form-{{ $item->id }}"
-                                        action="{{ route('account.delete', $item->id) }}" method="POST" class="inline">
+                                        action="{{ route('admin.account.delete', $item->id) }}" method="POST" class="inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="button" onclick="confirmDelete({{ $item->id }})"
@@ -138,7 +138,7 @@
                 </div>
                 <!-- Modal body form -->
                 <div class="p-4 md:p-5">
-                    <form action="{{ route('account.store') }}" method="POST" id="userForm" class="space-y-4">
+                    <form action="{{ route('admin.account.store') }}" method="POST" id="userForm" class="space-y-4">
                         @csrf
                         <div>
                             <label for="nama"

@@ -5,6 +5,7 @@ use App\Http\Controllers\Account\PenghuniAuthController;
 use App\Http\Controllers\Admin\DashboardCpntroller;
 use App\Http\Controllers\Admin\KamarController;
 use App\Http\Controllers\Admin\KategoriController;
+use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\SewaController as AdminSewaController;
 use App\Http\Controllers\Penghuni\DashboardController as PenghuniDashboardController;
 use App\Http\Controllers\Penghuni\KamarController as PenghuniKamarController;
@@ -39,6 +40,7 @@ Route::middleware(['auth', 'role:owner'])->prefix('admin')->name('admin.')->grou
     Route::delete('/account/{id}', [AccountController::class, 'destroy'])->name('account.delete');
     //penghuni
     Route::get('/penghuni', [AccountController::class, 'penghuni'])->name('account.penghuni');
+    Route::put('/account/{id}', [AccountController::class, 'update'])->name('account.update');
     //kategori kamar
     Route::get('/Kategori', [KategoriController::class, 'index'])->name('kategori.index');
     Route::post('/Kategori', [KategoriController::class, 'store'])->name('kategori.store');
@@ -49,6 +51,10 @@ Route::middleware(['auth', 'role:owner'])->prefix('admin')->name('admin.')->grou
     Route::post('/kamar/add', [KamarController::class, 'store'])->name('kamar.store');
     Route::put('/kamar/{id}', [KamarController::class, 'update'])->name('kamar.update');
     Route::delete('/kamar/{id}', [KamarController::class, 'destroy'])->name('kamar.destroy');
+    //laporan
+    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+    Route::get('/laporan/export-pdf', [LaporanController::class, 'exportPdf'])->name('laporan.export-pdf');
+    Route::get('/laporan/export-excel', [LaporanController::class, 'exportExcel'])->name('laporan.export-excel');
     //pemesanan
     Route::get('/pemesanan', [AdminSewaController::class, 'index'])->name('pemesanan.index');
     Route::post('/pemesanan', [AdminSewaController::class, 'store'])->name('pemesanan.store');
@@ -62,10 +68,10 @@ Route::middleware(['auth', 'role:owner'])->prefix('admin')->name('admin.')->grou
 });
 
 //Role:staf
-Route::middleware(['auth', 'role:staf'])->group(function () {
+Route::middleware(['auth', 'role:staf'])->prefix('staf')->name('staf.')->group(function () {
     //dashboard
-    Route::get('/dashboard/staf', [DashboardController::class, 'index'])->name('dashboard.staf');
-    Route::get('/penghuni/staf', [PenghuniController::class, 'index'])->name('penghuni.');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.staf');
+    Route::get('/penghuni', [PenghuniController::class, 'index'])->name('penghuni.index');
 });
 
 //Role:penghuni

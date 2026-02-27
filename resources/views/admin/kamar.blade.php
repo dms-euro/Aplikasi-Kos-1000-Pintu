@@ -123,7 +123,7 @@
                                         </button>
 
                                         <form id="delete-form-{{ $item->id }}"
-                                            action="{{ route('kamar.destroy', $item->id) }}" method="POST" class="inline">
+                                            action="{{ route('admin.kamar.destroy', $item->id) }}" method="POST" class="inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="button" onclick="confirmDelete({{ $item->id }})"
@@ -178,7 +178,7 @@
                     </button>
                 </div>
                 <div class="p-4 md:p-5">
-                    <form action="{{ route('kamar.store') }}" method="POST" id="kamarForm" class="space-y-4"
+                    <form action="{{ route('admin.kamar.store') }}" method="POST" id="kamarForm" class="space-y-4"
                         enctype="multipart/form-data">
                         @csrf
                         <div>
@@ -265,7 +265,7 @@
                 </div>
                 <div class="p-5">
                     <form id="editForm" method="POST" class="space-y-4" enctype="multipart/form-data"
-                        data-action-template="{{ route('kamar.update', ':id') }}">
+                        data-action-template="{{ route('admin.kamar.update', ':id') }}">
                         @csrf
                         @method('PUT')
                         <div>

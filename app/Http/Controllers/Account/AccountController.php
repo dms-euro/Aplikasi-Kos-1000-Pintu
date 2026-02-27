@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Account;
 
+use App\Models\Penghuni;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,11 +29,11 @@ class AccountController
             $user = Auth::user();
 
             if ($user->role === 'owner') {
-                return redirect()->route('dashboard.admin');
+                return redirect()->route('admin.dashboard.admin');
             }
 
             if ($user->role === 'staf') {
-                return redirect()->route('dashboard.staf');
+                return redirect()->route('staf.dashboard.staf');
             }
 
             if ($user->role === 'penghuni') {
@@ -62,8 +63,9 @@ class AccountController
 
     public function penghuni()
     {
+        $penghuni = Penghuni::with('user')->get();
         $user = User::where('role', 'penghuni')->get();
-        return view('admin.penghuni', compact('user'));
+        return view('admin.penghuni', compact('penghuni', 'user'));
     }
 
     /**
@@ -98,7 +100,39 @@ class AccountController
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'password' => 'nullable|min:6',
+
+            'kelamin' => 'required|in:Laki-laki,Perempuan',
+            'tanggal_lahir' => 'required|date',
+            'pekerjaan' => 'required|in:Karyawan,Mahasiswa,Lainnya',
+            'kontak' => 'required|string|max:15',
+            'kontak_darurat' => 'required|string|max:15',
+        ]);
+        $user = User::findOrFail($id);
+        $userData = [
+            'nama' => $request->nama,
+            'email' => $request->email,
+        ];
+
+        if ($request->filled('password')) {
+            $userData['password'] = Hash::make($request->password);
+        }
+        $user->update($userData);
+
+        $penghuni = Penghuni::where('users_id', $id)->firstOrFail();
+        $penghuni->update([
+            'nama' => $request->nama,
+            'kelamin' => $request->kelamin,
+            'tanggal_lahir' => $request->tanggal_lahir,
+            'pekerjaan' => $request->pekerjaan,
+            'kontak' => $request->kontak,
+            'kontak_darurat' => $request->kontak_darurat,
+        ]);
+
+        return redirect()->back()->with('success', 'Data penghuni berhasil diperbarui.');
     }
 
     /**

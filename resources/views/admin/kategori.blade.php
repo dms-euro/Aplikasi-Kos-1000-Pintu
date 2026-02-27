@@ -84,7 +84,7 @@
                                         </button>
 
                                         <form id="delete-form-{{ $item->id }}"
-                                            action="{{ route('kategori.destroy', $item->id) }}" method="POST"
+                                            action="{{ route('admin.kategori.destroy', $item->id) }}" method="POST"
                                             class="inline">
                                             @csrf
                                             @method('DELETE')
@@ -127,7 +127,7 @@
                 </div>
                 <!-- Body -->
                 <div class="p-5">
-                    <form action="{{ route('kategori.store') }}" method="POST" class="space-y-4">
+                    <form action="{{ route('admin.kategori.store') }}" method="POST" class="space-y-4">
                         @csrf
                         <div>
                             <label class="block mb-1 text-sm font-medium">Tipe Kamar</label>
@@ -165,7 +165,7 @@
                 </div>
                 <div class="p-5">
                     <form id="editForm" method="POST" class="space-y-4"
-                        data-action-template="{{ route('kategori.update', ':id') }}">
+                        data-action-template="{{ route('admin.kategori.update', ':id') }}">
                         @csrf
                         @method('PUT')
                         <div>
