@@ -1,144 +1,69 @@
 <?php
 
-namespace App\Http\Controllers\Staf;
+namespace App\Http\Controllers\Penghuni;
 
-use App\Http\Controllers\Controller;
-use App\Models\Penghuni;
 use App\Models\Kamar;
-use App\Models\Pemesanan;
-use App\Models\Pembayaran;
+use App\Models\Tipe_kamar;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
-use Illuminate\Routing\Controller as RoutingController;
 
-class DashboardController extends RoutingController
+class DashboardController
 {
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
-        // Statistik Penghuni
-        $penghuniAktif = Penghuni::whereHas('pemesanan', function ($q) {
-            $q->where('status', 'confirmed')
-                ->where('tanggal_masuk', '<=', now())
-                ->where('tanggal_keluar', '>=', now());
-        })->count();
+        $kamar = Kamar::with('tipe_kamar')->latest()->get();
+        $kategori = Tipe_kamar::all();
 
-        $penghuniBaru = Penghuni::whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
-            ->count();
+        return view('penghuni.dashboard', compact('kamar', 'kategori'));
+    }
 
-        // Statistik Kamar
-        $totalKamar = Kamar::count();
-        $kamarTerisi = Kamar::where('status', 'terisi')->count();
-        $kamarTersedia = Kamar::where('status', 'tersedia')->count();
-        $kamarDipesan = Kamar::where('status', 'dipesan')->count();
-        $kamarPerbaikan = Kamar::where('status', 'perbaikan')->count();
+    public function show($id)
+    {
+        $kamar = Kamar::with('tipe_kamar')->findOrFail($id);
 
-        // Persentase untuk progress bar
-        $persenTerisi = $totalKamar > 0 ? round(($kamarTerisi / $totalKamar) * 100) : 0;
-        $persenTersedia = $totalKamar > 0 ? round(($kamarTersedia / $totalKamar) * 100) : 0;
-        $persenDipesan = $totalKamar > 0 ? round(($kamarDipesan / $totalKamar) * 100) : 0;
-        $persenPerbaikan = $totalKamar > 0 ? round(($kamarPerbaikan / $totalKamar) * 100) : 0;
+        return view('penghuni.kamar_detail', compact('kamar'));
+    }
 
-        // Pemesanan
-        $pemesananPending = Pemesanan::where('status', 'pending')->count();
-        $pemesananTerbaru = Pemesanan::with(['penghuni', 'kamar'])
-            ->orderBy('created_at', 'desc')
-            ->limit(5)
-            ->get();
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
 
-        // Pembayaran
-        $pendingVerifikasi = Pembayaran::where('status', 'pending')->count();
-        $pembayaranPending = Pembayaran::with(['pemesanan.penghuni', 'pemesanan.kamar'])
-            ->where('status', 'pending')
-            ->orderBy('created_at', 'desc')
-            ->limit(5)
-            ->get();
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        //
+    }
 
-        // Pemasukan Hari Ini
-        $pemasukanHariIni = Pembayaran::whereDate('tanggal_bayar', now())
-            ->where('status', 'paid')
-            ->sum('jumlah');
 
-        $transaksiHariIni = Pembayaran::whereDate('tanggal_bayar', now())
-            ->where('status', 'paid')
-            ->count();
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
+    }
 
-        // Aktivitas Terkini (gabungan)
-        $aktivitas = collect();
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        //
+    }
 
-        // Pembayaran baru
-        $pembayaranBaru = Pembayaran::with('pemesanan.penghuni')
-            ->orderBy('created_at', 'desc')
-            ->limit(3)
-            ->get()
-            ->map(function ($item) {
-                return (object) [
-                    'deskripsi' => 'Pembayaran ' . ($item->pemesanan->penghuni->nama ?? 'penghuni') . ' sebesar Rp ' . number_format($item->jumlah, 0, ',', '.'),
-                    'waktu' => $item->created_at->diffForHumans(),
-                    'tipe' => 'pembayaran',
-                    'link' => route('staf.verifikasi.show', $item->id)
-                ];
-            });
-
-        // Pemesanan baru
-        $pemesananBaru = Pemesanan::with('penghuni')
-            ->orderBy('created_at', 'desc')
-            ->limit(3)
-            ->get()
-            ->map(function ($item) {
-                return (object) [
-                    'deskripsi' => 'Pemesanan baru dari ' . ($item->penghuni->nama ?? 'penghuni'),
-                    'waktu' => $item->created_at->diffForHumans(),
-                    'tipe' => 'pemesanan',
-                    'link' => route('staf.pemesanan.show', $item->id)
-                ];
-            });
-
-        // Penghuni baru
-        $penghuniBaruData = Penghuni::orderBy('created_at', 'desc')
-            ->limit(2)
-            ->get()
-            ->map(function ($item) {
-                return (object) [
-                    'deskripsi' => 'Penghuni baru: ' . $item->nama,
-                    'waktu' => $item->created_at->diffForHumans(),
-                    'tipe' => 'penghuni',
-                    'link' => route('staf.penghuni.show', $item->id)
-                ];
-            });
-
-        $aktivitas = $pembayaranBaru->concat($pemesananBaru)->concat($penghuniBaruData)
-            ->sortByDesc(function ($item) {
-                // Sorting manual berdasarkan waktu
-                return strtotime(str_replace(
-                    ['detik', 'menit', 'jam', 'hari', 'bulan', 'tahun'],
-                    ['second', 'minute', 'hour', 'day', 'month', 'year'],
-                    $item->waktu
-                ));
-            })
-            ->take(5)
-            ->values();
-
-        return view('staf.dashboard', compact(
-            'penghuniAktif',
-            'penghuniBaru',
-            'totalKamar',
-            'kamarTerisi',
-            'kamarTersedia',
-            'kamarDipesan',
-            'kamarPerbaikan',
-            'persenTerisi',
-            'persenTersedia',
-            'persenDipesan',
-            'persenPerbaikan',
-            'pemesananPending',
-            'pemesananTerbaru',
-            'pendingVerifikasi',
-            'pembayaranPending',
-            'pemasukanHariIni',
-            'transaksiHariIni',
-            'aktivitas'
-        ));
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
     }
 }

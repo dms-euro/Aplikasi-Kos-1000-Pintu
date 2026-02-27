@@ -88,7 +88,7 @@
 
     <!-- Tugas Utama Staf (Quick Actions) -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-        <div class="bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-2xl p-5 text-white shadow-lg">
+        <div class="bg-indigo-600 rounded-2xl p-5 text-white shadow-lg">
             <div class="flex items-start justify-between mb-4">
                 <div>
                     <h3 class="text-lg font-semibold">Verifikasi Pembayaran</h3>
@@ -98,12 +98,12 @@
                     <i class='bx bx-check-shield text-2xl'></i>
                 </div>
             </div>
-            <a href="{{ route('staf.verifikasi.index') }}" class="inline-flex items-center gap-1 bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg text-sm transition">
-                Verifikasi Sekarang <i class='bx bx-right-arrow-alt'></i>
-            </a>
+                <a href="" class="inline-flex items-center gap-1 bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg text-sm transition">
+                    Verifikasi Sekarang <i class='bx bx-right-arrow-alt'></i>
+                </a>
         </div>
 
-        <div class="bg-gradient-to-r from-green-500 to-green-600 rounded-2xl p-5 text-white shadow-lg">
+        <div class="bg-green-600 rounded-2xl p-5 text-white shadow-lg">
             <div class="flex items-start justify-between mb-4">
                 <div>
                     <h3 class="text-lg font-semibold">Konfirmasi Pemesanan</h3>
@@ -113,12 +113,12 @@
                     <i class='bx bx-calendar-check text-2xl'></i>
                 </div>
             </div>
-            <a href="{{ route('staf.pemesanan.index') }}" class="inline-flex items-center gap-1 bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg text-sm transition">
+            <a href="" class="inline-flex items-center gap-1 bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg text-sm transition">
                 Konfirmasi <i class='bx bx-right-arrow-alt'></i>
             </a>
         </div>
 
-        <div class="bg-gradient-to-r from-amber-500 to-amber-600 rounded-2xl p-5 text-white shadow-lg">
+        <div class="bg-amber-600 rounded-2xl p-5 text-white shadow-lg">
             <div class="flex items-start justify-between mb-4">
                 <div>
                     <h3 class="text-lg font-semibold">Input Penghuni</h3>
@@ -128,7 +128,7 @@
                     <i class='bx bx-user-plus text-2xl'></i>
                 </div>
             </div>
-            <a href="{{ route('staf.penghuni.create') }}" class="inline-flex items-center gap-1 bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg text-sm transition">
+            <a href="" class="inline-flex items-center gap-1 bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg text-sm transition">
                 Input Penghuni <i class='bx bx-right-arrow-alt'></i>
             </a>
         </div>
@@ -161,9 +161,9 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <span class="text-xs text-gray-500">{{ $item->created_at->diffForHumans() }}</span>
-                        <a href="{{ route('staf.verifikasi.show', $item->id) }}" class="text-indigo-600 hover:text-indigo-800">
+                        {{-- <a href="{{ route('staf.verifikasi.show', $item->id) }}" class="text-indigo-600 hover:text-indigo-800">
                             <i class='bx bx-show text-lg'></i>
-                        </a>
+                        </a> --}}
                     </div>
                 </div>
                 @empty
@@ -174,9 +174,9 @@
                 @endforelse
             </div>
             @if($pendingVerifikasi > 0)
-            <a href="{{ route('staf.verifikasi.index') }}" class="block w-full mt-4 text-sm text-indigo-600 bg-indigo-50 hover:bg-indigo-100 py-2 rounded-xl text-center transition">
+            {{-- <a href="{{ route('staf.verifikasi.index') }}" class="block w-full mt-4 text-sm text-indigo-600 bg-indigo-50 hover:bg-indigo-100 py-2 rounded-xl text-center transition">
                 Lihat Semua
-            </a>
+            </a> --}}
             @endif
         </div>
 
@@ -237,9 +237,9 @@
                     </tbody>
                 </table>
             </div>
-            <a href="{{ route('staf.pemesanan.index') }}" class="block w-full mt-4 text-sm text-indigo-600 bg-indigo-50 hover:bg-indigo-100 py-2 rounded-xl text-center transition">
+            {{-- <a href="{{ route('staf.pemesanan.index') }}" class="block w-full mt-4 text-sm text-indigo-600 bg-indigo-50 hover:bg-indigo-100 py-2 rounded-xl text-center transition">
                 Lihat Semua Pemesanan
-            </a>
+            </a> --}}
         </div>
     </div>
 
@@ -249,7 +249,7 @@
             <i class='bx bx-door-open text-indigo-500 text-xl'></i>
             Status Kamar Hari Ini
         </h3>
-        <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <div class="grid grid-cols-5 md:grid-cols-5 gap-4">
             <div class="bg-green-50 p-4 rounded-xl text-center border border-green-100">
                 <p class="text-xs text-gray-500">Terisi</p>
                 <p class="text-2xl font-bold text-green-600">{{ $kamarTerisi }}</p>
@@ -297,11 +297,11 @@
                     <p class="text-sm text-gray-700">{{ $item->deskripsi }}</p>
                     <p class="text-xs text-gray-400 mt-1">{{ $item->waktu }}</p>
                 </div>
-                @if($item->link)
+                {{-- @if($item->link)
                 <a href="{{ $item->link }}" class="text-indigo-600 hover:text-indigo-800 text-sm">
                     <i class='bx bx-show'></i>
                 </a>
-                @endif
+                @endif --}}
             </div>
             @empty
             <p class="text-sm text-gray-500 text-center py-4">Belum ada aktivitas</p>
