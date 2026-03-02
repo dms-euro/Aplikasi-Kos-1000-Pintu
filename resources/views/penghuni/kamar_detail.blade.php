@@ -264,7 +264,7 @@
                     @if ($kamar->status == 'tersedia')
                         @auth
                             @if (auth()->user()->role == 'penghuni')
-                                <a href="{{ route('pemesanan.create', $kamar->id) }}"
+                                <a href="{{ route('penghuni.pemesanan.create', $kamar->id) }}"
                                     class="block w-full bg-indigo-600 hover:bg-indigo-700 text-white py-4 rounded-xl font-semibold shadow-lg transition-all duration-300 text-center text-lg hover:shadow-xl hover:-translate-y-0.5">
                                     <i class='bx bx-calendar-check mr-2'></i>
                                     Sewa Sekarang

@@ -14,7 +14,7 @@
                             Informasi Kamar
                         </h2>
                         <!-- Button -->
-                        <a href="{{ route('detail.kamar', $kamar->id) }}"
+                        <a href="{{ route('penghuni.detail.kamar', $kamar->id) }}"
                             class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-semibold shadow-md transition transform hover:scale-105">
                             <i class='bx bx-arrow-back mr-2'></i>
                             Kembali ke Detail
@@ -68,7 +68,7 @@
                     </h2>
                 </div>
                 <div class="p-6">
-                    <form action="{{ route('pemesanan.store') }}" method="POST" id="formPemesanan">
+                    <form action="{{ route('penghuni.pemesanan.store') }}" method="POST" id="formPemesanan">
                         @csrf
                         <input type="hidden" name="kamar_id" value="{{ $kamar->id }}">
 
@@ -157,7 +157,8 @@
             </div>
         </div>
     </div>
-
+@endsection
+@push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const tanggalMasuk = document.getElementById('tanggal_masuk');
@@ -189,4 +190,4 @@
             durasiBulanan.addEventListener('change', hitungTanggalKeluar);
         });
     </script>
-@endsection
+@endpush

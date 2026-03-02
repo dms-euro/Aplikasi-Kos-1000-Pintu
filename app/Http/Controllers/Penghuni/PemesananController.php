@@ -65,6 +65,15 @@ class PemesananController
         $user = Auth::user();
         $penghuni = Penghuni::where('users_id', $user->id)->first();
 
+        $pemesananAktif = Pemesanan::where('penghuni_id', $penghuni->id)
+            ->whereIn('status', ['pending', 'dipesan', 'aktif'])
+            ->where('tanggal_keluar', '>=', now())
+            ->exists();
+
+        if ($pemesananAktif) {
+            return redirect()->back()->with('error','Anda masih memiliki kamar aktif. Selesaikan atau tunggu masa sewa habis.');
+        }
+
         // Buat pemesanan baru
         $pemesanan = Pemesanan::create([
             'penghuni_id' => $penghuni->id,
@@ -80,7 +89,7 @@ class PemesananController
         $kamar->update(['status' => 'dipesan']);
 
         // Redirect ke halaman detail pemesanan
-        return redirect()->route('pemesanan.show', $pemesanan->id)
+        return redirect()->route('penghuni.pemesanan.show', $pemesanan->id)
             ->with('success', 'Pemesanan berhasil dibuat. Silakan lakukan pembayaran.');
     }
 
@@ -103,44 +112,44 @@ class PemesananController
         return view('penghuni.pemesanan_show', compact('pemesanan'));
     }
 
-    /**
-     * Menyimpan data pembayaran
-     */
-    public function storePembayaran(Request $request, $pemesanan_id)
-    {
-        $request->validate([
-            'metode_pembayaran' => 'required|in:tunai,transfer',
-            'bukti_bayar' => 'required_if:metode_pembayaran,transfer|image|mimes:jpeg,png,jpg|max:2048',
-        ]);
+    // /**
+    //  * Menyimpan data pembayaran
+    //  */
+    // public function storePembayaran(Request $request, $pemesanan_id)
+    // {
+    //     $request->validate([
+    //         'metode_pembayaran' => 'required|in:tunai,transfer',
+    //         'bukti_bayar' => 'required_if:metode_pembayaran,transfer|image|mimes:jpeg,png,jpg|max:2048',
+    //     ]);
 
-        $pemesanan = Pemesanan::findOrFail($pemesanan_id);
+    //     $pemesanan = Pemesanan::findOrFail($pemesanan_id);
 
-        // Cek apakah sudah ada pembayaran sebelumnya
-        if ($pemesanan->pembayaran()->exists()) {
-            return redirect()->back()->with('error', 'Pembayaran sudah pernah dilakukan.');
-        }
+    //     // Cek apakah sudah ada pembayaran sebelumnya
+    //     if ($pemesanan->pembayaran()->exists()) {
+    //         return redirect()->back()->with('error', 'Pembayaran sudah pernah dilakukan.');
+    //     }
 
-        $dataPembayaran = [
-            'pemesanan_id' => $pemesanan->id,
-            'tanggal_bayar' => now(),
-            'jumlah' => $pemesanan->total,
-            'status' => 'pending',
-        ];
+    //     $dataPembayaran = [
+    //         'pemesanan_id' => $pemesanan->id,
+    //         'tanggal_bayar' => now(),
+    //         'jumlah' => $pemesanan->total,
+    //         'status' => 'pending',
+    //     ];
 
-        // Jika metode transfer, upload bukti bayar
-        if ($request->metode_pembayaran === 'transfer') {
-            $path = $request->file('bukti_bayar')->store('bukti-pembayaran', 'public');
-            $dataPembayaran['bukti_bayar'] = $path;
-        }
+    //     // Jika metode transfer, upload bukti bayar
+    //     if ($request->metode_pembayaran === 'transfer') {
+    //         $path = $request->file('bukti_bayar')->store('bukti-pembayaran', 'public');
+    //         $dataPembayaran['bukti_bayar'] = $path;
+    //     }
 
-        // Simpan pembayaran
-        Pembayaran::create($dataPembayaran);
+    //     // Simpan pembayaran
+    //     Pembayaran::create($dataPembayaran);
 
-        $message = $request->metode_pembayaran === 'tunai'
-            ? 'Pembayaran akan diverifikasi oleh petugas.'
-            : 'Bukti pembayaran berhasil diupload. Menunggu verifikasi petugas.';
+    //     $message = $request->metode_pembayaran === 'tunai'
+    //         ? 'Pembayaran akan diverifikasi oleh petugas.'
+    //         : 'Bukti pembayaran berhasil diupload. Menunggu verifikasi petugas.';
 
-        return redirect()->route('pemesanan.show', $pemesanan->id)
-            ->with('success', $message);
-    }
+    //     return redirect()->route('pemesanan.show', $pemesanan->id)
+    //         ->with('success', $message);
+    // }
 }

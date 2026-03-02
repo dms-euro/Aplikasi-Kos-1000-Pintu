@@ -2,63 +2,67 @@
 
 namespace App\Http\Controllers\Staf;
 
+use App\Models\Penghuni;
 use Illuminate\Http\Request;
 
 class PenghuniController
 {
     /**
-     * Display a listing of the resource.
+     * Menampilkan daftar penghuni yang sudah memesan kamar
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('staf.penghuni');
+        // Ambil semua penghuni yang memiliki pemesanan (sudah memesan kamar)
+        $query = Penghuni::whereHas('pemesanan', function ($q) {
+            $q->whereIn('status', ['pending', 'confirmed']);
+        })
+            ->with(['pemesanan' => function ($q) {
+                $q->with('kamar.tipe_kamar')
+                    ->whereIn('status', ['pending', 'confirmed'])
+                    ->latest();
+            }]);
+
+        // Pencarian
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                    ->orWhere('kontak', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter status pemesanan
+        if ($request->filled('status')) {
+            $query->whereHas('pemesanan', function ($q) use ($request) {
+                $q->where('status', $request->status);
+            });
+        }
+
+        $penghuni = $query->paginate(15)->withQueryString();
+
+        // Statistik
+        $totalAktif = Penghuni::whereHas('pemesanan', function ($q) {
+            $q->where('status', 'confirmed');
+        })->count();
+
+        $totalPending = Penghuni::whereHas('pemesanan', function ($q) {
+            $q->where('status', 'pending');
+        })->count();
+
+        return view('staf.penghuni', compact('penghuni', 'totalAktif', 'totalPending'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Menampilkan detail penghuni dan riwayat pemesanannya
      */
-    public function create()
+    public function show($id)
     {
-        //
-    }
+        $penghuni = Penghuni::with(['pemesanan' => function ($q) {
+            $q->with('kamar.tipe_kamar')
+                ->orderBy('created_at', 'desc');
+        }])
+            ->findOrFail($id);
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return view('staf.penghuni-show', compact('penghuni'));
     }
 }

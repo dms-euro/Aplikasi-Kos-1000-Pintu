@@ -3,7 +3,7 @@
 
 @section('content')
 <!-- Header -->
-<div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-12">
+<div class="bg-indigo-600 text-white py-12">
     <div class="container mx-auto px-4">
         <h1 class="text-3xl md:text-4xl font-bold mb-2">Kamar Saya</h1>
         <p class="text-indigo-100">Riwayat pemesanan dan kamar yang sedang Anda huni</p>
@@ -116,7 +116,7 @@
                             </div>
                         </div>
 
-                        <a href="{{ route('pemesanan.show', $aktif->id) }}"
+                        <a href="{{ route('penghuni.pemesanan.show', $aktif->id) }}"
                            class="inline-flex items-center gap-2 mt-4 text-indigo-600 hover:text-indigo-700 font-medium">
                             Lihat Detail <i class='bx bx-right-arrow-alt'></i>
                         </a>
@@ -170,7 +170,7 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <a href="{{ route('pemesanan.show', $item->id) }}"
+                                    <a href="{{ route('penghuni.pemesanan.show', $item->id) }}"
                                        class="text-indigo-600 hover:text-indigo-800">
                                         <i class='bx bx-show text-lg'></i>
                                     </a>

@@ -5,78 +5,59 @@ namespace App\Http\Controllers\Penghuni;
 use App\Models\Pembayaran;
 use App\Models\Pemesanan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PembayaranController
 {
-    public function form($id)
-    {
-        $pemesanan = Pemesanan::findOrFail($id);
-        return view('penghuni.pembayaran', compact('pemesanan'));
-    }
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request, $id)
+    public function cash($id)
     {
         $pemesanan = Pemesanan::findOrFail($id);
 
-        $jumlah = str_replace('.', '', $request->jumlah);
+        // Cek apakah sudah ada pembayaran
+        if ($pemesanan->pembayaran()->exists()) {
+            return redirect()->back()->with('error', 'Pembayaran sudah pernah dilakukan.');
+        }
 
+        // Buat pembayaran dengan status pending
         Pembayaran::create([
             'pemesanan_id' => $pemesanan->id,
             'tanggal_bayar' => now(),
-            'jumlah' => $jumlah,
-            'petugas_id' => null,
+            'jumlah' => $pemesanan->total,
+            'status' => 'pending',
+            'bukti_bayar' => null,
         ]);
 
-        return redirect()->route('dashboard.penghuni')
-            ->with('success', 'Pembayaran dikirim, menunggu verifikasi admin');
-    }
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+        return redirect()->back()->with('success', 'Pembayaran cash berhasil dicatat. Silakan datang ke kasir untuk menyelesaikan pembayaran.');
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Proses pembayaran QRIS dengan upload bukti
      */
-    public function edit(string $id)
+    public function qris(Request $request, $id)
     {
-        //
-    }
+        $request->validate([
+            'bukti_bayar' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+        $pemesanan = Pemesanan::findOrFail($id);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        // Cek apakah sudah ada pembayaran
+        if ($pemesanan->pembayaran()->exists()) {
+            return redirect()->back()->with('error', 'Pembayaran sudah pernah dilakukan.');
+        }
+
+        // Upload bukti bayar
+        $path = $request->file('bukti_bayar')->store('bukti-pembayaran', 'public');
+
+        // Buat pembayaran
+        Pembayaran::create([
+            'pemesanan_id' => $pemesanan->id,
+            'tanggal_bayar' => now(),
+            'jumlah' => $pemesanan->total,
+            'status' => 'pending',
+            'bukti_bayar' => $path,
+        ]);
+
+        return redirect()->back()->with('success', 'Bukti pembayaran berhasil diupload. Menunggu verifikasi petugas.');
     }
 }

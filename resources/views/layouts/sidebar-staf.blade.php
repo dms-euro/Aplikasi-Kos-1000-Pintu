@@ -35,9 +35,9 @@
             </a>
 
             {{-- Penghuni --}}
-            <a href=""
+            <a href="{{ route('staf.penghuni.index') }}"
                 class="flex items-center gap-3 px-4 py-3 rounded-xl transition group
-                {{ request()->routeIs('staf.account.penghuni')
+                {{ request()->routeIs('staf.penghuni.*')
                     ? 'text-indigo-700 bg-indigo-50 border-l-4 border-indigo-600 font-medium'
                     : 'text-gray-600 hover:bg-indigo-50/50' }}">
                 <i class='bx bx-id-card text-xl'></i>
@@ -45,23 +45,23 @@
             </a>
 
             {{-- Kamar --}}
-            <a href=""
+            <a href="{{ route('staf.kamar.index') }}"
                 class="flex items-center gap-3 px-4 py-3 rounded-xl transition group
                 {{ request()->routeIs('staf.kamar.*')
                     ? 'text-indigo-700 bg-indigo-50 border-l-4 border-indigo-600 font-medium'
                     : 'text-gray-600 hover:bg-indigo-50/50' }}">
                 <i class='bx bx-bed text-xl'></i>
-                <span>Manajemen Kamar</span>
+                <span>Kamar</span>
             </a>
 
-            {{-- Laporan --}}
+            {{-- Chat --}}
             <a href=""
                 class="flex items-center gap-3 px-4 py-3 rounded-xl transition group
-                {{ request()->routeIs('staf.laporan.*')
+                {{ request()->routeIs('staf.chat.*')
                     ? 'text-indigo-700 bg-indigo-50 border-l-4 border-indigo-600 font-medium'
                     : 'text-gray-600 hover:bg-indigo-50/50' }}">
-                <i class='bx bx-bar-chart-alt-2 text-xl'></i>
-                <span>Laporan</span>
+                <i class='bx bx-chat text-xl'></i>
+                <span>Chat</span>
             </a>
 
             <div class="pt-4 mt-2 border-t border-indigo-100"></div>

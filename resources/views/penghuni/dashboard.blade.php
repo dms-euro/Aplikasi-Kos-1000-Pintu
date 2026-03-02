@@ -66,7 +66,7 @@
                     </div>
                 </div>
                 <div class="hidden md:block">
-                    <img src="https://placehold.co/600x500/4f46e5/ffffff?text=Kosan+Elegant" alt="Hero Image"
+                    <img src="{{ asset('icon/Bapak_Kos-removebg.png') }}" alt="Hero Image"
                         class="rounded-2xl shadow-2xl">
                 </div>
             </div>
@@ -107,7 +107,7 @@
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4">
                 @forelse ($kamar as $item)
-                    <a href="{{ route('detail.kamar', $item->id) }}"
+                    <a href="{{ route('penghuni.detail.kamar', $item->id) }}"
                         class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
 
                         <img src="{{ asset('storage/' . $item->foto_kamar) }}" class="w-full h-40 object-cover">
