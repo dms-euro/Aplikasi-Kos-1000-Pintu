@@ -25,7 +25,7 @@
             </a>
 
             {{-- Pemesanan--}}
-            <a href=""
+            <a href="{{ route('staf.pemesanan.index') }}"
                 class="flex items-center gap-3 px-4 py-3 rounded-xl transition group
                 {{ request()->routeIs('staf.pemesanan.*')
                     ? 'text-indigo-700 bg-indigo-50 border-l-4 border-indigo-600 font-medium'

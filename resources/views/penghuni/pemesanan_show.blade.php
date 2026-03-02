@@ -139,7 +139,7 @@
                         <i class='bx bx-credit-card text-4xl text-gray-300 mb-2'></i>
                         <p class="text-gray-500">Belum ada pembayaran</p>
                         @if($pemesanan->status == 'pending')
-                        <a href="{{ route('penghuni.pembayaran.create', $pemesanan->id) }}"
+                        <a href="{{ route('pembayaran.store', $pemesanan->id) }}"
                            class="inline-flex items-center gap-2 mt-4 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-medium transition">
                             <i class='bx bx-wallet'></i>
                             Lakukan Pembayaran

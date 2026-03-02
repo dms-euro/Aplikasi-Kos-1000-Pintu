@@ -12,6 +12,8 @@ use App\Http\Controllers\Penghuni\KamarController as PenghuniKamarController;
 use App\Http\Controllers\Penghuni\PembayaranController;
 use App\Http\Controllers\Penghuni\PemesananController as PenghuniPemesananController;
 use App\Http\Controllers\Staf\DashboardController;
+use App\Http\Controllers\Staf\Pemesanan;
+use App\Http\Controllers\Staf\PemesananController;
 use App\Http\Controllers\Staf\PenghuniController;
 use Illuminate\Support\Facades\Route;
 
@@ -71,7 +73,19 @@ Route::middleware(['auth', 'role:owner'])->prefix('admin')->name('admin.')->grou
 Route::middleware(['auth', 'role:staf'])->prefix('staf')->name('staf.')->group(function () {
     //dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.staf');
+    //pemesanan
+    // Route::get('/pemesanan', [PemesananController::class, 'index'])->name('pemesanan.index');
+    //penghuni
     Route::get('/penghuni', [PenghuniController::class, 'index'])->name('penghuni.index');
+    // Pemesanan routes
+    Route::get('/pemesanan', [PemesananController::class, 'index'])->name('pemesanan.index');
+    Route::get('/pemesanan/pending', [PemesananController::class, 'pendingPayments'])->name('pemesanan.pending');
+    Route::get('/pemesanan/{id}', [PemesananController::class, 'show'])->name('pemesanan.show');
+    Route::get('/pemesanan/{id}/payment/create', [PemesananController::class, 'createPayment'])->name('pemesanan.payment.create');
+    Route::post('/pemesanan/{id}/payment', [PemesananController::class, 'storePayment'])->name('pemesanan.payment.store');
+    Route::post('/pembayaran/{id}/approve', [PemesananController::class, 'approvePayment'])->name('pembayaran.approve');
+    Route::post('/pembayaran/{id}/reject', [PemesananController::class, 'rejectPayment'])->name('pembayaran.reject');
+    Route::post('/pemesanan/{id}/cancel', [PemesananController::class, 'cancelBooking'])->name('pemesanan.cancel');
 });
 
 //Role:penghuni
