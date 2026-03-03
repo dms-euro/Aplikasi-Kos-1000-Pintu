@@ -10,10 +10,6 @@ use Illuminate\Support\Facades\Hash;
 
 class PenghuniAuthController
 {
-    // public function showLogin()
-    // {
-    //     return view('auth.penghuni-login');
-    // }
 
     public function showRegister()
     {
@@ -57,20 +53,29 @@ class PenghuniAuthController
         return redirect('/')->with('success', 'Registrasi berhasil!');
     }
 
-    // public function login(Request $request)
-    // {
-    //     if (Auth::attempt($request->only('email', 'password'))) {
+    public function me()
+    {
+        $user = Auth::user();
 
-    //         if (auth()->user()->role != 'penghuni') {
-    //             Auth::logout();
-    //             return back()->with('error', 'Bukan akun penghuni');
-    //         }
+        $penghuni = Penghuni::where('users_id', $user->id)->first();
 
-    //         return redirect('/');
-    //     }
+        $pemesananAktif = $penghuni ? $penghuni->pemesanan()
+            ->whereIn('status', ['pending', 'dikonfirmasi', 'aktif'])
+            ->with('kamar.tipe_kamar')
+            ->latest()
+            ->first() : null;
 
-    //     return back()->with('error', 'Login gagal');
-    // }
+        $riwayatPemesanan = $penghuni ? $penghuni->pemesanan()
+            ->whereIn('status', ['selesai', 'dibatalkan'])
+            ->with('kamar.tipe_kamar')
+            ->latest()
+            ->take(3)
+            ->get() : collect();
+
+        $jumlahKomplain = $penghuni ? $penghuni->komplain()->count() : 0;
+
+        return view('penghuni.me', compact('user', 'penghuni', 'pemesananAktif', 'riwayatPemesanan', 'jumlahKomplain'));
+    }
 
     public function logout()
     {

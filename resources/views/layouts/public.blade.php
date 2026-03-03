@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title')</title>
     <!-- Tailwind CDN v4 -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <!-- Boxicons -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <!-- Flowbite CSS & JS (untuk modal) -->
@@ -24,7 +24,7 @@
     </style>
 </head>
 
-<body class="bg-gray-50">
+<body>
 
     @include('layouts.navbar')
 

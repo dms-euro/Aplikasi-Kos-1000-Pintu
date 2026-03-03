@@ -21,8 +21,8 @@
                             <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center">
                                 <i class='bx bx-info-circle text-2xl text-indigo-600'></i>
                             </div>
-                            <div>
-                                <p class="text-sm text-gray-500">Status Pemesanan</p>
+                            <div mt->
+                                <p class="text-sm mb-2 text-gray-500">Status Pemesanan</p>
                                 @php
                                     $statusClass =
                                         [
@@ -180,21 +180,48 @@
                         <!-- Form untuk QRIS (hidden by default) -->
                         <div id="form_qris" class="hidden space-y-4">
                             <!-- QR Code Display -->
-                            <div class="bg-white border border-gray-200 rounded-xl p-6 text-center">
-                                <div class="w-48 h-48 mx-auto mb-3 bg-gray-100 flex items-center justify-center">
-                                    <img src="{{ asset('images/qris-example.png') }}" alt="QRIS Code"
-                                        class="w-full h-full object-contain">
-                                </div>
-                                <p class="text-sm font-medium text-gray-800">Scan QR Code di atas</p>
-                                <p class="text-xs text-gray-500 mt-1">Gunakan aplikasi e-wallet atau mobile banking</p>
+                            <div
+                                class="bg-gradient-to-br from-indigo-50 to-purple-50 border border-indigo-100 rounded-2xl p-8 text-center shadow-sm">
 
-                                <div class="mt-4 p-3 bg-gray-50 rounded-lg">
-                                    <p class="text-sm text-gray-600">Nominal Pembayaran:</p>
-                                    <p class="text-xl font-bold text-indigo-600">
-                                        Rp{{ number_format($pemesanan->total, 0, ',', '.') }}</p>
+                                <!-- QR Container -->
+                                <div class="bg-white p-6 rounded-2xl shadow-md inline-block">
+                                    <img src="{{ asset('icon/Kode QRIS Uroo.dev, Elektronik.png') }}" alt="QRIS Code"
+                                        class="w-72 h-72 object-contain mx-auto">
                                 </div>
+
+                                <!-- Info -->
+                                <div class="mt-6 space-y-2">
+                                    <p class="text-base font-semibold text-gray-800">
+                                        Scan QRIS untuk Pembayaran
+                                    </p>
+                                    <p class="text-sm text-gray-500">
+                                        Gunakan e-wallet atau mobile banking favoritmu
+                                    </p>
+                                </div>
+
+                                <!-- Nominal -->
+                                <div class="mt-6 bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+                                    <p class="text-sm text-gray-500">Nominal Pembayaran</p>
+                                    <p class="text-2xl font-bold text-indigo-600 tracking-wide">
+                                        Rp{{ number_format($pemesanan->total, 0, ',', '.') }}
+                                    </p>
+                                </div>
+
+                                <!-- Rekening -->
+                                <div class="mt-6">
+                                    <p class="text-xs text-gray-500">Nomor Rekening</p>
+                                    <p class="font-mono text-lg font-bold text-gray-800 tracking-wider">
+                                        0882006533693
+                                    </p>
+
+                                    <button onclick="copyToClipboard('0882006533693', this)"
+                                        class="mt-3 inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition shadow-md hover:shadow-lg">
+                                        <i class='bx bx-copy'></i>
+                                        Salin Nomor
+                                    </button>
+                                </div>
+
                             </div>
-
                             <!-- Upload Bukti Transfer -->
                             <form action="{{ route('penghuni.pembayaran.qris', $pemesanan->id) }}" method="POST"
                                 enctype="multipart/form-data">
@@ -309,6 +336,51 @@
     </style>
 @endsection
 @push('scripts')
+    <script>
+        function toggleMetode(metode) {
+            const formCash = document.getElementById('form_cash');
+            const formQris = document.getElementById('form_qris');
+
+            if (metode === 'cash') {
+                formCash.classList.remove('hidden');
+                formQris.classList.add('hidden');
+            } else {
+                formCash.classList.add('hidden');
+                formQris.classList.remove('hidden');
+            }
+        }
+
+        function updateFileName(input) {
+            const fileName = input.files[0]?.name;
+            const fileNameElement = document.getElementById('file-name');
+
+            if (fileName) {
+                fileNameElement.textContent = '📎 ' + fileName;
+                fileNameElement.classList.remove('hidden');
+            } else {
+                fileNameElement.classList.add('hidden');
+            }
+        }
+
+        // ✅ Tambahkan ini
+        function copyToClipboard(text, button) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.innerHTML;
+
+                button.innerHTML = "<i class='bx bx-check'></i> Tersalin!";
+                button.classList.remove('bg-indigo-600');
+                button.classList.add('bg-green-600');
+
+                setTimeout(() => {
+                    button.innerHTML = "<i class='bx bx-copy'></i> Salin Nomor";
+                    button.classList.remove('bg-green-600');
+                    button.classList.add('bg-indigo-600');
+                }, 2000);
+            }).catch(err => {
+                alert("Gagal menyalin teks");
+            });
+        }
+    </script>
     <script>
         function toggleMetode(metode) {
             const formCash = document.getElementById('form_cash');

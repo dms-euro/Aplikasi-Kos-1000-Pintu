@@ -54,7 +54,7 @@
                 <span>Kamar</span>
             </a>
 
-            {{-- Chat --}}
+            {{-- Chat
             <a href=""
                 class="flex items-center gap-3 px-4 py-3 rounded-xl transition group
                 {{ request()->routeIs('staf.chat.*')
@@ -62,7 +62,7 @@
                     : 'text-gray-600 hover:bg-indigo-50/50' }}">
                 <i class='bx bx-chat text-xl'></i>
                 <span>Chat</span>
-            </a>
+            </a> --}}
 
             <div class="pt-4 mt-2 border-t border-indigo-100"></div>
 

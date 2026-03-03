@@ -1,5 +1,5 @@
 @extends('layouts.public')
-@section('title', 'Telusuri Kamar - Bapak Kos')
+@section('title', 'Telusuri Kamar - BapakKos')
 
 @section('content')
     <!-- Hero Section dengan Background Gradient dan Pattern -->
@@ -130,64 +130,50 @@
         @if ($Kamar->count() > 0)
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 @foreach ($Kamar as $item)
-                    <a href="{{ route('penghuni.kamar.show', $item->id) }}"
-                        class="group bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-200 overflow-hidden transition-all duration-300">
+                    <a href="{{ route('penghuni.detail.kamar', $item->id) }}"
+                        class="bg-white rounded-xl shadow-sm hover:shadow-md transition overflow-hidden border border-gray-100">
 
-                        <!-- Image Container -->
-                        <div class="relative overflow-hidden bg-gray-100 aspect-[4/3]">
-                            <img src="{{ asset('storage/' . $item->foto_kamar) }}" alt="{{ $item->kode_kamar }}"
-                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <!-- Image -->
+                        <div class="relative h-40 overflow-hidden bg-gray-100">
+                            <img src="{{ asset('storage/' . $item->foto_kamar) }}" class="w-full h-full object-cover">
 
-                            <!-- Status Badge - Simple -->
-                            <div class="absolute top-3 right-3">
+                            <!-- Status Badge -->
+                            <div class="absolute top-2 right-2">
                                 @if ($item->status == 'tersedia')
-                                    <span
-                                        class="bg-green-500 text-white px-3 py-1.5 rounded-full text-xs font-medium shadow-sm">
+                                    <span class="bg-green-500 text-white text-xs px-2 py-1 rounded shadow-sm">
                                         Tersedia
                                     </span>
-                                @elseif($item->status == 'dipesan')
-                                    <span
-                                        class="bg-amber-500 text-white px-3 py-1.5 rounded-full text-xs font-medium shadow-sm">
-                                        Dipesan
-                                    </span>
-                                @elseif($item->status == 'terisi')
-                                    <span
-                                        class="bg-blue-500 text-white px-3 py-1.5 rounded-full text-xs font-medium shadow-sm">
-                                        Terisi
-                                    </span>
                                 @else
-                                    <span
-                                        class="bg-rose-500 text-white px-3 py-1.5 rounded-full text-xs font-medium shadow-sm">
-                                        Perbaikan
+                                    <span class="bg-amber-500 text-white text-xs px-2 py-1 rounded shadow-sm">
+                                        Terisi
                                     </span>
                                 @endif
                             </div>
                         </div>
 
                         <!-- Content -->
-                        <div class="p-4">
-                            <!-- Kode Kamar dan Tipe -->
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="font-semibold text-gray-800 text-lg">
-                                    {{ $item->kode_kamar }}
-                                </h3>
-                                <span class="text-xs text-indigo-600 bg-indigo-50 px-2 py-1 rounded-full">
-                                    {{ $item->tipe_kamar->tipe ?? 'Standard' }}
-                                </span>
-                            </div>
+                        <div class="p-3">
+                            <h3 class="font-semibold text-gray-800">{{ $item->tipe_kamar->tipe }}</h3>
 
-                            <!-- Harga -->
-                            <div class="mt-3">
-                                <p class="text-sm text-gray-500">Harga per bulan</p>
-                                <p class="text-xl font-bold text-indigo-600">
-                                    Rp{{ number_format($item->tipe_kamar->harga ?? 0, 0, ',', '.') }}
-                                </p>
-                            </div>
-
-                            <!-- Deskripsi Singkat -->
-                            <p class="text-sm text-gray-600 mt-3 line-clamp-2">
-                                {{ $item->tipe_kamar->deskripsi ?? '-' }}
+                            <p class="text-xs text-gray-500 mt-1">
+                                Kode: {{ $item->kode_kamar }}
                             </p>
+
+                            <!-- Facilities Preview -->
+                            <div class="flex items-center gap-2 mt-2 text-gray-500">
+                                <i class='bx bx-wifi text-sm'></i>
+                                <i class='bx bx-wind text-sm'></i>
+                                <i class='bx bx-bath text-sm'></i>
+                                <span class="text-xs text-gray-400 ml-1">+2</span>
+                            </div>
+
+                            <!-- Price -->
+                            <div class="flex items-center justify-between mt-2 pt-2 border-t border-gray-100">
+                                <span class="text-sm font-bold text-indigo-600">
+                                    Rp{{ number_format($item->tipe_kamar->harga, 0, ',', '.') }}
+                                </span>
+                                <span class="text-indigo-600 text-sm">Detail →</span>
+                            </div>
                         </div>
                     </a>
                 @endforeach

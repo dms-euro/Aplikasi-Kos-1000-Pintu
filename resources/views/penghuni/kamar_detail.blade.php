@@ -7,22 +7,12 @@
         <div class="relative h-[50vh] md:h-[60vh] lg:h-[70vh] overflow-hidden">
             <img src="{{ asset('storage/' . $kamar->foto_kamar) }}" alt="{{ $kamar->kode_kamar }}"
                 class="w-full h-full object-cover">
-
-            <!-- Overlay Gradient -->
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-
             <!-- Back Button -->
             <a href="{{ url()->previous() }}"
                 class="absolute top-6 left-6 w-12 h-12 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-all duration-300 group">
                 <i class='bx bx-arrow-back text-2xl text-gray-700 group-hover:text-indigo-600'></i>
             </a>
-
-            <!-- Favorite Button -->
-            <button
-                class="absolute top-6 right-6 w-12 h-12 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-all duration-300 group">
-                <i class='bx bx-heart text-2xl text-gray-700 group-hover:text-rose-500'></i>
-            </button>
-
             <!-- Status Badge -->
             <div class="absolute bottom-6 left-6">
                 @if ($kamar->status == 'tersedia')

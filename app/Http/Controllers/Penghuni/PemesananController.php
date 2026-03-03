@@ -66,7 +66,7 @@ class PemesananController
         $penghuni = Penghuni::where('users_id', $user->id)->first();
 
         $pemesananAktif = Pemesanan::where('penghuni_id', $penghuni->id)
-            ->whereIn('status', ['pending', 'dipesan', 'aktif'])
+            ->whereIn('status', ['pending', 'confirmed'])
             ->where('tanggal_keluar', '>=', now())
             ->exists();
 

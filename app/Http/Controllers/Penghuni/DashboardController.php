@@ -11,10 +11,18 @@ class DashboardController
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $kamar = Kamar::with('tipe_kamar')->latest()->get();
         $kategori = Tipe_kamar::all();
+
+        $kamar = Kamar::with('tipe_kamar')
+            ->when($request->kategori, function ($query) use ($request) {
+                $query->whereHas('tipe_kamar', function ($q) use ($request) {
+                    $q->where('tipe', $request->kategori);
+                });
+            })
+            ->latest()
+            ->get();
 
         return view('penghuni.dashboard', compact('kamar', 'kategori'));
     }

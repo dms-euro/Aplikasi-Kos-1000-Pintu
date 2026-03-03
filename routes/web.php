@@ -82,6 +82,8 @@ Route::middleware(['auth', 'role:staf'])->prefix('staf')->name('staf.')->group(f
 
 //Role:penghuni
 Route::middleware(['auth', 'role:penghuni'])->prefix('penghuni')->name('penghuni.')->group(function () {
+    //me
+    Route::get('/me', [PenghuniAuthController::class, 'me'])->name('me');
     //kamar
     Route::get('/kamar', [PenghuniKamarController::class, 'index'])->name('kamar.index');
     Route::get('/kamar/{id}', [PenghuniKamarController::class, 'show'])->name('kamar.show');
