@@ -28,10 +28,6 @@ class PemesananController
         $user = Auth::user();
         $penghuni = Penghuni::where('users_id', $user->id)->first();
 
-        if (!$penghuni) {
-            return redirect()->route('profile.edit')->with('error', 'Lengkapi data penghuni terlebih dahulu.');
-        }
-
         return view('penghuni.pemesanan', compact('kamar', 'penghuni'));
     }
 
